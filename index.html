@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fablemarq — Home</title>
+  <meta name="description" content="Fablemarq Studio">
+  <meta name="theme-color" content="#0b1222">
+  <link rel="icon" href="/assets/logo-fablemarq.png" type="image/png">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preload" as="image" href="/assets/title-card.png">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/hero-clean.css">
+
+  <!-- Bootstrap lingua -->
+  <script>
+  (function(){
+    const urlLang = new URL(location.href).searchParams.get('lang');
+    const saved   = localStorage.getItem('lang');
+    const nav     = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+    const norm = l => (l||'').toLowerCase().startsWith('it') ? 'it'
+                     : (l||'').toLowerCase().startsWith('es') ? 'es' : 'en';
+    const lang = norm(urlLang || saved || nav);
+    document.documentElement.lang = lang;
+    localStorage.setItem('lang', lang);
+    if (urlLang){ const u=new URL(location.href); u.searchParams.delete('lang'); history.replaceState({},'',u); }
+    window.PREFERRED_LANG = lang;
+  })();
+  </script>
+
+  <!-- i18n minimale -->
+  <script>
+  const HOME_I18N = {
+    en: { skip:"Skip to content", cta:"Shop", kiki:"Kiki Moon" },
+    it: { skip:"Salta al contenuto", cta:"Acquista", kiki:"Kiki Moon" },
+    es: { skip:"Saltar al contenido", cta:"Comprar", kiki:"Kiki Moon" }
+  };
+  function applyHomeI18n(lang){
+    const t = HOME_I18N[lang] || HOME_I18N.en;
+    const skip = document.querySelector('.skip-link');
+    const cta  = document.querySelector('a.cta-buy');
+    const kiki = document.querySelector('nav a[data-kiki]');
+    if (skip) skip.textContent = t.skip;
+    if (cta)  cta.textContent  = t.cta;
+    if (kiki) kiki.textContent = t.kiki;
+  }
+  </script>
+</head>
+<body>
+<a href="#main" class="skip-link">Salta al contenuto</a>
+
+<header><div class="container nav">
+  <a class="brand" href="/"><img src="/assets/logo-fablemarq.png" alt="Fablemarq"></a>
+  <nav>
+    <a data-kiki href="/kikimooncollection/">Kiki Moon</a>
+    <a class="cta-buy" href="/kikimooncollection/">Acquista</a>
+  </nav>
+</div></header>
+
+<main id="main">
+<section class="hero">
+  <div id="wow-canvas"></div>
+  <div class="hero-layer">
+    <img class="title-card" src="/assets/title-card.png" alt="Fablemarq">
+  </div>
+</section>
+</main>
+
+<!-- Propaga lingua ai link -->
+<script>
+(function(){
+  const lang = window.PREFERRED_LANG || localStorage.getItem('lang') || 'en';
+  applyHomeI18n(lang);
+  document.querySelectorAll('nav a[href^="/kikimooncollection/"]').forEach(a=>{
+    try{
+      const u=new URL(a.getAttribute('href'),location.origin);
+      u.searchParams.set('lang',lang);
+      a.setAttribute('href',u.pathname+'?'+u.searchParams.toString());
+    }catch(_){}
+  });
+})();
+</script>
+
+<script defer src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script defer src="/js/wow.js"></script>
+</body>
+</html>

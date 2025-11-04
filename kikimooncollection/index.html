@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kiki Moon Collection — Fablemarq</title>
+<meta name="description" content="La saga illustrata Kiki Moon: poster dei libri e accesso alle pagine dedicate." />
+<meta name="theme-color" content="#0b1222" />
+<link rel="icon" href="/assets/logo-fablemarq.png" />
+
+<style>
+  :root{--bg:#0b1222;--ink:#e9edf6;--gold:#E7C25F}
+  body{background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0}
+  .container{width:min(1100px,92vw);margin:0 auto;padding:24px 0}
+  header .nav{display:flex;align-items:center;justify-content:space-between}
+  .brand img{height:38px}
+  .h1{font-size:clamp(26px,5vw,42px);font-weight:800;margin:8px 0 20px}
+  .posters{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;list-style:none;padding:0;margin:0}
+  .posters li{background:rgba(231,194,95,.06);border:1px solid rgba(231,194,95,.14);border-radius:16px;padding:14px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.04)}
+  .posters img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:12px;background:#0f1730}
+  .caption{margin:8px 0 10px;font-weight:800;font-size:.95rem;color:#ffe8b3;min-height:2.4em}
+  .hidden{display:none}
+  .lang-switch{display:inline-flex;gap:6px;margin-left:14px;padding:4px 6px;border:1px solid rgba(231,194,95,.35);border-radius:14px;background:rgba(231,194,95,.10)}
+  .lang-switch button{all:unset;cursor:pointer;padding:6px 10px;border-radius:10px;font-weight:700;color:#ffe8b3}
+  .lang-switch button.active{background:rgba(231,194,95,.22);box-shadow:0 4px 12px rgba(231,194,95,.18)}
+  .center{text-align:center;margin-top:20px}
+  .btn{padding:12px 22px;font-size:1.05rem;border:1px solid rgba(231,194,95,.45);background:rgba(231,194,95,.08);border-radius:12px;color:#ffe8b3;font-weight:800;cursor:pointer}
+</style>
+
+<!-- Motore lingua condiviso -->
+<script>
+(function(){
+  function normLang(l){ const s=(l||'').toLowerCase(); if(s.startsWith('it'))return'it'; if(s.startsWith('es'))return'es'; return'en'; }
+  const qs=new URLSearchParams(location.search);
+  const urlL=qs.get('lang'); const saved=localStorage.getItem('lang');
+  const nav=(navigator.languages&&navigator.languages[0])||navigator.language||'en';
+
+  // Ordine: ?lang > localStorage > navigator
+  const L=normLang(urlL||saved||nav);
+  document.documentElement.lang=L; localStorage.setItem('lang',L); window.PREFERRED_LANG=L;
+  if(urlL){ const u=new URL(location.href); u.searchParams.delete('lang'); history.replaceState({},'',u); }
+
+  window.__setLang=function(newL){
+    const L2=normLang(newL);
+    document.documentElement.lang=L2; localStorage.setItem('lang',L2); window.PREFERRED_LANG=L2;
+    document.dispatchEvent(new CustomEvent('lang:changed',{detail:{lang:L2}}));
+    document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active', b.dataset.lang===L2));
+    if(typeof window.applyI18n==='function') window.applyI18n(L2);
+    // Propaga ?lang e preserva ?src su tutti i link interni
+    const q=new URLSearchParams(location.search);
+    document.querySelectorAll('a[href^="/"]').forEach(a=>{
+      try{
+        const u=new URL(a.getAttribute('href'),location.origin);
+        u.searchParams.set('lang',L2);
+        if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
+        a.href=u.pathname+'?'+u.searchParams.toString();
+      }catch(_){}
+    });
+  };
+})();
+</script>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <a class="brand" href="/"><img src="/assets/logo-fablemarq.png" alt="Fablemarq"></a>
+    <nav>
+      <div class="lang-switch" aria-label="Language">
+        <button data-lang="en">EN</button>
+        <button data-lang="it">IT</button>
+        <button data-lang="es">ES</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="container section">
+  <h1 class="h1" data-i18n="title">Kiki Moon Collection</h1>
+
+  <ul class="posters">
+    <li>
+      <a class="card-link" href="/kikimooncollection/libro-1/"><img src="/assets/cover1.jpg" alt="Libro I"></a>
+      <p class="caption" data-i18n="b1">Libro I — La Stella Perduta</p>
+    </li>
+    <li>
+      <a class="card-link" href="/kikimooncollection/libro-2/"><img src="/assets/cover2.jpg" alt="Libro II"></a>
+      <p class="caption" data-i18n="b2">Libro II — Il Segreto di Snarfel</p>
+    </li>
+    <li>
+      <a class="card-link" href="/kikimooncollection/libro-3/"><img src="/assets/cover3.jpg" alt="Libro III"></a>
+      <p class="caption" data-i18n="b3">Libro III — La Notte Infinita</p>
+    </li>
+    <li class="more hidden">
+      <a class="card-link" href="/kikimooncollection/libro-4/"><img src="/assets/cover4.jpg" alt="Libro IV"></a>
+      <p class="caption" data-i18n="b4">Libro IV</p>
+    </li>
+    <li class="more hidden">
+      <a class="card-link" href="/kikimooncollection/libro-5/"><img src="/assets/cover5.jpg" alt="Libro V"></a>
+      <p class="caption" data-i18n="b5">Libro V</p>
+    </li>
+    <li class="more hidden">
+      <a class="card-link" href="/kikimooncollection/libro-6/"><img src="/assets/cover6.jpg" alt="Libro VI"></a>
+      <p class="caption" data-i18n="b6">Libro VI</p>
+    </li>
+  </ul>
+
+  <div class="center">
+    <button id="showMore" class="btn" data-i18n="more">Mostra altri</button>
+  </div>
+</main>
+
+<script>
+const I18N = {
+  en:{ title:"Kiki Moon Collection", more:"Show more",
+       b1:"Book I — The Lost Star", b2:"Book II — Snarfel’s Secret", b3:"Book III — The Endless Night",
+       b4:"Book IV", b5:"Book V", b6:"Book VI" },
+  it:{ title:"Kiki Moon Collection", more:"Mostra altri",
+       b1:"Libro I — La Stella Perduta", b2:"Libro II — Il Segreto di Snarfel", b3:"Libro III — La Notte Infinita",
+       b4:"Libro IV", b5:"Libro V", b6:"Libro VI" },
+  es:{ title:"Colección Kiki Moon", more:"Ver más",
+       b1:"Libro I — La Estrella Perdida", b2:"Libro II — El Secreto de Snarfel", b3:"Libro III — La Noche Infinita",
+       b4:"Libro IV", b5:"Libro V", b6:"Libro VI" }
+};
+
+function applyI18n(lang){
+  const t=I18N[lang]||I18N.en;
+  const meta=document.querySelector('meta[name="description"]');
+  if(meta){
+    if(lang==='en') meta.content="Kiki Moon illustrated saga: book posters and access to dedicated pages.";
+    else if(lang==='es') meta.content="La saga ilustrada Kiki Moon: pósters y acceso a páginas dedicadas.";
+    else meta.content="La saga illustrata Kiki Moon: poster dei libri e accesso alle pagine dedicate.";
+  }
+  document.querySelector('[data-i18n="title"]').textContent=t.title;
+  const more=document.querySelector('[data-i18n="more"]'); if(more) more.textContent=t.more;
+  ['b1','b2','b3','b4','b5','b6'].forEach(k=>{
+    const el=document.querySelector(`[data-i18n="${k}"]`); if(el) el.textContent=t[k];
+  });
+}
+window.applyI18n = applyI18n;
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const L=window.PREFERRED_LANG||localStorage.getItem('lang')||'en';
+  // attiva pill attuale
+  document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active', b.dataset.lang===L));
+  // testo
+  applyI18n(L);
+  // propaga ?lang e ?src
+  const q=new URLSearchParams(location.search);
+  document.querySelectorAll('a.card-link, a[href="/"]').forEach(a=>{
+    try{
+      const u=new URL(a.getAttribute('href'),location.origin);
+      u.searchParams.set('lang',L);
+      if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
+      a.href=u.pathname+'?'+u.searchParams.toString();
+    }catch(_){}
+  });
+  // show more
+  document.getElementById('showMore')?.addEventListener('click',()=>{
+    document.querySelectorAll('.posters .more').forEach(el=>el.classList.remove('hidden'));
+    document.getElementById('showMore').remove();
+  });
+});
+
+// click lingua delegato
+document.addEventListener('click',(e)=>{
+  const b=e.target.closest('.lang-switch button[data-lang]'); if(!b) return;
+  e.preventDefault(); window.__setLang && window.__setLang(b.dataset.lang);
+});
+</script>
+</body>
+</html>

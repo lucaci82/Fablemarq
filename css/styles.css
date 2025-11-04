@@ -1,0 +1,79 @@
+:root{
+  /* Palette che converte */
+  --bg:#0B1222;
+  --surface:#0F1730;
+  --ink:#E7EAF6;
+  --muted:#BFC6D8;
+  --accent:#E7C25F;   /* dettagli, non testi lunghi */
+  --link:#8AB4FF;
+
+  /* CTA primaria */
+  --cta:#FFB020;
+  --cta-text:#1B1200;
+  --cta-hover:#E69A00;
+  --cta-press:#C47F00;
+
+  /* Accessibilità */
+  --focus:#FACC15;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;
+  background:var(--bg); color:var(--ink);
+}
+
+/* Link generici: leggibili su scuro */
+a{ color:var(--link); }
+a:focus, .btn:focus, .cta-buy:focus{
+  outline:2px solid var(--focus); outline-offset:2px; border-radius:12px;
+}
+
+.container{width:min(1100px,92vw);margin:0 auto;padding:20px}
+
+/* Header */
+header{
+  position:sticky; top:0; z-index:20;
+  background:rgba(11,18,34,.85);
+  backdrop-filter:saturate(140%) blur(6px);
+}
+.nav{display:flex;align-items:center;gap:16px;padding:10px 0}
+.brand img{height:34px}
+
+nav{display:flex;gap:12px;margin-left:auto}
+nav a{
+  color:rgba(231,234,246,.92);
+  text-decoration:none; padding:10px 12px; border-radius:10px;
+}
+nav a:hover{ background:rgba(231,194,95,.10); }
+
+/* CTA Amazon: UNA tinta, dominante */
+.cta-buy{
+  margin-left:4px; padding:10px 16px;
+  border:0; border-radius:999px;
+  background:var(--cta); color:var(--cta-text); font-weight:800;
+  text-decoration:none;
+  box-shadow:0 10px 24px rgba(255,176,32,.25);
+  transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+}
+.cta-buy:hover{ background:var(--cta-hover); transform:translateY(-1px); }
+.cta-buy:active{ background:var(--cta-press); transform:translateY(0); }
+
+/* Skip link */
+.skip-link{
+  position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;
+}
+.skip-link:focus{
+  left:12px; top:12px; width:auto; height:auto;
+  background:#111; color:#fff; padding:8px 10px; border-radius:8px;
+}
+
+/* Footer minimal */
+footer{display:none}
+
+/* Mobile */
+@media (max-width:720px){
+  nav a{padding:10px 10px}
+  .cta-buy{padding:10px 14px}
+}
