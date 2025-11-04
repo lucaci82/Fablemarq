@@ -76,6 +76,49 @@
       .book-sheet{grid-template-columns:1fr}
       .cover-lg{width:72%;margin:0 auto 8px;object-fit:contain}
     }
+/* --- FIX telefoni molto stretti (Z Flip & co) --- */
+@media (max-width: 420px){
+  .container{padding:12px}
+  header .nav{gap:8px}
+  .lang-switch{padding:2px 4px}
+  .lang-switch button{padding:4px 8px}
+
+  .book-sheet{
+    grid-template-columns:96px 1fr !important;
+    gap:10px !important;
+    padding:12px !important;
+    margin-top:12px !important;
+  }
+  .cover-lg{width:96px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+  .sheet-text h1{font-size:1rem;margin:0 0 6px}
+  .meta{gap:6px;font-size:.88rem;margin:0 0 8px}
+  .plot{font-size:.93rem;margin:4px 0 8px}
+  .hook{font-size:.92rem;margin:0 0 10px;padding-left:8px;border-left-width:2px}
+
+  /* badge in riga con scroll orizzontale */
+  .awards{
+    justify-content:flex-start !important;
+    gap:10px !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    padding-bottom:6px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .award-item{flex:0 0 auto;width:72px}
+  .award-item p{font-size:.72rem}
+
+  .review{gap:10px;margin-top:14px;padding:0 2px}
+  .review .stars{min-width:78px;font-size:1.1rem}
+  .cta-row{margin-top:8px;gap:10px}
+  .sticky-buy{padding:10px;margin-top:16px}
+}
+
+@media (max-width: 340px){
+  .book-sheet{grid-template-columns:1fr !important}
+  .cover-lg{width:68%;margin:0 auto 8px;aspect-ratio:2/3;object-fit:cover}
+  .review{align-items:center;text-align:center}
+  .review p{text-align:justify}
+}
   </style>
 
   <!-- Motore lingua (immutato) -->
