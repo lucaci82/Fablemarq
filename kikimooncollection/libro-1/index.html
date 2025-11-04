@@ -183,6 +183,66 @@
     gap:8px;
   }
 }
+/* MOBILE STRETTO: cover sx, titolo+meta dx, trama & resto sotto */
+@media (max-width:520px){
+  .book-sheet{
+    display:grid;
+    grid-template-columns:118px 1fr;   /* cover | testo */
+    grid-auto-rows:auto;
+    column-gap:10px;
+    row-gap:8px;
+    align-items:start;
+    text-align:left;                   /* niente centrature indesiderate */
+  }
+
+  .cover-lg{
+    grid-column:1;
+    grid-row:1 / span 2;               /* occupa due righe a sinistra */
+    width:118px; height:auto; margin:0;
+    aspect-ratio:2/3; object-fit:cover;
+  }
+
+  /* permette ai figli di .sheet-text di diventare elementi della grid */
+  .sheet-text{ display:contents; }
+
+  /* titolo e meta a destra della cover */
+  .sheet-text h1{
+    grid-column:2; grid-row:1;
+    margin:0 0 4px; font-size:1.08rem; line-height:1.2;
+  }
+  .meta{
+    grid-column:2; grid-row:2;
+    margin:0 0 6px; font-size:.9rem; gap:8px;
+    justify-content:flex-start;
+  }
+
+  /* tutto il resto a tutta larghezza sotto */
+  .plot, .hook, .awards, .review, .cta-row, .trust{
+    grid-column:1 / -1;
+  }
+
+  /* badge allineati in alto e testo in 2 righe */
+  .awards{
+    justify-content:center;
+    align-items:flex-start;   /* allineamento uniforme in alto */
+    gap:14px;
+    margin-top:10px;
+  }
+  .award-item{ width:92px; text-align:center; }
+  .award-item img{ height:66px; width:auto; display:block; margin:0 auto 6px; }
+  .award-item p{ font-size:.78rem; line-height:1.15; white-space:normal; }
+
+  /* recensione e CTA comodi */
+  .review{ max-width:100%; margin-top:16px; }
+  .cta-row{ justify-content:center; gap:10px; }
+}
+
+/* XS extra piccoli: una colonna soltanto (fallback) */
+@media (max-width:360px){
+  .book-sheet{ grid-template-columns:1fr; }
+  .cover-lg{ grid-column:1; grid-row:auto; width:72%; margin:0 auto 8px; }
+}
+
 
   </style>
 
