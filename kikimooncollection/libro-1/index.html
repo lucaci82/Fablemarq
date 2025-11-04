@@ -72,7 +72,7 @@
 .award-item p{
   margin:0;
   font-size:.75rem;
-  color:var(--gold-soft);
+  color:var(--gold-soft);  
   line-height:1.2;
   max-width:120px;
   display:-webkit-box;
@@ -124,6 +124,66 @@
       .book-sheet{grid-template-columns:1fr}
       .cover-lg{width:72%;margin:0 auto 8px;object-fit:contain}
     }
+    /* 🧩 FIX SPECIFICO TELEFONI STRETTI (Galaxy Z Flip, iPhone SE ecc.) */
+@media (max-width:480px){
+  .book-sheet {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:14px 10px;
+  }
+
+  .cover-lg {
+    width:70%;
+    max-width:220px;
+    height:auto;
+    margin:0 auto 12px;
+  }
+
+  .sheet-text {
+    width:100%;
+  }
+
+  .sheet-text h1 {
+    font-size:1.1rem;
+    margin-bottom:6px;
+  }
+
+  .meta {
+    justify-content:center;
+    font-size:.9rem;
+    margin-bottom:10px;
+  }
+
+  .hook {
+    font-size:.95rem;
+    border-left:none;
+    border-top:2px solid rgba(231,194,95,.4);
+    padding:8px 0 0;
+  }
+
+  .awards {
+    justify-content:center;
+    gap:10px;
+    margin-top:10px;
+  }
+
+  .award-item {
+    width:84px;
+  }
+
+  .review {
+    max-width:100%;
+    margin-top:16px;
+  }
+
+  .cta-row {
+    flex-direction:column;
+    gap:8px;
+  }
+}
+
   </style>
 
   <!-- Motore lingua -->
