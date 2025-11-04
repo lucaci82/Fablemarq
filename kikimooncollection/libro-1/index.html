@@ -101,11 +101,11 @@
       .award-item p{font-size:.74rem}
     }
 
-   /* 📱 MOBILE ≤520px — cover a sinistra, titolo/meta a destra; meta in colonna unica */
+/* 📱 MOBILE ≤520px — cover a sinistra, titolo/meta a destra; meta in colonna unica con data su due righe */
 @media (max-width:520px){
   .book-sheet{
     display:grid;
-    grid-template-columns:118px 1fr;   /* cover | testo */
+    grid-template-columns:118px 1fr;
     column-gap:10px;
     row-gap:6px;
     align-items:start;
@@ -113,7 +113,6 @@
     padding:12px;
   }
 
-  /* cover affiancata ai testi */
   .cover-lg{
     grid-column:1;
     grid-row:1 / 4;
@@ -127,29 +126,36 @@
     margin:0; line-height:1.2; font-size:1.1rem;
   }
 
-  /* META: UNA colonna, niente accavallamenti */
+  /* META: una colonna, data a capo */
   .sheet-text .meta{
     grid-column:2; grid-row:2 / 4;
-    display:block !important;    /* forza 1 colonna */
+    display:block !important;
     margin:0; padding:0;
   }
   .sheet-text .meta li{
     list-style:none;
-    display:block;                /* ogni elemento su riga propria */
-    white-space:normal;           /* consenti a ES/IT di andare a capo */
-    overflow:visible;             /* niente ellissi */
+    display:block;
+    white-space:normal;
+    overflow:visible;
     text-overflow:clip;
-    margin:0 0 4px;
+    margin:0 0 6px;
   }
   .sheet-text .meta li:last-child{ margin-bottom:0; }
 
+  /* etichette sopra, testo sotto */
   .sheet-text .meta strong{
-    display:inline !important;    /* etichetta inline */
-    min-width:0 !important;       /* rimuove larghezze fisse */
-    margin-right:6px;
+    display:block !important;
+    font-weight:700;
+    color:var(--muted);
+    margin:0 0 2px;
   }
 
-  /* resto a tutta larghezza sotto */
+  .sheet-text .meta span{
+    display:block;
+    margin-left:0;
+  }
+
+  /* resto a tutta larghezza */
   .plot,.hook,.awards,.review,.cta-row,.trust{ grid-column:1 / -1; margin-left:0; }
 
   .awards{
