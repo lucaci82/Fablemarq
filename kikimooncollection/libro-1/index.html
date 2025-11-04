@@ -46,29 +46,47 @@
     .plot{opacity:.92;margin:6px 0 12px}
     .hook{margin:0 0 14px;font-style:italic;color:#ffe8b3;border-left:3px solid rgba(231,194,95,.55);padding-left:10px}
 
-    /* Awards: centrati e clamp 2 righe */
-    .awards{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:16px;
-      flex-wrap:wrap;
-      margin:16px 0 12px;
-    }
-    .award-item{
-      text-align:center;
-      width:92px;
-      flex:0 0 auto;
-    }
-    .award-item img{
-      width:100%;height:auto;display:block;margin-bottom:6px;
-      filter:drop-shadow(0 0 8px rgba(231,194,95,.3))
-    }
-    .award-item p{
-      margin:0;font-size:.75rem;color:var(--gold-soft);line-height:1.2;
-      display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
-      text-wrap:balance;
-    }
+/* === Fix allineamento stemmi (orizzontali, top allineato, 2 righe max caption) === */
+.awards{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:flex-start;     /* allinea in alto la riga */
+  gap:18px;
+  margin:16px 0 12px;
+}
+
+.award-item{
+  width:auto;
+  text-align:center;
+}
+
+.award-item img{
+  display:block;
+  height:84px;                /* stessa altezza per tutti i badge */
+  width:auto;                 /* mantiene le proporzioni */
+  margin:0 auto 6px;
+  filter:drop-shadow(0 0 8px rgba(231,194,95,.3));
+}
+
+.award-item p{
+  margin:0;
+  font-size:.75rem;
+  color:var(--gold-soft);
+  line-height:1.2;
+  max-width:120px;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;       /* “Best Illustrated Tale” resta su 2 righe */
+  overflow:hidden;
+  text-wrap:balance;
+}
+
+/* telefoni piccoli */
+@media (max-width:420px){
+  .award-item img{height:72px}
+}
+
 
     /* Recensione */
     .review{display:flex;align-items:flex-start;justify-content:center;gap:18px;max-width:600px;margin:22px auto 0;text-align:left;flex-wrap:wrap}
