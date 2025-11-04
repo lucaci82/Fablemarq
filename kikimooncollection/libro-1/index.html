@@ -174,46 +174,49 @@
     flex-direction:column;
     gap:8px;
   }
-/* 📱 MOBILE STRETTO ≤520px — Cover a sinistra, titolo/meta a destra, resto sotto */
+  
+/* 📱 MOBILE STRETTO ≤520px — Cover a sinistra, testo allineato al margine sinistro */
 @media (max-width:520px){
   .book-sheet{
-    display:block;                 /* niente grid */
+    display:block;
     text-align:left;
-  }
-  .book-sheet::after{              /* clearfix per contenere il float */
-    content:"";
-    display:table;
-    clear:both;
   }
 
   .cover-lg{
     float:left;
     width:118px;
-    max-width:118px;               /* blocca la larghezza */
     height:auto;
-    margin:0 10px 8px 0;           /* spazio a destra della cover */
-    aspect-ratio:auto;             /* evita deformazioni */
+    margin:0 10px 8px 0;
+    aspect-ratio:auto;
   }
 
   /* Titolo e meta accanto alla cover */
-  .sheet-text{min-width:0;}
   .sheet-text h1,
   .sheet-text .meta{
-    margin-left:128px;             /* allineati a destra della cover */
+    margin-left:128px;           /* allineamento a destra della cover */
+    padding-left:0;              /* niente rientri */
+    text-align:left;             /* tutto allineato a sinistra */
   }
 
-  /* Tutto il resto va sotto, a tutta larghezza */
-  .plot,
-  .hook,
-  .awards,
-  .review,
-  .cta-row,
-  .trust{
+  /* Forza l’allineamento perfetto delle righe meta */
+  .sheet-text .meta li{
+    width:100%;
+    display:flex;
+    gap:4px;
+    align-items:baseline;
+  }
+
+  .sheet-text .meta strong{
+    min-width:120px;             /* blocco fisso per etichette (Data, Genere, Lingue) */
+    display:inline-block;
+  }
+
+  /* Tutto il resto sotto */
+  .plot, .hook, .awards, .review, .cta-row, .trust{
     clear:both;
     margin-left:0;
   }
 
-  /* Badge ordinati e allineati in alto */
   .awards{
     display:flex;
     flex-wrap:wrap;
@@ -222,13 +225,9 @@
     gap:14px;
     margin-top:10px;
   }
+
   .award-item{ width:92px; text-align:center; }
-  .award-item img{
-    height:66px;
-    width:auto;
-    display:block;
-    margin:0 auto 6px;
-  }
+  .award-item img{ height:66px; width:auto; display:block; margin:0 auto 6px; }
   .award-item p{
     font-size:.78rem;
     line-height:1.15;
@@ -239,10 +238,10 @@
     overflow:hidden;
   }
 
-  /* Recensione e CTA comodi */
   .review{ max-width:100%; margin-top:16px; }
   .cta-row{ justify-content:center; gap:10px; }
 }
+
 
 /* 📱 XS ≤360px — tutto centrato sotto (no float) */
 @media (max-width:360px){
