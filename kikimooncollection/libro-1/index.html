@@ -234,8 +234,41 @@
   .book-sheet{ grid-template-columns:1fr; }
   .cover-lg{ grid-column:1; grid-row:auto; width:72%; margin:0 auto 8px; }
 }
+/* Fallback telefoni stretti (Z Flip, SE, ecc.)
+   Cover a sinistra, titolo+meta a destra, resto sotto */
+@media (max-width:520px){
+  .book-sheet{display:block}                  /* niente grid qui */
+  .cover-lg{
+    float:left;
+    width:118px;
+    height:auto;
+    margin:0 10px 8px 0;                      /* spazio a destra */
+    aspect-ratio:auto;                         /* evita stranezze */
+  }
+  /* Titolo e meta accanto alla cover */
+  .sheet-text h1,
+  .sheet-text .meta{ margin-left:128px }
 
+  /* Tutto il resto va sotto, a tutta larghezza */
+  .plot, .hook, .awards, .review, .cta-row, .trust{
+    clear:both;
+    margin-left:0;
+  }
 
+  /* Badge ordinati e allineati in alto */
+  .awards{
+    display:flex; flex-wrap:wrap;
+    justify-content:center; align-items:flex-start;
+    gap:14px; margin-top:10px;
+  }
+  .award-item{ width:92px; text-align:center }
+  .award-item img{ height:66px; width:auto; display:block; margin:0 auto 6px }
+  .award-item p{
+    font-size:.78rem; line-height:1.15;
+    max-width:120px; display:-webkit-box; -webkit-line-clamp:2;
+    -webkit-box-orient:vertical; overflow:hidden;
+  }
+}
   </style>
 
   <!-- Motore lingua -->
