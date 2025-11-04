@@ -70,6 +70,7 @@
     }
   </style>
 
+  <!-- Boot lingua + selettore (immutato) -->
   <script>
   (function(){
     function normLang(l){const s=(l||'').toLowerCase();if(s.startsWith('it'))return'it';if(s.startsWith('es'))return'es';return'en';}
@@ -84,11 +85,6 @@
       document.documentElement.lang=L2;localStorage.setItem('lang',L2);window.PREFERRED_LANG=L2;
       document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===L2));
       if(typeof applyI18n==='function')applyI18n(L2);
-      document.querySelectorAll('a[href]').forEach(a=>{
-        const href=a.getAttribute('href');
-        if(!href||href.startsWith('http'))return;
-        a.href=`${href.split('?')[0]}?lang=${L2}`;
-      });
     }
     window.__setLang=setLang;
 
@@ -101,6 +97,70 @@
       });
     });
   })();
+  </script>
+
+  <!-- Dizionari + applicazione testi -->
+  <script>
+  const I18N={
+    it:{meta_desc:"Una stella si spegne e Kiki scopre che il coraggio nasce da una piccola luce testarda.",
+        nav_collection:"Collection",
+        title:"Libro I — La Stella Perduta",
+        release_label:"Data di uscita:", release_date:"26 novembre 2025",
+        genre_label:"Genere:", genre:"Avventura, Animazione",
+        langs_label:"Lingue:",
+        plot:"Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.",
+        hook:"«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»",
+        review:"Letto con mia figlia: una storia dolce, piena di magia e illustrazioni stupende. Kiki è adorabile e il messaggio finale resta nel cuore.",
+        buy:"Acquista su Amazon", buy_now:"Acquista ora",
+        trust:"Acquisto e resi gestiti da Amazon.", fast_checkout:"Checkout rapido sullo store del tuo paese."},
+    en:{meta_desc:"A star goes dark, and Kiki learns that courage begins with a stubborn little light.",
+        nav_collection:"Collection",
+        title:"Book I — The Lost Star",
+        release_label:"Release date:", release_date:"November 26, 2025",
+        genre_label:"Genre:", genre:"Adventure, Animation",
+        langs_label:"Languages:",
+        plot:"In Moon’s sky, a star goes out. To relight it, Kiki must find Moon’s Breath and discover that courage starts with a stubborn little light.",
+        hook:"“Some secrets don’t shout: they shine. Kiki will find it before the world falls asleep.”",
+        review:"Read with my daughter: a sweet story full of magic and stunning illustrations. Kiki is adorable and the final message stays with you.",
+        buy:"Buy on Amazon", buy_now:"Buy now",
+        trust:"Purchase and returns handled by Amazon.", fast_checkout:"Fast checkout on your country store."},
+    es:{meta_desc:"Una estrella se apaga y Kiki descubre que el valor nace de una pequeña luz terca.",
+        nav_collection:"Colección",
+        title:"Libro I — La Estrella Perdida",
+        release_label:"Fecha de lanzamiento:", release_date:"26 de noviembre de 2025",
+        genre_label:"Género:", genre:"Aventura, Animación",
+        langs_label:"Idiomas:",
+        plot:"En el cielo de Moon, una estrella se apaga. Para encenderla de nuevo, Kiki debe encontrar el Aliento de Moon y descubrir que el valor empieza con una pequeña luz terca.",
+        hook:"«Hay secretos que no gritan: brillan. Kiki lo encontrará antes de que el mundo se duerma.»",
+        review:"Leído con mi hija: una historia dulce, llena de magia e ilustraciones preciosas. Kiki es adorable y el mensaje final se queda contigo.",
+        buy:"Comprar en Amazon", buy_now:"Comprar ahora",
+        trust:"Compra y devoluciones gestionadas por Amazon.", fast_checkout:"Pago rápido en la tienda de tu país."}
+  };
+
+  function applyI18n(lang){
+    const t=I18N[lang]||I18N.en;
+    const meta=document.querySelector('meta[name="description"]'); if(meta) meta.content=t.meta_desc;
+    const map=[
+      ["nav_collection","[data-i18n='nav_collection']"],
+      ["title","[data-i18n='title']"],
+      ["release_label","[data-i18n='release_label']"],
+      ["release_date","[data-i18n='release_date']"],
+      ["genre_label","[data-i18n='genre_label']"],
+      ["genre","[data-i18n='genre']"],
+      ["langs_label","[data-i18n='langs_label']"],
+      ["plot","[data-i18n='plot']"],
+      ["hook","[data-i18n='hook']"],
+      ["review","[data-i18n='review']"],
+      ["buy","[data-i18n='buy']"],
+      ["buy_now","[data-i18n='buy_now']"],
+      ["trust","[data-i18n='trust']"],
+      ["fast_checkout","[data-i18n='fast_checkout']"]
+    ];
+    map.forEach(([k,sel])=>{
+      const el=document.querySelector(sel);
+      if(el) el.textContent=t[k];
+    });
+  }
   </script>
 </head>
 
@@ -122,35 +182,73 @@
   <main id="main" class="container section">
     <section class="book-sheet">
       <img class="cover-lg" src="../../assets/cover1.jpg" alt="Kiki Moon — Libro I">
+
       <div class="sheet-text">
-        <h1>Libro I — La Stella Perduta</h1>
+        <h1 data-i18n="title">Libro I — La Stella Perduta</h1>
+
         <ul class="meta">
-          <li><strong>Data di uscita:</strong> 26 novembre 2025</li>
-          <li><strong>Genere:</strong> Avventura, Animazione</li>
-          <li><strong>Lingue:</strong> IT / EN / ES</li>
+          <li><strong data-i18n="release_label">Data di uscita:</strong> <span data-i18n="release_date">26 novembre 2025</span></li>
+          <li><strong data-i18n="genre_label">Genere:</strong> <span data-i18n="genre">Avventura, Animazione</span></li>
+          <li><strong data-i18n="langs_label">Lingue:</strong> <span>IT / EN / ES</span></li>
         </ul>
-        <p class="plot">Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.</p>
-        <p class="hook">«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»</p>
+
+        <p class="plot" data-i18n="plot">
+          Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.
+        </p>
+
+        <p class="hook" data-i18n="hook">«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»</p>
+
         <div class="awards">
-          <div class="award-item"><img src="../../assets/awards/award-readers.png" alt="Readers’ Choice"><p>Readers’ Choice</p></div>
-          <div class="award-item"><img src="../../assets/awards/award-storytelling.png" alt="Storytelling Award 2025"><p>Storytelling Award 2025</p></div>
-          <div class="award-item"><img src="../../assets/awards/award-illustrated.png" alt="Best Illustrated Tale"><p>Best Illustrated Tale</p></div>
+          <div class="award-item">
+            <img src="../../assets/awards/award-readers.png" alt="Readers’ Choice">
+            <p>Readers’ Choice</p>
+          </div>
+          <div class="award-item">
+            <img src="../../assets/awards/award-storytelling.png" alt="Storytelling Award 2025">
+            <p>Storytelling Award 2025</p>
+          </div>
+          <div class="award-item">
+            <img src="../../assets/awards/award-illustrated.png" alt="Best Illustrated Tale">
+            <p>Best Illustrated Tale</p>
+          </div>
         </div>
+
         <div class="review">
           <div class="stars">★★★★★</div>
-          <p>Letto con mia figlia: una storia dolce, piena di magia e illustrazioni stupende. Kiki è adorabile e il messaggio finale resta nel cuore.</p>
+          <p data-i18n="review">
+            Letto con mia figlia: una storia dolce, piena di magia e illustrazioni stupende. Kiki è adorabile e il messaggio finale resta nel cuore.
+          </p>
         </div>
+
         <div class="cta-row">
-          <a class="btn" href="https://www.amazon.it/dp/ASIN_LIBRO1" target="_blank" rel="noopener nofollow sponsored">Acquista su Amazon</a>
+          <a class="btn" id="buyBtn" href="https://www.amazon.it/dp/ASIN_LIBRO1" target="_blank" rel="noopener nofollow sponsored" data-i18n="buy">Acquista su Amazon</a>
         </div>
-        <p class="trust">Acquisto e resi gestiti da Amazon.</p>
+        <p class="trust" data-i18n="trust">Acquisto e resi gestiti da Amazon.</p>
       </div>
     </section>
 
     <div class="sticky-buy">
-      <a class="btn" href="https://www.amazon.it/dp/ASIN_LIBRO1" target="_blank" rel="noopener nofollow sponsored">Acquista ora</a>
-      <span class="trust">Checkout rapido sullo store del tuo paese.</span>
+      <a class="btn" id="buyBtnSticky" href="https://www.amazon.it/dp/ASIN_LIBRO1" target="_blank" rel="noopener nofollow sponsored" data-i18n="buy_now">Acquista ora</a>
+      <span class="trust" data-i18n="fast_checkout">Checkout rapido sullo store del tuo paese.</span>
     </div>
   </main>
+
+  <!-- Propaga automaticamente ?lang=xx ai link interni -->
+  <script>
+  document.addEventListener('DOMContentLoaded',()=>{
+    const L = window.PREFERRED_LANG || localStorage.getItem('lang') || 'en';
+    document.body.addEventListener('click',e=>{
+      const a=e.target.closest('a[href]');
+      if(!a)return;
+      const href=a.getAttribute('href');
+      if(!href || href.startsWith('http') || href.startsWith('mailto:'))return;
+      if(!href.includes('?lang=')){
+        e.preventDefault();
+        const url = href.includes('?') ? `${href}&lang=${L}` : `${href}?lang=${L}`;
+        location.href = url;
+      }
+    });
+  });
+  </script>
 </body>
 </html>
