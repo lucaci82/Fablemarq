@@ -101,51 +101,69 @@
       .award-item p{font-size:.74rem}
     }
 
-    /* 📱 MOBILE ≤520px — cover a sinistra, titolo/meta a destra su 3 righe */
-    @media (max-width:520px){
-      .book-sheet{
-        display:grid;
-        grid-template-columns:118px 1fr;   /* cover | testo */
-        grid-template-rows:auto auto auto; /* r1: titolo, r2: data+genere, r3: lingue */
-        column-gap:10px;
-        row-gap:6px;
-        align-items:start;
-        text-align:left;
-        padding:12px;
-      }
+   /* 📱 MOBILE ≤520px — cover a sinistra, titolo/meta a destra; meta in colonna unica */
+@media (max-width:520px){
+  .book-sheet{
+    display:grid;
+    grid-template-columns:118px 1fr;   /* cover | testo */
+    column-gap:10px;
+    row-gap:6px;
+    align-items:start;
+    text-align:left;
+    padding:12px;
+  }
 
-      /* cover va dall'h1 fino alla riga "Lingue" */
-      .cover-lg{
-        grid-column:1;
-        grid-row:1 / 4;
-        width:118px;height:auto;margin:0;aspect-ratio:2/3;object-fit:cover;
-      }
+  /* cover affiancata ai testi */
+  .cover-lg{
+    grid-column:1;
+    grid-row:1 / 4;
+    width:118px; height:auto; margin:0; aspect-ratio:2/3; object-fit:cover;
+  }
 
-      .sheet-text{display:contents}
+  .sheet-text{ display:contents; }
 
-      .sheet-text h1{
-        grid-column:2;grid-row:1;margin:0;line-height:1.2;font-size:1.1rem;
-      }
+  .sheet-text h1{
+    grid-column:2; grid-row:1;
+    margin:0; line-height:1.2; font-size:1.1rem;
+  }
 
-      /* meta su UNA riga ciascuna, allineate a sinistra */
-      .sheet-text .meta{
-        grid-column:2;grid-row:2 / 4;
-        display:grid;grid-template-columns:1fr;row-gap:4px;margin:0;padding:0;
-      }
-      .sheet-text .meta li{
-        list-style:none;display:flex;align-items:baseline;gap:6px;
-        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-      }
-      .sheet-text .meta strong{min-width:108px;display:inline-block}
+  /* META: UNA colonna, niente accavallamenti */
+  .sheet-text .meta{
+    grid-column:2; grid-row:2 / 4;
+    display:block !important;    /* forza 1 colonna */
+    margin:0; padding:0;
+  }
+  .sheet-text .meta li{
+    list-style:none;
+    display:block;                /* ogni elemento su riga propria */
+    white-space:normal;           /* consenti a ES/IT di andare a capo */
+    overflow:visible;             /* niente ellissi */
+    text-overflow:clip;
+    margin:0 0 4px;
+  }
+  .sheet-text .meta li:last-child{ margin-bottom:0; }
 
-      /* resto a tutta larghezza sotto */
-      .plot,.hook,.awards,.review,.cta-row,.trust{grid-column:1 / -1;margin-left:0}
+  .sheet-text .meta strong{
+    display:inline !important;    /* etichetta inline */
+    min-width:0 !important;       /* rimuove larghezze fisse */
+    margin-right:6px;
+  }
 
-      .awards{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:14px;margin-top:10px}
-      .award-item{width:92px;text-align:center}
-      .award-item img{height:66px;width:auto;display:block;margin:0 auto 6px}
-      .award-item p{font-size:.78rem;line-height:1.15;max-width:120px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    }
+  /* resto a tutta larghezza sotto */
+  .plot,.hook,.awards,.review,.cta-row,.trust{ grid-column:1 / -1; margin-left:0; }
+
+  .awards{
+    display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start;
+    gap:14px; margin-top:10px;
+  }
+  .award-item{ width:92px; text-align:center; }
+  .award-item img{ height:66px; width:auto; display:block; margin:0 auto 6px; }
+  .award-item p{
+    font-size:.78rem; line-height:1.15; max-width:120px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+}
+
 
     /* 📱 XS ≤360px — fallback centrato sotto */
     @media (max-width:360px){
