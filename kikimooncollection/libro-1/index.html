@@ -175,100 +175,91 @@
     gap:8px;
   }
 
-/* MOBILE STRETTO: cover sx, titolo+meta dx, trama & resto sotto */
+/* 📱 MOBILE STRETTO ≤520px — Cover a sinistra, titolo/meta a destra, resto sotto */
 @media (max-width:520px){
   .book-sheet{
-    display:grid;
-    grid-template-columns:118px 1fr;   /* cover | testo */
-    grid-auto-rows:auto;
-    column-gap:10px;
-    row-gap:8px;
-    align-items:start;
-    text-align:left;                   /* niente centrature indesiderate */
+    display:block;                 /* niente grid */
+    text-align:left;
   }
 
-  .cover-lg{
-    grid-column:1;
-    grid-row:1 / span 2;               /* occupa due righe a sinistra */
-    width:118px; height:auto; margin:0;
-    aspect-ratio:2/3; object-fit:cover;
-  }
-
-  /* permette ai figli di .sheet-text di diventare elementi della grid */
-  .sheet-text{ display:contents; }
-
-  /* titolo e meta a destra della cover */
-  .sheet-text h1{
-    grid-column:2; grid-row:1;
-    margin:0 0 4px; font-size:1.08rem; line-height:1.2;
-  }
-  .meta{
-    grid-column:2; grid-row:2;
-    margin:0 0 6px; font-size:.9rem; gap:8px;
-    justify-content:flex-start;
-  }
-
-  /* tutto il resto a tutta larghezza sotto */
-  .plot, .hook, .awards, .review, .cta-row, .trust{
-    grid-column:1 / -1;
-  }
-
-  /* badge allineati in alto e testo in 2 righe */
-  .awards{
-    justify-content:center;
-    align-items:flex-start;   /* allineamento uniforme in alto */
-    gap:14px;
-    margin-top:10px;
-  }
-  .award-item{ width:92px; text-align:center; }
-  .award-item img{ height:66px; width:auto; display:block; margin:0 auto 6px; }
-  .award-item p{ font-size:.78rem; line-height:1.15; white-space:normal; }
-
-  /* recensione e CTA comodi */
-  .review{ max-width:100%; margin-top:16px; }
-  .cta-row{ justify-content:center; gap:10px; }
-}
-
-/* XS extra piccoli: una colonna soltanto (fallback) */
-@media (max-width:360px){
-  .book-sheet{ grid-template-columns:1fr; }
-  .cover-lg{ grid-column:1; grid-row:auto; width:72%; margin:0 auto 8px; }
-}
-/* Fallback telefoni stretti (Z Flip, SE, ecc.)
-   Cover a sinistra, titolo+meta a destra, resto sotto */
-@media (max-width:520px){
-  .book-sheet{display:block}                  /* niente grid qui */
   .cover-lg{
     float:left;
     width:118px;
     height:auto;
-    margin:0 10px 8px 0;                      /* spazio a destra */
-    aspect-ratio:auto;                         /* evita stranezze */
+    margin:0 10px 8px 0;           /* spazio a destra della cover */
+    aspect-ratio:auto;             /* evita deformazioni */
   }
+
   /* Titolo e meta accanto alla cover */
   .sheet-text h1,
-  .sheet-text .meta{ margin-left:128px }
+  .sheet-text .meta{
+    margin-left:128px;             /* allineati a destra della cover */
+  }
 
   /* Tutto il resto va sotto, a tutta larghezza */
-  .plot, .hook, .awards, .review, .cta-row, .trust{
+  .plot,
+  .hook,
+  .awards,
+  .review,
+  .cta-row,
+  .trust{
     clear:both;
     margin-left:0;
   }
 
   /* Badge ordinati e allineati in alto */
   .awards{
-    display:flex; flex-wrap:wrap;
-    justify-content:center; align-items:flex-start;
-    gap:14px; margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:flex-start;
+    gap:14px;
+    margin-top:10px;
   }
-  .award-item{ width:92px; text-align:center }
-  .award-item img{ height:66px; width:auto; display:block; margin:0 auto 6px }
+
+  .award-item{
+    width:92px;
+    text-align:center;
+  }
+
+  .award-item img{
+    height:66px;
+    width:auto;
+    display:block;
+    margin:0 auto 6px;
+  }
+
   .award-item p{
-    font-size:.78rem; line-height:1.15;
-    max-width:120px; display:-webkit-box; -webkit-line-clamp:2;
-    -webkit-box-orient:vertical; overflow:hidden;
+    font-size:.78rem;
+    line-height:1.15;
+    max-width:120px;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  /* Recensione e CTA comodi */
+  .review{ max-width:100%; margin-top:16px; }
+  .cta-row{ justify-content:center; gap:10px; }
+}
+
+/* 📱 XS ≤360px — tutto centrato sotto (no float) */
+@media (max-width:360px){
+  .cover-lg{
+    float:none;
+    display:block;
+    width:72%;
+    margin:0 auto 8px;
+  }
+
+  .sheet-text h1,
+  .sheet-text .meta{
+    margin-left:0;
+    text-align:center;
   }
 }
+
   </style>
 
   <!-- Motore lingua -->
