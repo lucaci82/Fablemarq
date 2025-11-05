@@ -169,6 +169,76 @@
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
   }
 }
+/* ✅ 396→364 px: tre stemmi su una riga, senza wrap */
+@media (max-width:396px) and (min-width:364px){
+  .awards{
+    justify-content:center;
+    flex-wrap:nowrap;   /* niente ritorno a capo */
+    gap:10px;
+  }
+  .award-item{
+    width:100px;        /* 3x100 + gap = ci stiamo */
+    text-align:center;
+    flex:0 0 auto;
+  }
+  .award-item img{
+    height:60px;        /* ridotti leggermente */
+  }
+  .award-item p{
+    font-size:.72rem;
+    max-width:100px;
+    -webkit-line-clamp:1;   /* una riga per sicurezza */
+    line-clamp:1;
+  }
+}
+
+/* ✅ <362 px: una colonna centrata, testo a sinistra, tre stemmi in una riga */
+@media (max-width:361.98px){
+  .book-sheet{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto;
+    text-align:left;              /* testo allineato a sinistra */
+  }
+  .cover-lg{
+    grid-column:1;
+    grid-row:auto;
+    width:72%;
+    max-width:220px;
+    margin:0 auto 8px;            /* centrata */
+  }
+  .sheet-text h1{
+    text-align:center;            /* titolo al centro */
+  }
+  .sheet-text .meta{
+    text-align:center;            /* etichette centrate */
+  }
+  .sheet-text .meta li{
+    justify-content:center;
+  }
+
+  /* Stemmi: tutti su una riga anche qui */
+  .awards{
+    justify-content:center;
+    flex-wrap:nowrap;             /* una sola riga */
+    gap:8px;
+    margin-top:8px;
+  }
+  .award-item{
+    width:auto;
+    text-align:center;
+    flex:0 0 auto;
+  }
+  .award-item img{
+    height:54px;                  /* ancora un filo più piccoli */
+  }
+  .award-item p{
+    font-size:.7rem;
+    max-width:90px;
+    -webkit-line-clamp:1;         /* una riga per non andare a capo */
+    line-clamp:1;
+  }
+}
+
 
 
     /* 📱 XS ≤360px — fallback centrato sotto */
@@ -178,6 +248,249 @@
       .sheet-text h1{text-align:center}
       .sheet-text .meta li{justify-content:center}
     }
+    /* 📏 FIX responsivo finale — stemmi e layout stretti */
+
+/* 1️⃣ Da 364 a 396 px → tre stemmi su una riga */
+@media (max-width:396px) and (min-width:364px){
+  .awards{
+    justify-content:center !important;
+    flex-wrap:nowrap !important;
+    gap:8px !important;
+  }
+  .award-item{
+    width:92px !important;
+    flex:0 0 auto !important;
+  }
+  .award-item img{
+    height:62px !important;
+  }
+  .award-item p{
+    font-size:.7rem !important;
+    max-width:90px !important;
+    -webkit-line-clamp:1 !important;
+  }
+}
+
+/* 2️⃣ Sotto 362 px → una colonna centrata, tutto centrato ma testo sinistro */
+@media (max-width:362px){
+  .book-sheet{
+    grid-template-columns:1fr !important;
+    grid-template-rows:auto auto auto !important;
+    text-align:left !important;
+  }
+  .cover-lg{
+    grid-column:1 !important;
+    grid-row:auto !important;
+    width:72% !important;
+    max-width:220px !important;
+    margin:0 auto 10px !important;
+  }
+  .sheet-text h1{
+    text-align:center !important;
+    font-size:1rem !important;
+  }
+  .sheet-text .meta{
+    text-align:center !important;
+  }
+  .sheet-text .meta li{
+    justify-content:center !important;
+  }
+  .plot,.hook,.review,.cta-row,.trust{
+    text-align:left !important;
+  }
+
+  /* Stemmi tutti su una riga centrata e più piccoli */
+  .awards{
+    justify-content:center !important;
+    flex-wrap:nowrap !important;
+    gap:6px !important;
+    margin-top:8px !important;
+  }
+  .award-item{
+    width:80px !important;
+    flex:0 0 auto !important;
+    text-align:center !important;
+  }
+  .award-item img{
+    height:50px !important;
+  }
+  .award-item p{
+    font-size:.68rem !important;
+    max-width:80px !important;
+    -webkit-line-clamp:1 !important;
+  }
+}
+/* ⬇️ XS ≤365 px: cover → titolo → meta (in quest'ordine), allineati a sinistra */
+@media (max-width:365px){
+  .book-sheet{
+    grid-template-columns:1fr !important;
+    grid-auto-flow:row !important;
+    text-align:left !important;
+  }
+
+  /* 1) Copertina in alto */
+  .cover-lg{
+    grid-column:1 !important;
+    grid-row:1 !important;          /* prima riga */
+    width:72% !important;
+    max-width:220px !important;
+    margin:0 auto 10px !important;  /* centrata come immagine */
+  }
+
+  /* 2) Titolo sotto la cover */
+  .sheet-text h1{
+    grid-column:1 !important;
+    grid-row:2 !important;          /* seconda riga */
+    text-align:left !important;     /* richiesto: a sinistra come il resto */
+    font-size:1rem !important;
+    margin:0 0 6px !important;
+  }
+
+  /* 3) Meta sotto il titolo */
+  .sheet-text .meta{
+    grid-column:1 !important;
+    grid-row:3 !important;          /* terza riga */
+    display:block !important;
+    text-align:left !important;
+    margin:0 0 10px !important;
+    padding:0 !important;
+  }
+  .sheet-text .meta li{
+    display:block !important;
+    margin:0 0 6px !important;
+  }
+  .sheet-text .meta strong{
+    display:block !important;
+    color:var(--muted);
+    margin:0 0 2px !important;
+  }
+
+  /* Stemmi su una sola riga (se serve) */
+  .awards{
+    justify-content:center !important;
+    flex-wrap:nowrap !important;
+    gap:8px !important;
+  }
+  .award-item img{ height:50px !important; }
+  .award-item p{
+    font-size:.68rem !important;
+    max-width:80px !important;
+    -webkit-line-clamp:1 !important;
+    line-clamp:1 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   FIX header + card XS (≤365px)
+   ───────────────────────────────────────────── */
+
+/* 0) Robustezza generale: evita testi che escono */
+:where(h1, p, li, span){ overflow-wrap:break-word; word-break:normal; }
+
+/* 1) Header: non taglia il selettore lingua */
+@media (max-width:365px){
+  header .nav{ flex-wrap:wrap; gap:8px; }
+  header nav{ margin-left:auto; gap:8px; }
+  .lang-switch{
+    transform:scale(.92);               /* leggero shrink */
+    transform-origin:right center;
+    padding:3px 5px;
+  }
+  .lang-switch button{ padding:5px 8px; font-size:.9rem; }
+}
+
+/* 2) Card: stessi margini, niente “restringimento” */
+@media (max-width:365px){
+  .container{ padding-inline:14px !important; }   /* margine costante ai lati */
+  .book-sheet{
+    box-sizing:border-box;         /* padding incluso nella larghezza */
+    width:100%;                    /* riempi il container, non meno */
+    margin:12px 0 0 !important;
+    padding:14px !important;       /* non cambia al ridursi della viewport */
+    grid-template-columns:1fr !important;
+    grid-auto-flow:row !important;
+    text-align:left !important;
+  }
+
+  /* Ordine: cover → titolo → meta (sotto la cover) */
+  .cover-lg{
+    grid-column:1 !important; grid-row:1 !important;
+    width:72% !important; max-width:220px !important;
+    margin:0 auto 10px !important;
+  }
+  .sheet-text h1{
+    grid-column:1 !important; grid-row:2 !important;
+    text-align:left !important; font-size:1rem !important; margin:0 0 6px !important;
+  }
+  .sheet-text .meta{
+    grid-column:1 !important; grid-row:3 !important;
+    display:block !important; text-align:left !important; margin:0 0 10px !important;
+  }
+  .sheet-text .meta li{
+    display:block !important; margin:0 0 6px !important;
+  }
+  .sheet-text .meta strong{ display:block !important; color:var(--muted); margin:0 0 2px !important; }
+
+  /* Stemmi: una sola riga centrata, dimensione contenuta (non causano shrink) */
+  .awards{ justify-content:center !important; flex-wrap:nowrap !important; gap:8px !important; }
+  .award-item{ flex:0 0 auto !important; width:auto !important; text-align:center !important; }
+  .award-item img{ height:50px !important; }
+  .award-item p{ font-size:.68rem !important; max-width:80px !important; -webkit-line-clamp:1 !important; line-clamp:1 !important; }
+}
+/* 🩹 FIX finale — testo stemmi leggibile sotto i 397px */
+@media (max-width:397px){
+  .award-item p{
+    -webkit-line-clamp: unset !important;  /* rimuove il blocco a una riga */
+    line-clamp: unset !important;
+    display:block !important;              /* testo normale */
+    white-space:normal !important;         /* consente il ritorno a capo */
+    overflow:visible !important;
+    text-overflow:clip !important;
+    max-width:100px !important;            /* mantiene la larghezza contenuta */
+  }
+}
+/* 🧭 Scheda più larga: riduce i margini laterali del container */
+
+/* Desktop */
+.container{
+  width:min(1200px,96vw) !important;  /* più ampia del vecchio 92vw */
+  padding-inline:24px !important;     /* meno bordo laterale */
+}
+
+/* Tablet */
+@media (max-width:820px){
+  .container{
+    width:96vw !important;
+    padding-inline:18px !important;
+  }
+}
+
+/* Mobile */
+@media (max-width:520px){
+  .container{
+    width:98vw !important;   /* quasi pieno schermo */
+    padding-inline:12px !important;
+  }
+  .book-sheet{
+    width:100% !important;   /* occupa tutta la larghezza disponibile */
+    padding-inline:16px !important;
+  }
+}
+
+/* XS */
+@media (max-width:365px){
+  .container{
+    width:99vw !important;
+    padding-inline:10px !important;
+  }
+  .book-sheet{
+    width:100% !important;
+    padding-inline:14px !important;
+  }
+}
+
+
+
   </style>
 
   <!-- Motore lingua -->
