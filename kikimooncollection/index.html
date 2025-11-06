@@ -6,8 +6,13 @@
 <title>Kiki Moon Collection — Fablemarq</title>
 <meta name="description" content="Continua l'avventura: acquista subito il prossimo libro della saga Kiki Moon." />
 <meta name="theme-color" content="#0b1222" />
+
+<!-- Se devi cambiare la root degli asset, modificala qui -->
+<meta name="asset-root" content="../assets" />
+
+<!-- Questi due vengono riallineati a runtime, intanto metto valori sensati -->
 <link rel="icon" href="../assets/logo-fablemarq.png" />
-<link rel="preload" as="image" href="../assets/cover2.jpg" />
+<link rel="preload" as="image" href="../assets/it/cover2.webp" />
 
 <style>
   :root{
@@ -50,7 +55,7 @@
     display:inline-flex;align-items:center;justify-content:center;
     min-height:56px;padding:14px 28px;border-radius:12px;
     background:#000;border:2px solid var(--gold);
-    color:var(--orange);text-transform:lowercase;font-weight:800;font-size:1rem;letter-spacing:.2px;
+    color:#FF9900;text-transform:lowercase;font-weight:800;font-size:1rem;letter-spacing:.2px;
     box-shadow:0 6px 18px rgba(0,0,0,.25);
     transition:box-shadow .15s ease,transform .12s ease,border-color .15s ease
   }
@@ -87,6 +92,20 @@
 </style>
 
 <script>
+/* ============ ASSET ROOT SOLO WEBP ============ */
+const ASSET_ROOT = (()=>{
+  const meta = document.querySelector('meta[name="asset-root"]');
+  if (meta?.content) return meta.content.replace(/\/+$/,'');
+  // fallback auto se non usi il meta
+  const p = location.pathname.toLowerCase().replace(/\\/g,'/');
+  if (/(^|\/)libro-\d+\//.test(p)) return '../../assets';
+  if (/(^|\/)(kikimooncollection|kiki-moon-collection|collection)\//.test(p)) return '../assets';
+  return './assets';
+})();
+
+/* =========================
+   Lingua e store
+   ========================= */
 function normLang(l){const s=(l||'').toLowerCase();if(s.startsWith('it'))return'it';if(s.startsWith('es'))return'es';return'en';}
 (function initLang(){
   const qs=new URLSearchParams(location.search);
@@ -107,7 +126,7 @@ function suggestStoreFromLang(lang){
   if(l.includes('fr'))return'FR';
   if(l.includes('de'))return'DE';
   if(l.includes('gb')||l.includes('uk'))return'GB';
-  if(l.startsWith('es')){if(l.includes('-mx'))return'MX';if(l.includes('-co'))return'CO';return'ES';}
+  if(l.startsWith('es')){ if(l.includes('-mx'))return'MX'; if(l.includes('-co'))return'CO'; return'ES'; }
   return'US';
 }
 (function initStoreOnce(){
@@ -116,41 +135,86 @@ function suggestStoreFromLang(lang){
   localStorage.setItem('amz_cc',cc);
 })();
 
-/* Slug tab per riscrivere i link delle card */
-const BOOK_SLUGS={
-  b1:'libro-1/index.html',
-  b2:'libro-2/index.html',
-  b3:'libro-3/index.html',
-  b4:'libro-4/index.html',
-  b5:'libro-5/index.html',
-  b6:'libro-6/index.html'
-};
+/* =========================
+   Dati multilingua e cover
+   ========================= */
 
+/* Slug pagine libro per riscrivere i link delle card */
+const BOOK_SLUGS={ b1:'libro-1/index.html', b2:'libro-2/index.html', b3:'libro-3/index.html', b4:'libro-4/index.html', b5:'libro-5/index.html', b6:'libro-6/index.html' };
+
+/* Numero libro: b1→1 ecc. */
+const BOOK_NUM={ b1:1, b2:2, b3:3, b4:4, b5:5, b6:6 };
+
+/* === SOLO WEBP: {ASSET_ROOT}/{lang}/cover{N}.webp === */
+function coverPath(lang, code){
+  const n = BOOK_NUM[code] || 1;
+  return `${ASSET_ROOT}/${lang}/cover${n}.webp`;
+}
+
+/* Imposta immagine: solo WebP, nessun fallback JPG */
+function setCoverIMG(imgEl, lang, code, title){
+  if(!imgEl) return;
+  const p = coverPath(lang, code);
+  imgEl.src = p;
+  imgEl.removeAttribute('srcset');
+  imgEl.removeAttribute('sizes');
+  if(title) imgEl.alt = title;
+}
+
+/* Preload immagine hero coerente */
+function updateHeroPreload(lang, code){
+  const link=document.querySelector('link[rel="preload"][as="image"]');
+  if (link) link.href = coverPath(lang, code);
+}
+
+/* Sistema logo/favicon rispetto alla root */
+function fixStaticAssets(){
+  const logo = document.querySelector('.brand img');
+  if (logo) logo.src = `${ASSET_ROOT}/logo-fablemarq.webp`; // se hai solo .png, cambia qui
+  const fav = document.querySelector('link[rel="icon"]');
+  if (fav) fav.href = `${ASSET_ROOT}/logo-fablemarq.png`;   // favicon spesso resta png
+}
+
+/* Testi localizzati */
 const I18N={
-  it:{buy:"acquista su amazon",metaBuy:"Acquisto e resi gestiti da Amazon.",
-      benefits:["80 pagine illustrate","per bambini 6–10 anni","stampa di qualità"],
-      hooks:{b2:"Snarfel è tornato. E questa volta il segreto è più grande della magia.",b3:"Il tempo dorme. Kiki deve risvegliarlo prima che Moon si fermi."},
-      titles:{b2:"Libro II — Il Segreto di Snarfel",b3:"Libro III — La Notte Infinita"}},
-  en:{buy:"buy on amazon",metaBuy:"Purchase and returns handled by Amazon.",
-      benefits:["80 illustrated pages","for kids aged 6–10","high-quality print"],
-      hooks:{b2:"Snarfel is back. This time the secret is bigger than magic.",b3:"Time is asleep. Kiki must wake it before Moon stops."},
-      titles:{b2:"Book II — Snarfel’s Secret",b3:"Book III — The Endless Night"}},
-  es:{buy:"comprar en amazon",metaBuy:"Compra y devoluciones gestionadas por Amazon.",
-      benefits:["80 páginas ilustradas","para niños de 6 a 10 años","impresión de alta calidad"],
-      hooks:{b2:"Snarfel ha vuelto. Y esta vez el secreto es más grande que la magia.",b3:"El tiempo duerme. Kiki debe despertarlo antes de que Moon se detenga."},
-      titles:{b2:"Libro II — El Secreto de Snarfel",b3:"Libro III — La Noche Infinita"}}
+  it:{
+    buy:"acquista su amazon", metaBuy:"Acquisto e resi gestiti da Amazon.",
+    benefits:["80 pagine illustrate","per bambini 6–10 anni","stampa di qualità"],
+    hooks:{ b2:"Snarfel è tornato. E questa volta il segreto è più grande della magia.", b3:"Il tempo dorme. Kiki deve risvegliarlo prima che Moon si fermi." },
+    titles:{ b1:"Libro I — La Stella Perduta", b2:"Libro II — Il Segreto di Snarfel", b3:"Libro III — La Notte Infinita" },
+    metas:{  b1:"L’inizio dell’avventura",        b2:"Il segreto si rivela",            b3:"Il tempo si è fermato" }
+  },
+  en:{
+    buy:"buy on amazon", metaBuy:"Purchase and returns handled by Amazon.",
+    benefits:["80 illustrated pages","for kids aged 6–10","high-quality print"],
+    hooks:{ b2:"Snarfel is back. This time the secret is bigger than magic.", b3:"Time is asleep. Kiki must wake it before Moon stops." },
+    titles:{ b1:"Book I — The Lost Star", b2:"Book II — Snarfel’s Secret", b3:"Book III — The Endless Night" },
+    metas:{  b1:"The beginning of the journey", b2:"The secret unfolds",     b3:"Time has stopped" }
+  },
+  es:{
+    buy:"comprar en amazon", metaBuy:"Compra y devoluciones gestionadas por Amazon.",
+    benefits:["80 páginas ilustradas","para niños de 6 a 10 años","impresión de alta calidad"],
+    hooks:{ b2:"Snarfel ha vuelto. Y esta vez el secreto es más grande que la magia.", b3:"El tiempo duerme. Kiki debe despertarlo antes de que Moon se detenga." },
+    titles:{ b1:"Libro I — La Estrella Perdida", b2:"Libro II — El Secreto de Snarfel", b3:"La Noche Infinita" },
+    metas:{  b1:"El inicio de la aventura",       b2:"El secreto se revela",             b3:"El tiempo se detuvo" }
+  }
 };
 
+/* Libri successivi per hero + ASIN (inserisci gli ASIN reali) */
 const NEXT_BOOK={
-  b1:{code:'b2',slug:'libro-2/index.html',cover:'../assets/cover2.jpg',
+  b1:{code:'b2',slug:'libro-2/index.html',
       title:{it:'Libro II — Il Segreto di Snarfel',en:'Book II — Snarfel’s Secret',es:'Libro II — El Secreto de Snarfel'},
       asin:{it:'ASIN_LIBRO2_IT',en:'ASIN_LIBRO2_EN',es:'ASIN_LIBRO2_ES'}},
-  b2:{code:'b3',slug:'libro-3/index.html',cover:'../assets/cover3.jpg',
+  b2:{code:'b3',slug:'libro-3/index.html',
       title:{it:'Libro III — La Notte Infinita',en:'Book III — The Endless Night',es:'Libro III — La Noche Infinita'},
       asin:{it:'ASIN_LIBRO3_IT',en:'ASIN_LIBRO3_EN',es:'ASIN_LIBRO3_ES'}}
 };
 
+/* =========================
+   Rendering pagina
+   ========================= */
 function L(){return localStorage.getItem('lang')||(document.documentElement.lang||'en');}
+
 function buildAmazonUrl(cc,seriesCode,asin,lang){
   const tld=AMZ_TLD[cc]||'com';
   const q=new URLSearchParams(location.search);
@@ -163,14 +227,16 @@ function renderPage(){
   const lang=L();document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
   const dict=I18N[lang]||I18N.en;
 
-  /* Origine dal QR: src=b1|b2|b3... */
   const urlParams=new URLSearchParams(location.search);
   const src=urlParams.get('src')||'b1';
   const nb=NEXT_BOOK[src]||NEXT_BOOK.b1;
 
-  /* HERO */
-  const h=document.getElementById('hero');
-  const coverImg=h.querySelector('img.cover');coverImg.src=nb.cover;coverImg.alt=nb.title[lang];
+  /* HERO: cover localizzata solo WebP */
+  const heroTitle=(I18N[lang]?.titles?.[nb.code]) || nb.title?.[lang] || '';
+  const heroImg=document.querySelector('#hero img.cover');
+  setCoverIMG(heroImg, lang, nb.code, heroTitle);
+  updateHeroPreload(lang, nb.code);
+
   function withParams(path){
     const u=new URL(path,location.href);
     u.searchParams.set('lang',lang);
@@ -180,6 +246,7 @@ function renderPage(){
   }
   const coverA=document.getElementById('coverLink');if(coverA&&nb.slug)coverA.href=withParams(nb.slug);
 
+  /* Titolo, hook, benefit */
   const full=dict.titles[nb.code]||nb.title[lang];const parts=full.split('—').map(s=>s.trim());
   document.getElementById('titleLine1').textContent=parts[0]||full;
   document.getElementById('titleLine2').textContent=parts[1]||"";
@@ -195,22 +262,39 @@ function renderPage(){
   const mainBtn=document.getElementById('buyNow');const stickyBtn=document.getElementById('buyNowSticky');
   if(mainBtn)mainBtn.href=url;if(stickyBtn)stickyBtn.href=url;
 
-  /* GRIGLIA: nascondi il libro che è in hero e riscrivi i link con lang + src */
+  /* GRIGLIA: nascondi il libro in hero, riscrivi href e localizza immagini/titoli/meta */
   const grid=document.getElementById('gridBooks');
   if(grid){
     const items=Array.from(grid.querySelectorAll('li[data-book]'));
     items.forEach(li=>{li.style.display=li.dataset.book===nb.code?'none':'';});
-    // Riscrivi href di tutte le card in base alla lingua e alla sorgente
+
     items.forEach(li=>{
       const code=li.dataset.book;
       const a=li.querySelector('a.card-link');
+      const img=li.querySelector('img');
+      const cap=li.querySelector('.caption');
+      const mt =li.querySelector('.meta');
+
+      // href
       const slug=BOOK_SLUGS[code];
       if(a&&slug){
-        const rewritten=withParams(slug);
-        a.setAttribute('href',rewritten);
+        const u=new URL(slug,location.href);
+        u.searchParams.set('lang',lang);
+        if(urlParams.get('src'))u.searchParams.set('src',urlParams.get('src'));
+        a.setAttribute('href', u.pathname + '?' + u.searchParams.toString());
       }
+
+      // cover solo WebP
+      const t = I18N[lang]?.titles?.[code] || (img?.alt||'');
+      if(img) setCoverIMG(img, lang, code, t);
+
+      // caption + meta
+      if(cap && t) cap.textContent=t;
+      const m = I18N[lang]?.metas?.[code];
+      if(mt && m) mt.textContent=m;
     });
-    // Ordine desiderato
+
+    // Ordine griglia
     const ORDER_MAP={
       b1:['b2','b3','b4','b5','b6'],
       b2:['b3','b1','b4','b5','b6'],
@@ -230,6 +314,7 @@ function renderPage(){
   initStickyObserver();
 }
 
+/* Sticky CTA su mobile */
 function initStickyObserver(){
   const wrap=document.getElementById('stickyCta');const btn=document.getElementById('buyNow');
   if(!wrap||!btn)return;
@@ -237,8 +322,7 @@ function initStickyObserver(){
   function attach(){
     if(!mq.matches){wrap.style.display='none';return;}
     const io=new IntersectionObserver((entries)=>{
-      const visible=entries[0].isIntersecting;
-      wrap.style.display=visible?'none':'block';
+      wrap.style.display=entries[0].isIntersecting?'none':'block';
     },{threshold:0.01});
     io.observe(btn);
   }
@@ -246,7 +330,16 @@ function initStickyObserver(){
   attach();
 }
 
-document.addEventListener('DOMContentLoaded',renderPage);
+/* Bootstrap */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // logo + favicon
+  const logo = document.querySelector('.brand img');
+  if (logo) logo.src = `${ASSET_ROOT}/logo-fablemarq.webp`; // cambia in .png se non hai la webp del logo
+  const fav = document.querySelector('link[rel="icon"]');
+  if (fav) fav.href = `${ASSET_ROOT}/logo-fablemarq.png`;
+
+  renderPage();
+});
 document.addEventListener('click',(e)=>{
   const b=e.target.closest('.lang-switch button[data-lang]');if(!b)return;
   e.preventDefault();window.__setLang&&window.__setLang(b.dataset.lang);
@@ -256,7 +349,9 @@ document.addEventListener('click',(e)=>{
 <body>
 <header>
   <div class="container nav">
-    <a class="brand" href="../index.html"><img src="../assets/logo-fablemarq.png" alt="Fablemarq"></a>
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo-fablemarq.webp" alt="Fablemarq" width="128" height="36" decoding="async">
+    </a>
     <nav>
       <div class="lang-switch" aria-label="Language">
         <button data-lang="en">EN</button>
@@ -270,7 +365,8 @@ document.addEventListener('click',(e)=>{
 <main class="container">
   <section class="hero" id="hero">
     <a id="coverLink" class="cover-link" href="#" title="Anteprima" aria-label="Apri anteprima">
-      <img class="cover" src="../assets/cover2.jpg" alt="Copertina — anteprima" loading="eager" />
+      <!-- Solo WebP, riscritto via JS -->
+      <img class="cover" src="../assets/it/cover2.webp" alt="Copertina — anteprima" loading="eager" />
     </a>
     <div class="copy">
       <h1 class="hero-title">
@@ -301,33 +397,33 @@ document.addEventListener('click',(e)=>{
   <h2 class="sec-title">Altri libri della saga</h2>
   <ul class="posters" id="gridBooks">
     <li data-book="b1">
-      <a class="card-link" href="libro-1/index.html?lang=it"><img src="../assets/cover1.jpg" alt="Libro I" loading="lazy"></a>
+      <a class="card-link" href="#"><img src="../assets/it/cover1.webp" alt="Libro I" loading="lazy"></a>
       <p class="caption">Libro I — La Stella Perduta</p>
       <p class="meta">L’inizio dell’avventura</p>
     </li>
     <li data-book="b2">
-      <a class="card-link" href="libro-2/index.html?lang=it"><img src="../assets/cover2.jpg" alt="Libro II" loading="lazy"></a>
+      <a class="card-link" href="#"><img src="../assets/it/cover2.webp" alt="Libro II" loading="lazy"></a>
       <p class="caption">Libro II — Il Segreto di Snarfel</p>
       <p class="meta">Il segreto si rivela</p>
     </li>
     <li data-book="b3">
-      <a class="card-link" href="libro-3/index.html?lang=it"><img src="../assets/cover3.jpg" alt="Libro III" loading="lazy"></a>
+      <a class="card-link" href="#"><img src="../assets/it/cover3.webp" alt="Libro III" loading="lazy"></a>
       <p class="caption">Libro III — La Notte Infinita</p>
       <p class="meta">Il tempo si è fermato</p>
     </li>
-    <!-- opzionali futuri -->
+    <!-- Futuri -->
     <li data-book="b4" style="display:none">
-      <a class="card-link" href="libro-4/index.html?lang=it"><img src="../assets/cover4.jpg" alt="Libro IV" loading="lazy"></a>
+      <a class="card-link" href="#"><img src="../assets/it/cover4.webp" alt="Libro IV" loading="lazy"></a>
       <p class="caption">Libro IV</p>
       <p class="meta">Prossimamente</p>
     </li>
     <li data-book="b5" style="display:none">
-      <a class="card-link" href="libro-5/index.html?lang=it"><img src="../assets/cover5.jpg" alt="Libro V" loading="lazy"></a>
+      <a class="card-link" href="#"><img src="../assets/it/cover5.webp" alt="Libro V" loading="lazy"></a>
       <p class="caption">Libro V</p>
       <p class="meta">Prossimamente</p>
     </li>
     <li data-book="b6" style="display:none">
-      <a class="card-link" href="libro-6/index.html?lang=it"><img src="../assets/cover6.jpg" alt="Libro VI" loading="lazy"></a>
+      <a class="card-link" href="#"><img src="../assets/it/cover6.webp" alt="Libro VI" loading="lazy"></a>
       <p class="caption">Libro VI</p>
       <p class="meta">Prossimamente</p>
     </li>
