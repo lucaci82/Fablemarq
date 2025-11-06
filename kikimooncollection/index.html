@@ -4,30 +4,48 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kiki Moon Collection — Fablemarq</title>
-<meta name="description" content="La saga illustrata Kiki Moon: poster dei libri e accesso alle pagine dedicate." />
+<meta name="description" content="Continua l'avventura: acquista subito il prossimo libro della saga Kiki Moon." />
 <meta name="theme-color" content="#0b1222" />
 <link rel="icon" href="../assets/logo-fablemarq.png" />
 
 <style>
-  :root{--bg:#0b1222;--ink:#e9edf6;--gold:#E7C25F}
-  body{background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0}
-  .container{width:min(1100px,92vw);margin:0 auto;padding:24px 0}
+  :root{--bg:#0b1222;--ink:#e9edf6;--muted:#9aa3b2;--gold:#E7C25F}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  a{text-decoration:none;color:inherit}
+  .container{width:min(1100px,92vw);margin:0 auto;padding:20px 0}
   header .nav{display:flex;align-items:center;justify-content:space-between}
-  .brand img{height:38px}
-  .h1{font-size:clamp(26px,5vw,42px);font-weight:800;margin:8px 0 20px}
-  .posters{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;list-style:none;padding:0;margin:0}
-  .posters li{background:rgba(231,194,95,.06);border:1px solid rgba(231,194,95,.14);border-radius:16px;padding:14px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.04)}
-  .posters img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:12px;background:#0f1730}
-  .caption{margin:8px 0 10px;font-weight:800;font-size:.95rem;color:#ffe8b3;min-height:2.4em}
-  .hidden{display:none}
+  .brand img{height:36px}
   .lang-switch{display:inline-flex;gap:6px;margin-left:14px;padding:4px 6px;border:1px solid rgba(231,194,95,.35);border-radius:14px;background:rgba(231,194,95,.10)}
   .lang-switch button{all:unset;cursor:pointer;padding:6px 10px;border-radius:10px;font-weight:700;color:#ffe8b3}
   .lang-switch button.active{background:rgba(231,194,95,.22);box-shadow:0 4px 12px rgba(231,194,95,.18)}
-  .center{text-align:center;margin-top:20px}
-  .btn{padding:12px 22px;font-size:1.05rem;border:1px solid rgba(231,194,95,.45);background:rgba(231,194,95,.08);border-radius:12px;color:#ffe8b3;font-weight:800;cursor:pointer}
+  /* HERO */
+  .hero{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;align-items:center;margin:14px 0 18px;padding:18px;border-radius:18px;background:rgba(231,194,95,.06);border:1px solid rgba(231,194,95,.14);box-shadow:0 10px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.04)}
+  .hero .cover{aspect-ratio:2/3;border-radius:14px;object-fit:cover;width:100%;background:#0f1730;border:1px solid rgba(231,194,95,.16)}
+  .hero h1{margin:0 0 6px;font-size:clamp(22px,4.4vw,40px);font-weight:900;letter-spacing:.2px}
+  .hero p.hook{margin:6px 0 12px;color:#ffe8b3;font-style:italic}
+  .cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:12px;border:1px solid rgba(231,194,95,.55);background:rgba(231,194,95,.10);color:#ffe8b3;font-weight:900;box-shadow:0 6px 18px rgba(231,194,95,.12)}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(231,194,95,.18)}
+  .trust{font-size:.92rem;color:#cfd3e0;opacity:.95}
+  .rating{display:flex;align-items:center;gap:8px;color:#E7C25F}
+  .rating .stars{letter-spacing:2px}
+  .badge{font-size:.85rem;color:#cfd3e0;opacity:.95}
+  /* POSTERS GRID */
+  .sec-title{margin:18px 0 10px;font-size:1rem;color:#cfd3e0;opacity:.9}
+  .posters{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;list-style:none;padding:0;margin:0}
+  .posters li{background:rgba(231,194,95,.06);border:1px solid rgba(231,194,95,.14);border-radius:16px;padding:12px;text-align:center}
+  .posters img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:12px;background:#0f1730}
+  .caption{margin:8px 0 4px;font-weight:800;font-size:.95rem;color:#ffe8b3}
+  .meta{margin:0;font-size:.85rem;color:#9aa3b2}
+  /* MOBILE */
+  @media (max-width:820px){ .hero{grid-template-columns:1fr;gap:14px} .hero .cover{max-width:360px;margin:0 auto} }
 </style>
 
 <script>
+/* =========================
+   LINGUA UI (IT/EN/ES)
+========================= */
 (function(){
   function normLang(l){ const s=(l||'').toLowerCase(); if(s.startsWith('it'))return'it'; if(s.startsWith('es'))return'es'; return'en'; }
   const qs=new URLSearchParams(location.search);
@@ -36,30 +54,185 @@
   const L=normLang(urlL||saved||nav);
   document.documentElement.lang=L; localStorage.setItem('lang',L); window.PREFERRED_LANG=L;
   if(urlL){ const u=new URL(location.href); u.searchParams.delete('lang'); history.replaceState({},'',u); }
-
   window.__setLang=function(newL){
     const L2=normLang(newL);
     document.documentElement.lang=L2; localStorage.setItem('lang',L2); window.PREFERRED_LANG=L2;
-    document.dispatchEvent(new CustomEvent('lang:changed',{detail:{lang:L2}}));
     document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active', b.dataset.lang===L2));
     if(typeof window.applyI18n==='function') window.applyI18n(L2);
-    const q=new URLSearchParams(location.search);
-    document.querySelectorAll('a[href^="./"], a[href^="."], a[href^="#"], a.card-link, a.brand').forEach(a=>{
-      try{
-        const u=new URL(a.getAttribute('href'),location.href);
-        u.searchParams.set('lang',L2);
-        if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
-        a.href=u.pathname+'?'+u.searchParams.toString();
-      }catch(_){}
-    });
+    propagateLangToLinks(L2);
+    // aggiorna CTA con ASIN della lingua, store invariato
+    updateCTA();
   };
 })();
+
+/* =========================
+   STORE AMAZON (QR unico)
+   Scelto una volta dalla lingua browser e salvato.
+========================= */
+const AMZ_TLD = { IT:'it', ES:'es', FR:'fr', DE:'de', GB:'co.uk', US:'com', CA:'ca', MX:'com.mx', CO:'com.co' };
+
+function suggestStoreFromLang(lang){
+  const l=(lang||navigator.language||'en').toLowerCase();
+  if(l.includes('-ca')) return 'CA';
+  if(l.includes('it')) return 'IT';
+  if(l.includes('fr')) return 'FR';
+  if(l.includes('de')) return 'DE';
+  if(l.includes('gb')||l.includes('uk')) return 'GB';
+  if(l.startsWith('es')){ if(l.includes('-mx')) return 'MX'; if(l.includes('-co')) return 'CO'; return 'US'; }
+  return 'US';
+}
+
+(function initStoreOnce(){
+  const saved=localStorage.getItem('amz_cc');
+  if(saved) return;
+  const lang=(navigator.languages&&navigator.languages[0])||navigator.language;
+  const cc=suggestStoreFromLang(lang);
+  localStorage.setItem('amz_cc', cc);
+})();
+
+/* =========================
+   I18N copy
+========================= */
+const I18N = {
+  it:{
+    title:"Kiki Moon Collection",
+    heroLine:(t)=>`L’avventura continua: ${t}`,
+    buy:"Acquista ora su Amazon",
+    hook_b2:"Snarfel è tornato. E questa volta il segreto è più grande della magia.",
+    hook_b3:"Il tempo dorme. Kiki deve risvegliarlo prima che Moon si fermi.",
+    gridTitle:"Altri libri della saga",
+    metaBuy:"Acquisto e resi gestiti da Amazon."
+  },
+  en:{
+    title:"Kiki Moon Collection",
+    heroLine:(t)=>`The adventure continues: ${t}`,
+    buy:"Buy now on Amazon",
+    hook_b2:"Snarfel is back. This time the secret is bigger than magic.",
+    hook_b3:"Time is asleep. Kiki must wake it before Moon stops.",
+    gridTitle:"More from the saga",
+    metaBuy:"Purchase and returns handled by Amazon."
+  },
+  es:{
+    title:"Colección Kiki Moon",
+    heroLine:(t)=>`La aventura continúa: ${t}`,
+    buy:"Comprar ahora en Amazon",
+    hook_b2:"Snarfel ha vuelto. Y esta vez el secreto es más grande que la magia.",
+    hook_b3:"El tiempo duerme. Kiki debe despertarlo antes de que Moon se detenga.",
+    gridTitle:"Otros libros de la saga",
+    metaBuy:"Compra y devoluciones gestionadas por Amazon."
+  }
+};
+
+/* =========================
+   Routing “prossimo libro” da QR
+   src=b1 → promuovi Libro II
+   src=b2 → promuovi Libro III
+========================= */
+const NEXT_BOOK = {
+  b1: {
+    // Libro II
+    slug: 'libro-2/index.html',
+    cover: '../assets/cover2.jpg',
+    title: { it:'Libro II — Il Segreto di Snarfel', en:'Book II — Snarfel’s Secret', es:'Libro II — El Secreto de Snarfel' },
+    hookKey: 'hook_b2',
+    seriesCode: 'b2',
+    asinByLang: { it:'ASIN_LIBRO2_IT', en:'ASIN_LIBRO2_EN', es:'ASIN_LIBRO2_ES' }
+  },
+  b2: {
+    // Libro III
+    slug: 'libro-3/index.html',
+    cover: '../assets/cover3.jpg',
+    title: { it:'Libro III — La Notte Infinita', en:'Book III — The Endless Night', es:'Libro III — La Noche Infinita' },
+    hookKey: 'hook_b3',
+    seriesCode: 'b3',
+    asinByLang: { it:'ASIN_LIBRO3_IT', en:'ASIN_LIBRO3_EN', es:'ASIN_LIBRO3_ES' }
+  }
+};
+
+/* =========================
+   Helpers
+========================= */
+function currentLang(){ return localStorage.getItem('lang') || (document.documentElement.lang||'en'); }
+
+function propagateLangToLinks(lang){
+  const q=new URLSearchParams(location.search);
+  document.querySelectorAll('a.card-link, a.brand, a.deep').forEach(a=>{
+    try{
+      const u=new URL(a.getAttribute('href'), location.href);
+      u.searchParams.set('lang', lang);
+      if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
+      a.href = u.pathname + (u.search?('?'+u.searchParams.toString()):'');
+    }catch(_){}
+  });
+}
+
+function flagForStore(cc){
+  // Emoji flag approssimative per feedback visivo store
+  const m={IT:'🇮🇹',ES:'🇪🇸',FR:'🇫🇷',DE:'🇩🇪',GB:'🇬🇧',US:'🇺🇸',CA:'🇨🇦',MX:'🇲🇽',CO:'🇨🇴'};
+  return m[cc] || '🌍';
+}
+
+function buildAmazonUrl(cc, seriesCode, asin, lang){
+  const tld = AMZ_TLD[cc] || 'com';
+  const q = new URLSearchParams(location.search);
+  const medium = `${seriesCode}_${lang}`; // es. b2_it
+  const utm = `utm_source=qr&utm_medium=${medium}&utm_campaign=readthrough`;
+  const extra = q.get('src') ? `&src=${encodeURIComponent(q.get('src'))}` : '';
+  return `https://www.amazon.${tld}/dp/${asin}?${utm}${extra}`;
+}
+
+/* =========================
+   Render pagina
+========================= */
+function renderPage(){
+  const qs=new URLSearchParams(location.search);
+  const src=qs.get('src'); // da quale libro arriva il QR
+  const L=currentLang(); const t=I18N[L]||I18N.en;
+
+  // Header/lang
+  document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active', b.dataset.lang===L));
+  document.querySelector('h1[data-i18n="title"]').textContent=t.title;
+
+  // Decidi quale next-book mostrare (default: Libro II)
+  const nb = NEXT_BOOK[src] || NEXT_BOOK.b1;
+
+  // HERO
+  const hero=document.getElementById('hero');
+  hero.querySelector('img.cover').src = nb.cover;
+  hero.querySelector('img.cover').alt = nb.title[L];
+  hero.querySelector('[data-bind="title"]').textContent = t.heroLine(nb.title[L]);
+  hero.querySelector('[data-bind="hook"]').textContent = t[nb.hookKey];
+
+  // CTA
+  const cc = localStorage.getItem('amz_cc') || 'US';
+  const asin = nb.asinByLang[L] || nb.asinByLang.en;
+  const url = buildAmazonUrl(cc, nb.seriesCode, asin, L);
+  const buyBtn = document.getElementById('buyNow');
+  buyBtn.href = url;
+  buyBtn.querySelector('.store-flag').textContent = flagForStore(cc);
+  document.getElementById('buyMeta').textContent = t.metaBuy;
+
+  // Griglia altri libri (link con lang/src propagati)
+  propagateLangToLinks(L);
+}
+
+/* I18N switch click */
+document.addEventListener('click',(e)=>{
+  const b=e.target.closest('.lang-switch button[data-lang]'); if(!b) return;
+  e.preventDefault(); window.__setLang && window.__setLang(b.dataset.lang);
+});
+
+/* update CTA quando cambia lingua */
+function updateCTA(){ renderPage(); }
+
+/* DOM READY */
+document.addEventListener('DOMContentLoaded', renderPage);
 </script>
 </head>
 <body>
 <header>
   <div class="container nav">
-    <a class="brand" href="../index.html"><img src="../assets/logo-fablemarq.png" alt="Fablemarq"></a>
+    <a class="brand deep" href="../index.html"><img src="../assets/logo-fablemarq.png" alt="Fablemarq"></a>
     <nav>
       <div class="lang-switch" aria-label="Language">
         <button data-lang="en">EN</button>
@@ -70,93 +243,43 @@
   </div>
 </header>
 
-<main id="main" class="container section">
-  <h1 class="h1" data-i18n="title">Kiki Moon Collection</h1>
+<main class="container">
+  <!-- HERO: prossimo libro in evidenza -->
+  <section class="hero" id="hero">
+    <img class="cover" src="../assets/cover2.jpg" alt="Next book">
+    <div class="copy">
+      <h1 data-bind="title">L’avventura continua</h1>
+      <p class="hook" data-bind="hook">Snarfel è tornato…</p>
+      <div class="cta">
+        <a id="buyNow" class="btn" href="#" target="_blank" rel="noopener nofollow sponsored">
+          <span class="store-flag" aria-hidden="true">🌍</span>
+          <span data-i18n="buy">Acquista ora su Amazon</span>
+        </a>
+        <span class="rating"><span class="stars">★★★★★</span> <span class="badge">Readers’ Choice</span></span>
+      </div>
+      <p id="buyMeta" class="trust">Acquisto e resi gestiti da Amazon.</p>
+    </div>
+  </section>
 
+  <!-- Altri libri (ridotti, no distrazioni) -->
+  <h2 class="sec-title" data-i18n="gridTitle">Altri libri della saga</h2>
   <ul class="posters">
     <li>
-      <a class="card-link" href="libro-1/index.html"><img src="../assets/cover1.jpg" alt="Libro I"></a>
-      <p class="caption" data-i18n="b1">Libro I — La Stella Perduta</p>
+      <a class="card-link deep" href="libro-1/index.html"><img src="../assets/cover1.jpg" alt="Libro I"></a>
+      <p class="caption">Libro I — La Stella Perduta</p>
+      <p class="meta">L’inizio dell’avventura</p>
     </li>
     <li>
-      <a class="card-link" href="libro-2/index.html"><img src="../assets/cover2.jpg" alt="Libro II"></a>
-      <p class="caption" data-i18n="b2">Libro II — Il Segreto di Snarfel</p>
+      <a class="card-link deep" href="libro-2/index.html"><img src="../assets/cover2.jpg" alt="Libro II"></a>
+      <p class="caption">Libro II — Il Segreto di Snarfel</p>
+      <p class="meta">Il segreto si rivela</p>
     </li>
     <li>
-      <a class="card-link" href="libro-3/index.html"><img src="../assets/cover3.jpg" alt="Libro III"></a>
-      <p class="caption" data-i18n="b3">Libro III — La Notte Infinita</p>
-    </li>
-    <li class="more hidden">
-      <a class="card-link" href="libro-4/index.html"><img src="../assets/cover4.jpg" alt="Libro IV"></a>
-      <p class="caption" data-i18n="b4">Libro IV</p>
-    </li>
-    <li class="more hidden">
-      <a class="card-link" href="libro-5/index.html"><img src="../assets/cover5.jpg" alt="Libro V"></a>
-      <p class="caption" data-i18n="b5">Libro V</p>
-    </li>
-    <li class="more hidden">
-      <a class="card-link" href="libro-6/index.html"><img src="../assets/cover6.jpg" alt="Libro VI"></a>
-      <p class="caption" data-i18n="b6">Libro VI</p>
+      <a class="card-link deep" href="libro-3/index.html"><img src="../assets/cover3.jpg" alt="Libro III"></a>
+      <p class="caption">Libro III — La Notte Infinita</p>
+      <p class="meta">Il tempo si è fermato</p>
     </li>
   </ul>
-
-  <div class="center">
-    <button id="showMore" class="btn" data-i18n="more">Mostra altri</button>
-  </div>
 </main>
-
-<script>
-const I18N = {
-  en:{ title:"Kiki Moon Collection", more:"Show more",
-       b1:"Book I — The Lost Star", b2:"Book II — Snarfel’s Secret", b3:"Book III — The Endless Night",
-       b4:"Book IV", b5:"Book V", b6:"Book VI" },
-  it:{ title:"Kiki Moon Collection", more:"Mostra altri",
-       b1:"Libro I — La Stella Perduta", b2:"Libro II — Il Segreto di Snarfel", b3:"Libro III — La Notte Infinita",
-       b4:"Libro IV", b5:"Libro V", b6:"Libro VI" },
-  es:{ title:"Colección Kiki Moon", more:"Ver más",
-       b1:"Libro I — La Estrella Perdida", b2:"Libro II — El Secreto de Snarfel", b3:"Libro III — La Noche Infinita",
-       b4:"Libro IV", b5:"Libro V", b6:"Libro VI" }
-};
-
-function applyI18n(lang){
-  const t=I18N[lang]||I18N.en;
-  const meta=document.querySelector('meta[name="description"]');
-  if(meta){
-    if(lang==='en') meta.content="Kiki Moon illustrated saga: book posters and access to dedicated pages.";
-    else if(lang==='es') meta.content="La saga ilustrada Kiki Moon: pósters y acceso a páginas dedicadas.";
-    else meta.content="La saga illustrata Kiki Moon: poster dei libri e accesso alle pagine dedicate.";
-  }
-  document.querySelector('[data-i18n="title"]').textContent=t.title;
-  const more=document.querySelector('[data-i18n="more"]'); if(more) more.textContent=t.more;
-  ['b1','b2','b3','b4','b5','b6'].forEach(k=>{
-    const el=document.querySelector(`[data-i18n="${k}"]`); if(el) el.textContent=t[k];
-  });
-}
-window.applyI18n = applyI18n;
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  const L=window.PREFERRED_LANG||localStorage.getItem('lang')||'en';
-  document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active', b.dataset.lang===L));
-  applyI18n(L);
-  const q=new URLSearchParams(location.search);
-  document.querySelectorAll('a.card-link, a.brand').forEach(a=>{
-    try{
-      const u=new URL(a.getAttribute('href'),location.href);
-      u.searchParams.set('lang',L);
-      if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
-      a.href=u.pathname+'?'+u.searchParams.toString();
-    }catch(_){}
-  });
-  document.getElementById('showMore')?.addEventListener('click',()=>{
-    document.querySelectorAll('.posters .more').forEach(el=>el.classList.remove('hidden'));
-    document.getElementById('showMore').remove();
-  });
-});
-
-document.addEventListener('click',(e)=>{
-  const b=e.target.closest('.lang-switch button[data-lang]'); if(!b) return;
-  e.preventDefault(); window.__setLang && window.__setLang(b.dataset.lang);
-});
-</script>
 </body>
 </html>
