@@ -33,7 +33,10 @@
     background:var(--panel);border:1px solid var(--panelBorder);
     box-shadow:0 10px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.04)
   }
-  .hero .cover{aspect-ratio:2/3;border-radius:14px;object-fit:cover;width:100%;background:#0f1730;border:1px solid rgba(231,194,95,.16)}
+  /* cover cliccabile */
+  .cover-link{display:block}
+  .cover-link .cover{display:block;aspect-ratio:2/3;border-radius:14px;object-fit:cover;width:100%;background:#0f1730;border:1px solid rgba(231,194,95,.16);cursor:pointer}
+  .cover-link:hover .cover{filter:brightness(1.02)}
 
   /* Titolo 2 righe */
   .hero-title{
@@ -44,12 +47,12 @@
 
   .hook{margin:6px 0 12px;color:#ffe8b3;font-style:italic;text-align:center}
 
-  /* Benefits (3 voci) */
+  /* Benefits */
   .benefits{list-style:none;margin:6px 0 12px;padding:0;display:grid;gap:6px;justify-items:center}
   .benefits li{font-size:.98rem;color:#d8dcee;opacity:.95}
   .benefits li::before{content:"✓";margin-right:8px;color:var(--gold)}
 
-  /* CTA (subito sotto i benefits) */
+  /* CTA */
   .cta{display:flex;justify-content:center;margin:10px 0 8px}
   .amazon-btn{
     display:inline-flex;align-items:center;justify-content:center;
@@ -62,7 +65,7 @@
   .amazon-btn:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,0,0,.32);border-color:#ffd979}
   .amazon-btn:focus-visible{outline:3px solid #ffd979;outline-offset:3px}
 
-  /* Trust line con lucchetto (subito sotto il bottone) */
+  /* Trust line */
   .mini-trust{margin:4px 0 12px;font-size:.92rem;color:var(--muted);text-align:center}
   .mini-trust .lock{margin-right:6px}
 
@@ -161,10 +164,10 @@ const I18N={
 
 /* Routing “prossimo libro” */
 const NEXT_BOOK={
-  b1:{ code:'b2', cover:'../assets/cover2.jpg',
+  b1:{ code:'b2', slug:'libro-2/index.html', cover:'../assets/cover2.jpg',
        title:{it:'Libro II — Il Segreto di Snarfel',en:'Book II — Snarfel’s Secret',es:'Libro II — El Secreto de Snarfel'},
        asin:{it:'ASIN_LIBRO2_IT', en:'ASIN_LIBRO2_EN', es:'ASIN_LIBRO2_ES'} },
-  b2:{ code:'b3', cover:'../assets/cover3.jpg',
+  b2:{ code:'b3', slug:'libro-3/index.html', cover:'../assets/cover3.jpg',
        title:{it:'Libro III — La Notte Infinita',en:'Book III — The Endless Night',es:'Libro III — La Noche Infinita'},
        asin:{it:'ASIN_LIBRO3_IT', en:'ASIN_LIBRO3_EN', es:'ASIN_LIBRO3_ES'} }
 };
@@ -187,21 +190,34 @@ function renderPage(){
   const src=new URLSearchParams(location.search).get('src')||'b1';
   const nb=NEXT_BOOK[src]||NEXT_BOOK.b1;
 
-  // cover
+  // cover (cliccabile alla pagina giusta)
   const h=document.getElementById('hero');
-  h.querySelector('img.cover').src=nb.cover;
-  h.querySelector('img.cover').alt=nb.title[lang];
+  const coverImg=h.querySelector('img.cover');
+  coverImg.src=nb.cover;
+  coverImg.alt=nb.title[lang];
+
+  // link cover → anteprima del libro corretto, con lang/src
+  const q=new URLSearchParams(location.search);
+  function withParams(path){
+    const u=new URL(path, location.href);
+    u.searchParams.set('lang', lang);
+    if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
+    u.hash='anteprima';
+    return u.pathname + (u.search?('?'+u.searchParams.toString()):'') + u.hash;
+  }
+  const coverA=document.getElementById('coverLink');
+  if(coverA && nb.slug) coverA.href = withParams(nb.slug);
 
   // Titolo 2 righe
   const full=dict.titles[nb.code] || nb.title[lang];
   const parts=full.split('—').map(s=>s.trim());
-  document.getElementById('titleLine1').textContent = parts[0] || full;         // "Libro II"
-  document.getElementById('titleLine2').textContent = parts[1] || "";           // "Il Segreto di Snarfel"
+  document.getElementById('titleLine1').textContent = parts[0] || full; // "Libro II"
+  document.getElementById('titleLine2').textContent = parts[1] || "";   // "Il Segreto di Snarfel"
 
   // Hook
   document.querySelector('[data-bind="hook"]').textContent=dict.hooks[nb.code];
 
-  // Benefits (3 voci)
+  // Benefits
   const bl=document.getElementById('benefits'); bl.innerHTML='';
   dict.benefits.forEach(txt=>{ const li=document.createElement('li'); li.textContent=txt; bl.appendChild(li); });
 
@@ -262,7 +278,9 @@ document.addEventListener('click',(e)=>{
 <main class="container">
   <!-- HERO -->
   <section class="hero" id="hero">
-    <img class="cover" src="../assets/cover2.jpg" alt="Next book" loading="eager" />
+    <a id="coverLink" class="cover-link" href="#" title="Anteprima" aria-label="Apri anteprima">
+      <img class="cover" src="../assets/cover2.jpg" alt="Copertina — anteprima" loading="eager" />
+    </a>
     <div class="copy">
       <h1 class="hero-title">
         <span class="line1" id="titleLine1">Libro II</span>
