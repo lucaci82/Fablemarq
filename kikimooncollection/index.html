@@ -7,10 +7,10 @@
 <meta name="description" content="Continua l'avventura: acquista subito il prossimo libro della saga Kiki Moon." />
 <meta name="theme-color" content="#0b1222" />
 
-<!-- Se devi cambiare la root degli asset, modificala qui -->
+<!-- Radice asset (modifica se cambi struttura) -->
 <meta name="asset-root" content="../assets" />
 
-<!-- Questi due vengono riallineati a runtime, intanto metto valori sensati -->
+<!-- Questi due saranno riallineati a runtime -->
 <link rel="icon" href="../assets/logo-fablemarq.png" />
 <link rel="preload" as="image" href="../assets/it/cover2.webp" />
 
@@ -24,8 +24,16 @@
   a{text-decoration:none;color:inherit}
   .container{width:min(1100px,92vw);margin:0 auto;padding:20px 0}
 
-  header .nav{display:flex;align-items:center;justify-content:space-between}
-  .brand img{height:36px}
+  /* Header */
+  header .nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{flex:0 0 auto}
+  .brand img{
+    display:block;
+    height:40px;           /* cambia qui per ingrandire/ridurre */
+    width:auto;
+    max-width:none;        /* evita shrink da regole globali */
+    image-rendering:-webkit-optimize-contrast;
+  }
   .lang-switch{display:inline-flex;gap:6px;margin-left:14px;padding:4px 6px;border:1px solid rgba(231,194,95,.35);border-radius:14px;background:rgba(231,194,95,.10)}
   .lang-switch button{all:unset;cursor:pointer;padding:6px 10px;border-radius:10px;font-weight:700;color:#ffe8b3}
   .lang-switch button.active{background:rgba(231,194,95,.22);box-shadow:0 4px 12px rgba(231,194,95,.18)}
@@ -38,7 +46,10 @@
     box-shadow:0 10px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.04)
   }
   .cover-link{display:block}
-  .cover-link .cover{display:block;aspect-ratio:2/3;border-radius:14px;object-fit:cover;width:100%;background:#0f1730;border:1px solid rgba(231,194,95,.16);cursor:pointer}
+  .cover-link .cover{
+    display:block;aspect-ratio:2/3;border-radius:14px;object-fit:cover;width:100%;
+    background:#0f1730;border:1px solid rgba(231,194,95,.16);cursor:pointer
+  }
   .cover-link:hover .cover{filter:brightness(1.02)}
 
   .hero-title{text-align:center;font-weight:900;margin:0 0 8px}
@@ -70,6 +81,7 @@
   .caption{margin:8px 0 4px;font-weight:800;font-size:.95rem;color:#ffe8b3}
   .meta{margin:0;font-size:.85rem;color:#9aa3b2}
 
+  /* Sticky CTA mobile */
   @media (max-width:520px){
     .sticky-cta{
       position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
@@ -92,11 +104,12 @@
 </style>
 
 <script>
-/* ============ ASSET ROOT SOLO WEBP ============ */
+/* =========================
+   Asset root e utilità
+   ========================= */
 const ASSET_ROOT = (()=>{
   const meta = document.querySelector('meta[name="asset-root"]');
   if (meta?.content) return meta.content.replace(/\/+$/,'');
-  // fallback auto se non usi il meta
   const p = location.pathname.toLowerCase().replace(/\\/g,'/');
   if (/(^|\/)libro-\d+\//.test(p)) return '../../assets';
   if (/(^|\/)(kikimooncollection|kiki-moon-collection|collection)\//.test(p)) return '../assets';
@@ -167,14 +180,6 @@ function updateHeroPreload(lang, code){
   if (link) link.href = coverPath(lang, code);
 }
 
-/* Sistema logo/favicon rispetto alla root */
-function fixStaticAssets(){
-  const logo = document.querySelector('.brand img');
-  if (logo) logo.src = `${ASSET_ROOT}/logo-fablemarq.webp`; // se hai solo .png, cambia qui
-  const fav = document.querySelector('link[rel="icon"]');
-  if (fav) fav.href = `${ASSET_ROOT}/logo-fablemarq.png`;   // favicon spesso resta png
-}
-
 /* Testi localizzati */
 const I18N={
   it:{
@@ -195,12 +200,12 @@ const I18N={
     buy:"comprar en amazon", metaBuy:"Compra y devoluciones gestionadas por Amazon.",
     benefits:["80 páginas ilustradas","para niños de 6 a 10 años","impresión de alta calidad"],
     hooks:{ b2:"Snarfel ha vuelto. Y esta vez el secreto es más grande que la magia.", b3:"El tiempo duerme. Kiki debe despertarlo antes de que Moon se detenga." },
-    titles:{ b1:"Libro I — La Estrella Perdida", b2:"Libro II — El Secreto de Snarfel", b3:"La Noche Infinita" },
+    titles:{ b1:"Libro I — La Estrella Perdida", b2:"Libro II — El Secreto de Snarfel", b3:"Libro III — La Noche Infinita" },
     metas:{  b1:"El inicio de la aventura",       b2:"El secreto se revela",             b3:"El tiempo se detuvo" }
   }
 };
 
-/* Libri successivi per hero + ASIN (inserisci gli ASIN reali) */
+/* Libri successivi per hero + ASIN (INSERISCI GLI ASIN REALI) */
 const NEXT_BOOK={
   b1:{code:'b2',slug:'libro-2/index.html',
       title:{it:'Libro II — Il Segreto di Snarfel',en:'Book II — Snarfel’s Secret',es:'Libro II — El Secreto de Snarfel'},
@@ -286,7 +291,12 @@ function renderPage(){
 
       // cover solo WebP
       const t = I18N[lang]?.titles?.[code] || (img?.alt||'');
-      if(img) setCoverIMG(img, lang, code, t);
+      if(img){
+        // path localizzato
+        img.src = coverPath(lang, code);
+        img.removeAttribute('srcset'); img.removeAttribute('sizes');
+        if(t) img.alt = t;
+      }
 
       // caption + meta
       if(cap && t) cap.textContent=t;
@@ -332,9 +342,9 @@ function initStickyObserver(){
 
 /* Bootstrap */
 document.addEventListener('DOMContentLoaded', ()=>{
-  // logo + favicon
+  // logo + favicon allineati alla root
   const logo = document.querySelector('.brand img');
-  if (logo) logo.src = `${ASSET_ROOT}/logo-fablemarq.webp`; // cambia in .png se non hai la webp del logo
+  if (logo) logo.src = `${ASSET_ROOT}/logo-fablemarq.png`; // usa .png se non hai la webp
   const fav = document.querySelector('link[rel="icon"]');
   if (fav) fav.href = `${ASSET_ROOT}/logo-fablemarq.png`;
 
@@ -350,7 +360,8 @@ document.addEventListener('click',(e)=>{
 <header>
   <div class="container nav">
     <a class="brand" href="../index.html">
-      <img src="../assets/logo-fablemarq.webp" alt="Fablemarq" width="128" height="36" decoding="async">
+      <!-- Nessun width/height inline: controlliamo tutto da CSS -->
+      <img src="../assets/logo-fablemarq.webp" alt="Fablemarq" decoding="async">
     </a>
     <nav>
       <div class="lang-switch" aria-label="Language">
