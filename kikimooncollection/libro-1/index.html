@@ -365,13 +365,22 @@
   <!-- Motore lingua -->
   <script>
   (function(){
-    function normLang(l){ const s=(l||'').toLowerCase(); if(s.startsWith('it'))return'it'; if(s.startsWith('es'))return'es'; return'en'; }
+    function normLang(l){
+      const s=(l||'').toLowerCase();
+      if(s.startsWith('it'))return'it';
+      if(s.startsWith('es'))return'es';
+      return'en';
+    }
     const qs=new URLSearchParams(location.search);
     const urlL=qs.get('lang'); const saved=localStorage.getItem('lang');
     const nav=(navigator.languages&&navigator.languages[0])||navigator.language||'en';
     const L=normLang(urlL||saved||nav);
     document.documentElement.lang=L; localStorage.setItem('lang',L); window.PREFERRED_LANG=L;
-    if(urlL){ const u=new URL(location.href); u.searchParams.delete('lang'); history.replaceState({},'',u); }
+    if(urlL){
+      const u=new URL(location.href);
+      u.searchParams.delete('lang');
+      history.replaceState({},'',u);
+    }
 
     window.__setLang=function(newL){
       const L2=normLang(newL);
@@ -383,7 +392,7 @@
       const img = document.querySelector('.cover-lg');
       if (img) {
         img.src = `../../assets/${L2}/cover1.webp`;
-        img.alt = (L2==='en') ? 'Kiki Moon — Book I' : 'Kiki Moon — Libro I';
+        img.alt = (L2==='en') ? 'Kiki Moon — Book I' : (L2==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
       }
 
       const q=new URLSearchParams(location.search);
@@ -392,7 +401,7 @@
           const u=new URL(a.getAttribute('href'), location.href);
           u.searchParams.set('lang',L2);
           if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
-          a.setAttribute('href', u.pathname.replace(location.origin,'') + (u.search?('?'+u.searchParams.toString()):''));
+          a.setAttribute('href', u.pathname.replace(location.origin,'') + (u.search?('?'+u.searchParams.toString()):'')); 
         }catch(_){}
       });
     };
@@ -459,7 +468,7 @@
 
         <div class="cta-row">
           <a class="btn" id="buyBtn"
-             href="https://www.amazon.it/dp/ASIN_LIBRO1"
+             href="https://www.amazon.it/dp/B0G2MC6Z2X"
              target="_blank" rel="noopener nofollow sponsored" data-i18n="buy">
              Acquista su Amazon
           </a>
@@ -470,7 +479,7 @@
 
     <div class="sticky-buy">
       <a class="btn" id="buyBtnSticky"
-         href="https://www.amazon.it/dp/ASIN_LIBRO1"
+         href="https://www.amazon.it/dp/B0G2MC6Z2X"
          target="_blank" rel="noopener nofollow sponsored" data-i18n="buy_now">
          Acquista ora
       </a>
@@ -502,7 +511,7 @@
     const img = document.querySelector('.cover-lg');
     if (img) {
       img.src = `../../assets/${L}/cover1.webp`;
-      img.alt = (L==='en') ? 'Kiki Moon — Book I' : 'Kiki Moon — Libro I';
+      img.alt = (L==='en') ? 'Kiki Moon — Book I' : (L==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
     }
 
     const q=new URLSearchParams(location.search);
@@ -527,15 +536,24 @@
     (function(){
       const map = { IT:'it', ES:'es', MX:'com.mx', US:'com', CA:'ca', GB:'co.uk', FR:'fr', DE:'de' };
       const prefer = localStorage.getItem('amz_cc');
+
+      function getAsinForLang(){
+        const lang = (window.PREFERRED_LANG || document.documentElement.lang || 'en').toLowerCase();
+        if(lang === 'it') return 'B0G2MC6Z2X';
+        if(lang === 'es') return 'B0G2J42FDD';
+        return 'B0G2JLYKWY'; // EN default
+      }
+
       function setHref(cc){
         const tld = map[cc] || 'com';
-        const asin = 'ASIN_LIBRO1'; // TODO: sostituisci
+        const asin = getAsinForLang();
         const url = `https://www.amazon.${tld}/dp/${asin}`;
         const b1 = document.getElementById('buyBtn');
         const b2 = document.getElementById('buyBtnSticky');
         if(b1) b1.href = url;
         if(b2) b2.href = url;
       }
+
       if (prefer) { setHref(prefer); return; }
       const ctrl = new AbortController(); const timer = setTimeout(()=>ctrl.abort(), 900);
       fetch('https://ipapi.co/country/', {signal:ctrl.signal, cache:'no-store'})
@@ -544,7 +562,10 @@
           cc=(cc||'').trim().toUpperCase();
           if (cc) { localStorage.setItem('amz_cc', cc); setHref(cc); } else setHref('US');
         })
-        .catch(()=>{ const lang = (navigator.language || '').slice(-2).toUpperCase(); setHref(lang || 'US'); });
+        .catch(()=>{
+          const lang = (navigator.language || '').slice(-2).toUpperCase();
+          setHref(lang || 'US');
+        });
     })();
   </script>
 </body>
