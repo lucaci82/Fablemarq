@@ -4,17 +4,16 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Kiki Moon Collection — Fablemarq</title>
-<meta name="description" content="Continua l'avventura: acquista subito il prossimo libro della saga Kiki Moon." />
+<meta name="description" content="Continua l'avventura: acquista subito il primo libro della saga Kiki Moon e scopri i prossimi in arrivo." />
 <meta name="theme-color" content="#0b1222" />
 
-<!-- Radice asset (modifica se cambi struttura) -->
+<!-- Radice asset -->
 <meta name="asset-root" content="../assets" />
 
-<!-- Riallineati a runtime -->
 <link rel="icon" href="../assets/logo-fablemarq.png" />
-<link rel="preload" as="image" href="../assets/it/cover2.webp" />
+<link rel="preload" as="image" href="../assets/it/cover1.webp" />
 
-<!-- Font: Baloo 2 (titoli) + Manrope (testo) -->
+<!-- Font -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800;900&family=Manrope:wght@400;700;800;900&display=swap" rel="stylesheet" />
@@ -26,7 +25,6 @@
     --ctaA:#FFB347;--ctaB:#FF9900;--ctaText:#111417
   }
   *{box-sizing:border-box}
-  /* Testo generale con Manrope */
   body{
     margin:0;background:var(--bg);color:var(--ink);
     font:16px/1.6 "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
@@ -58,7 +56,6 @@
   }
   .cover-link:hover .cover{filter:brightness(1.02)}
 
-  /* Titoli hero con Baloo 2 molto pesante */
   .hero-title{
     text-align:center;font-weight:900;margin:0 0 8px;
     font-family:"Baloo 2", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
@@ -77,7 +74,6 @@
   .benefits li::before{content:"✓";margin-right:10px;color:var(--gold)}
 
   .cta{display:flex;justify-content:center;margin:12px 0 8px}
-  /* CTA bello tosto */
   .amazon-btn{
     display:inline-flex;align-items:center;justify-content:center;
     min-height:60px;padding:14px 28px;border-radius:12px;
@@ -91,10 +87,23 @@
 
   .sec-title{margin:18px 0 10px;font-size:1rem;color:#cfd3e0;opacity:.9}
   .posters{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;list-style:none;padding:0;margin:0}
-  .posters li{background:var(--panel);border:1px solid var(--panelBorder);border-radius:16px;padding:12px;text-align:center}
+  .posters li{background:var(--panel);border:1px solid var(--panelBorder);border-radius:16px;padding:12px;text-align:center;position:relative}
   .posters img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:12px;background:#0f1730}
   .caption{margin:8px 0 4px;font-weight:800;font-size:.95rem;color:#ffe8b3}
   .meta{margin:0;font-size:.85rem;color:#9aa3b2}
+
+  .coming::after{
+    content:"Coming Soon";
+    position:absolute;top:10px;right:10px;
+    font-size:.7rem;font-weight:800;
+    padding:4px 8px;border-radius:999px;
+    background:rgba(0,0,0,.65);color:#ffe8b3;
+    text-transform:uppercase;letter-spacing:.05em;
+  }
+  .coming.es::after{content:"Próximamente";}
+  .coming.it::after{content:"In lavorazione";}
+
+  .posters li.coming a.card-link{pointer-events:none;cursor:default;opacity:.9}
 
   /* Sticky CTA mobile */
   @media (max-width:520px){
@@ -119,8 +128,8 @@
 </style>
 
 <script>
-/* ========== Asset root ========== */
-const ASSET_ROOT = (()=>{
+/* ====== asset root ====== */
+const ASSET_ROOT = (()=> {
   const meta = document.querySelector('meta[name="asset-root"]');
   if (meta?.content) return meta.content.replace(/\/+$/,'');
   const p = location.pathname.toLowerCase().replace(/\\/g,'/');
@@ -129,184 +138,285 @@ const ASSET_ROOT = (()=>{
   return './assets';
 })();
 
-/* ========== Lingua e store ========== */
-function normLang(l){const s=(l||'').toLowerCase();if(s.startsWith('it'))return'it';if(s.startsWith('es'))return'es';return'en';}
-(function initLang(){
-  const qs=new URLSearchParams(location.search);
-  const urlL=qs.get('lang');const saved=localStorage.getItem('lang');
-  const nav=(navigator.languages&&navigator.languages[0])||navigator.language||'en';
-  const L=normLang(urlL||saved||nav);
-  document.documentElement.lang=L;localStorage.setItem('lang',L);
-  if(urlL){const u=new URL(location.href);u.searchParams.delete('lang');history.replaceState({},'',u);}
-  window.__setLang=function(newL){const L2=normLang(newL);document.documentElement.lang=L2;localStorage.setItem('lang',L2);
-    document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===L2));renderPage();};
-})();
-
-const AMZ_TLD={IT:'it',ES:'es',FR:'fr',DE:'de',GB:'co.uk',US:'com',CA:'ca',MX:'com.mx',CO:'com.co'};
-function suggestStoreFromLang(lang){
-  const l=(lang||navigator.language||'en').toLowerCase();
-  if(l.includes('-ca'))return'CA';
-  if(l.includes('it'))return'IT';
-  if(l.includes('fr'))return'FR';
-  if(l.includes('de'))return'DE';
-  if(l.includes('gb')||l.includes('uk'))return'GB';
-  if(l.startsWith('es')){ if(l.includes('-mx'))return'MX'; if(l.includes('-co'))return'CO'; return'ES'; }
-  return'US';
+/* ====== lingua ====== */
+function normLang(l){
+  const s = (l||'').toLowerCase();
+  if (s.startsWith('it')) return 'it';
+  if (s.startsWith('es')) return 'es';
+  return 'en';
 }
-(function initStoreOnce(){
-  if(localStorage.getItem('amz_cc'))return;
-  const cc=suggestStoreFromLang((navigator.languages&&navigator.languages[0])||navigator.language);
-  localStorage.setItem('amz_cc',cc);
+
+(function initLang(){
+  const qs   = new URLSearchParams(location.search);
+  const urlL = qs.get('lang');
+  const saved= localStorage.getItem('lang');
+  const nav  = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+  const L    = normLang(urlL || saved || nav);
+  document.documentElement.lang = L;
+  localStorage.setItem('lang', L);
+  if (urlL){
+    const u = new URL(location.href);
+    u.searchParams.delete('lang');
+    history.replaceState({},'',u);
+  }
+  window.__setLang = function(newL){
+    const L2 = normLang(newL);
+    document.documentElement.lang = L2;
+    localStorage.setItem('lang', L2);
+    document.querySelectorAll('.lang-switch button')
+      .forEach(b => b.classList.toggle('active', b.dataset.lang === L2));
+    renderPage();
+  };
 })();
 
-/* ========== Dati multilingua e cover ========== */
-const BOOK_SLUGS={ b1:'libro-1/index.html', b2:'libro-2/index.html', b3:'libro-3/index.html', b4:'libro-4/index.html', b5:'libro-5/index.html', b6:'libro-6/index.html' };
-const BOOK_NUM={ b1:1, b2:2, b3:3, b4:4, b5:5, b6:6 };
+/* ====== store amazon ====== */
+const AMZ_TLD = {IT:'it',ES:'es',FR:'fr',DE:'de',GB:'co.uk',US:'com',CA:'ca',MX:'com.mx',CO:'com.co'};
 
-function coverPath(lang, code){ const n = BOOK_NUM[code] || 1; return `${ASSET_ROOT}/${lang}/cover${n}.webp`; }
-function setCoverIMG(imgEl, lang, code, title){ if(!imgEl) return; const p=coverPath(lang,code); imgEl.src=p; imgEl.removeAttribute('srcset'); imgEl.removeAttribute('sizes'); if(title) imgEl.alt=title; }
-function updateHeroPreload(lang, code){ const link=document.querySelector('link[rel="preload"][as="image"]'); if (link) link.href = coverPath(lang, code); }
+function suggestStoreFromLang(lang){
+  const l = (lang || navigator.language || 'en').toLowerCase();
+  if (l.includes('-ca')) return 'CA';
+  if (l.includes('it'))  return 'IT';
+  if (l.includes('fr'))  return 'FR';
+  if (l.includes('de'))  return 'DE';
+  if (l.includes('gb') || l.includes('uk')) return 'GB';
+  if (l.startsWith('es')){
+    if (l.includes('-mx')) return 'MX';
+    if (l.includes('-co')) return 'CO';
+    return 'ES';
+  }
+  return 'US';
+}
 
-/* Testi localizzati */
-const I18N={
+(function initStoreOnce(){
+  if (localStorage.getItem('amz_cc')) return;
+  const cc = suggestStoreFromLang((navigator.languages && navigator.languages[0]) || navigator.language);
+  localStorage.setItem('amz_cc', cc);
+})();
+
+/* ====== testi e asin ====== */
+const I18N = {
   it:{
-    buy:"acquista su amazon", metaBuy:"Acquisto e resi gestiti da Amazon.",
-    benefits:["Età 6–10 anni","80 pagine illustrate a colori","Stampa premium"],
-    hooks:{ b2:"Snarfel è tornato. Questa volta il segreto è più grande della magia.", b3:"Il tempo dorme. Kiki deve risvegliarlo prima che Moon si fermi." },
-    titles:{ b1:"Libro I — La Stella Perduta", b2:"Libro II — Il Segreto di Snarfel", b3:"Libro III — La Notte Infinita" },
-    metas:{  b1:"L’inizio dell’avventura",        b2:"Il segreto si rivela",            b3:"Il tempo si è fermato" }
+    heroTitle1:"Kiki Moon — Libro I",
+    heroTitle2:"La Stella Perduta",
+    heroHook:"Una stella si spegne. Ma la luce di Kiki è appena iniziata.",
+    buy:"Acquista su Amazon",
+    metaBuy:"Acquisto e resi gestiti da Amazon.",
+    benefits:["Età 6–10 anni","80 pagine illustrate a colori","Ideale da leggere insieme"],
+    secTitle:"Altri libri della saga",
+    b1_caption:"Libro I — La Stella Perduta",
+    b1_meta:"L’inizio dell’avventura",
+    b2_caption:"Libro II — Il Segreto di Snarfel",
+    b2_meta:"In lavorazione",
+    b3_caption:"Libro III — La Notte Infinita",
+    b3_meta:"In lavorazione"
   },
   en:{
-    buy:"buy on amazon", metaBuy:"Purchase and returns handled by Amazon.",
-    benefits:["Ages 6–10","80 full-color pages","Premium print"],
-    hooks:{ b2:"Snarfel is back. This time the secret is bigger than magic.", b3:"Time is asleep. Kiki must wake it before Moon stops." },
-    titles:{ b1:"Book I — The Lost Star", b2:"Book II — Snarfel’s Secret", b3:"Book III — The Endless Night" },
-    metas:{  b1:"The beginning of the journey", b2:"The secret unfolds",     b3:"Time has stopped" }
+    heroTitle1:"Kiki Moon — Book I",
+    heroTitle2:"The Lost Star",
+    heroHook:"A star goes dark. Kiki’s light is just beginning.",
+    buy:"Buy on Amazon",
+    metaBuy:"Purchase and returns handled by Amazon.",
+    benefits:["Ages 6–10","80 full-color pages","Perfect for family reading"],
+    secTitle:"Other books in the series",
+    b1_caption:"Book I — The Lost Star",
+    b1_meta:"The beginning of the journey",
+    b2_caption:"Book II — Snarfel’s Secret",
+    b2_meta:"In progress",
+    b3_caption:"Book III — The Endless Night",
+    b3_meta:"In progress"
   },
   es:{
-    buy:"comprar en amazon", metaBuy:"Compra y devoluciones gestionadas por Amazon.",
-    benefits:["Edades 6–10","80 páginas a color","Impresión premium"],
-    hooks:{ b2:"Snarfel ha vuelto. Y esta vez el secreto es más grande que la magia.", b3:"El tiempo duerme. Kiki debe despertarlo antes de que Moon se detenga." },
-    titles:{ b1:"Libro I — La Estrella Perdida", b2:"Libro II — El Secreto de Snarfel", b3:"Libro III — La Noche Infinita" },
-    metas:{  b1:"El inicio de la aventura",       b2:"El secreto se revela",             b3:"El tiempo se detuvo" }
+    heroTitle1:"Kiki Moon — Libro I",
+    heroTitle2:"La Estrella Perdida",
+    heroHook:"Una estrella se apaga. La luz de Kiki acaba de empezar.",
+    buy:"Comprar en Amazon",
+    metaBuy:"Compra y devoluciones gestionadas por Amazon.",
+    benefits:["Edades 6–10","80 páginas a color","Perfecto para leer en familia"],
+    secTitle:"Otros libros de la saga",
+    b1_caption:"Libro I — La Estrella Perdida",
+    b1_meta:"El inicio de la aventura",
+    b2_caption:"Libro II — El Secreto de Snarfel",
+    b2_meta:"En desarrollo",
+    b3_caption:"Libro III — La Noche Infinita",
+    b3_meta:"En desarrollo"
   }
 };
 
-/* Next book per hero + ASIN (INSERISCI GLI ASIN REALI) */
-const NEXT_BOOK={
-  b1:{code:'b2',slug:'libro-2/index.html',
-      title:{it:'Libro II — Il Segreto di Snarfel',en:'Book II — Snarfel’s Secret',es:'Libro II — El Secreto de Snarfel'},
-      asin:{it:'ASIN_LIBRO2_IT',en:'ASIN_LIBRO2_EN',es:'ASIN_LIBRO2_ES'}},
-  b2:{code:'b3',slug:'libro-3/index.html',
-      title:{it:'Libro III — La Notte Infinita',en:'Book III — The Endless Night',es:'Libro III — La Noche Infinita'},
-      asin:{it:'ASIN_LIBRO3_IT',en:'ASIN_LIBRO3_EN',es:'ASIN_LIBRO3_ES'}}
+const ASIN_B1 = {
+  it: "B0G2MC6Z2X",
+  en: "B0G2JLYKWY",
+  es: "B0G2J42FDD"
 };
 
-/* ========== Rendering ========== */
-function L(){return localStorage.getItem('lang')||(document.documentElement.lang||'en');}
+function L(){ return localStorage.getItem('lang') || (document.documentElement.lang || 'en'); }
 
-function buildAmazonUrl(cc,seriesCode,asin,lang){
-  const tld=AMZ_TLD[cc]||'com';
-  const q=new URLSearchParams(location.search);
-  const utm=`utm_source=qr&utm_medium=${seriesCode}_${lang}&utm_campaign=readthrough`;
-  const extra=q.get('src')?`&src=${encodeURIComponent(q.get('src'))}`:'';
-  return`https://www.amazon.${tld}/dp/${asin}?${utm}${extra}`;
+function buildAmazonUrl(cc, asin, lang){
+  const tld = AMZ_TLD[cc] || 'com';
+  const q   = new URLSearchParams();
+  q.set('utm_source','qr');
+  q.set('utm_medium','b1_'+lang);
+  q.set('utm_campaign','readthrough');
+  const src = new URLSearchParams(location.search).get('src');
+  if (src) q.set('src', src);
+  return `https://www.amazon.${tld}/dp/${asin}?${q.toString()}`;
 }
 
+/* ====== render ====== */
 function renderPage(){
-  const lang=L();document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
-  const dict=I18N[lang]||I18N.en;
+  const lang = L();
+  const dict = I18N[lang] || I18N.en;
 
-  const urlParams=new URLSearchParams(location.search);
-  const src=urlParams.get('src')||'b1';
-  const nb=NEXT_BOOK[src]||NEXT_BOOK.b1;
+  document.querySelectorAll('.lang-switch button')
+    .forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 
-  // HERO cover
-  const heroTitle=(I18N[lang]?.titles?.[nb.code]) || nb.title?.[lang] || '';
-  const heroImg=document.querySelector('#hero img.cover');
-  setCoverIMG(heroImg, lang, nb.code, heroTitle);
-  updateHeroPreload(lang, nb.code);
-
-  function withParams(path){
-    const u=new URL(path,location.href);
-    u.searchParams.set('lang',lang);
-    if(urlParams.get('src')&&!u.searchParams.get('src'))u.searchParams.set('src',urlParams.get('src'));
-    u.hash='anteprima';
-    return u.pathname+(u.search?('?'+u.searchParams.toString()):'')+u.hash;
+  // meta description
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc){
+    if (lang === 'it') metaDesc.content = "Continua l'avventura: acquista il primo libro della saga Kiki Moon e scopri i prossimi in arrivo.";
+    else if (lang === 'es') metaDesc.content = "Sigue la aventura: compra el primer libro de la saga Kiki Moon y descubre los próximos en camino.";
+    else metaDesc.content = "Continue the adventure: get the first book of the Kiki Moon saga and see what's coming next.";
   }
-  const coverA=document.getElementById('coverLink');if(coverA&&nb.slug)coverA.href=withParams(nb.slug);
 
-  // Titolo, hook, benefit
-  const full=dict.titles[nb.code]||nb.title[lang];const parts=full.split('—').map(s=>s.trim());
-  document.getElementById('titleLine1').textContent=parts[0]||full;
-  document.getElementById('titleLine2').textContent=parts[1]||"";
-  document.querySelector('[data-bind="hook"]').textContent=dict.hooks[nb.code];
+  // hero cover
+  const heroImg = document.querySelector('#hero img.cover');
+  if (heroImg){
+    heroImg.src = `${ASSET_ROOT}/${lang}/cover1.webp`;
+    heroImg.alt = dict.heroTitle1 + " — " + dict.heroTitle2;
+  }
+  const preload = document.querySelector('link[rel="preload"][as="image"]');
+  if (preload){
+    preload.href = `${ASSET_ROOT}/${lang}/cover1.webp`;
+  }
 
-  const bl=document.getElementById('benefits');bl.innerHTML='';
-  dict.benefits.forEach(txt=>{const li=document.createElement('li');li.textContent=txt;bl.appendChild(li);});
+  // titolo hero
+  const t1 = document.getElementById('titleLine1');
+  const t2 = document.getElementById('titleLine2');
+  if (t1) t1.textContent = dict.heroTitle1;
+  if (t2) t2.textContent = dict.heroTitle2;
 
-  document.querySelectorAll('[data-i18n="buy"]').forEach(el=>el.textContent=dict.buy);
-  document.getElementById('buyMeta').innerHTML=`<span class="lock" aria-hidden="true">🔒</span> ${dict.metaBuy}`;
+  // hook
+  const hook = document.querySelector('[data-bind="hook"]');
+  if (hook) hook.textContent = dict.heroHook;
 
-  // Pulsanti Amazon
-  const cc=localStorage.getItem('amz_cc')||suggestStoreFromLang(lang);
-  const asin=nb.asin[lang]||nb.asin.en;
-  const url=buildAmazonUrl(cc,nb.code,asin,lang);
-  const mainBtn=document.getElementById('buyNow');const stickyBtn=document.getElementById('buyNowSticky');
-  if(mainBtn)mainBtn.href=url;if(stickyBtn)stickyBtn.href=url;
+  // benefits
+  const bl = document.getElementById('benefits');
+  if (bl){
+    bl.innerHTML = '';
+    dict.benefits.forEach(txt => {
+      const li = document.createElement('li');
+      li.textContent = txt;
+      bl.appendChild(li);
+    });
+  }
 
-  // Griglia (nascondi hero, riscrivi href, localizza)
-  const grid=document.getElementById('gridBooks');
-  if(grid){
-    const items=Array.from(grid.querySelectorAll('li[data-book]'));
-    items.forEach(li=>{li.style.display=li.dataset.book===nb.code?'none':'';});
+  // buy text + meta
+  document.querySelectorAll('[data-i18n="buy"]').forEach(el => el.textContent = dict.buy);
+  const buyMeta = document.getElementById('buyMeta');
+  if (buyMeta) buyMeta.innerHTML = `<span class="lock" aria-hidden="true">🔒</span> ${dict.metaBuy}`;
 
-    items.forEach(li=>{
-      const code=li.dataset.book;
-      const a=li.querySelector('a.card-link');
-      const img=li.querySelector('img');
-      const cap=li.querySelector('.caption');
-      const mt =li.querySelector('.meta');
+  // section title
+  const sec = document.querySelector('.sec-title');
+  if (sec) sec.textContent = dict.secTitle;
 
-      const slug=BOOK_SLUGS[code];
-      if(a&&slug){
-        const u=new URL(slug,location.href);
-        u.searchParams.set('lang',lang);
-        if(urlParams.get('src'))u.searchParams.set('src',urlParams.get('src'));
-        a.setAttribute('href', u.pathname + '?' + u.searchParams.toString());
+  // Amazon URL (Libro I)
+  const cc   = localStorage.getItem('amz_cc') || suggestStoreFromLang(lang);
+  const asin = ASIN_B1[lang] || ASIN_B1.en;
+  const url  = buildAmazonUrl(cc, asin, lang);
+
+  const mainBtn   = document.getElementById('buyNow');
+  const stickyBtn = document.getElementById('buyNowSticky');
+  if (mainBtn)   mainBtn.href   = url;
+  if (stickyBtn) stickyBtn.href = url;
+
+  // link anteprima Libro I
+  const coverLink = document.getElementById('coverLink');
+  if (coverLink){
+    const u = new URL('libro-1/index.html', location.href);
+    u.searchParams.set('lang', lang);
+    u.searchParams.set('src', 'b1');
+    u.hash = 'anteprima';
+    coverLink.href = u.pathname + '?' + u.searchParams.toString() + u.hash;
+  }
+
+  // griglia libri
+  const grid = document.getElementById('gridBooks');
+  if (grid){
+    const b1 = grid.querySelector('li[data-book="b1"]');
+    const b2 = grid.querySelector('li[data-book="b2"]');
+    const b3 = grid.querySelector('li[data-book="b3"]');
+
+    if (b1){
+      const a   = b1.querySelector('a.card-link');
+      const img = b1.querySelector('img');
+      const cap = b1.querySelector('.caption');
+      const mt  = b1.querySelector('.meta');
+
+      if (img){
+        img.src = `${ASSET_ROOT}/${lang}/cover1.webp`;
+        img.alt = dict.b1_caption;
       }
+      if (cap) cap.textContent = dict.b1_caption;
+      if (mt)  mt.textContent  = dict.b1_meta;
 
-      const t = I18N[lang]?.titles?.[code] || (img?.alt||'');
-      if(img){ img.src = coverPath(lang, code); img.removeAttribute('srcset'); img.removeAttribute('sizes'); if(t) img.alt=t; }
-      if(cap && t) cap.textContent=t;
-      const m = I18N[lang]?.metas?.[code]; if(mt && m) mt.textContent=m;
-    });
+      if (a){
+        const u = new URL('libro-1/index.html', location.href);
+        u.searchParams.set('lang', lang);
+        u.searchParams.set('src','b1');
+        a.href = u.pathname + '?' + u.searchParams.toString();
+      }
+    }
 
-    const ORDER_MAP={ b1:['b2','b3','b4','b5','b6'], b2:['b3','b1','b4','b5','b6'], b3:['b5','b2','b1','b4','b6'], b4:['b5','b3','b2','b1','b6'] };
-    (ORDER_MAP[nb.code]||[]).forEach(code=>{
-      const li=grid.querySelector(`li[data-book="${code}"]`);
-      if(li && li.style.display!=='none') grid.appendChild(li);
-    });
+    function setupComing(li, num){
+      if (!li) return;
+      li.classList.add('coming');
+      li.classList.remove('it','es');
+      if (lang === 'it') li.classList.add('it');
+      if (lang === 'es') li.classList.add('es');
+
+      const img = li.querySelector('img');
+      const cap = li.querySelector('.caption');
+      const mt  = li.querySelector('.meta');
+      const a   = li.querySelector('a.card-link');
+
+      if (img){
+        img.src = `${ASSET_ROOT}/${lang}/cover${num}.webp`;
+        img.alt = (num === 2 ? dict.b2_caption : dict.b3_caption);
+      }
+      if (cap) cap.textContent = (num === 2 ? dict.b2_caption : dict.b3_caption);
+      if (mt)  mt.textContent  = (num === 2 ? dict.b2_meta    : dict.b3_meta);
+
+      if (a){
+        a.removeAttribute('href');
+        a.setAttribute('aria-disabled','true');
+      }
+    }
+
+    setupComing(b2,2);
+    setupComing(b3,3);
   }
 
   initStickyObserver();
 }
 
-/* Sticky CTA su mobile */
+/* sticky CTA */
 function initStickyObserver(){
-  const wrap=document.getElementById('stickyCta');const btn=document.getElementById('buyNow');
-  if(!wrap||!btn)return;
-  const mq=window.matchMedia('(max-width:520px)');
+  const wrap = document.getElementById('stickyCta');
+  const btn  = document.getElementById('buyNow');
+  if (!wrap || !btn) return;
+  const mq = window.matchMedia('(max-width:520px)');
   function attach(){
-    if(!mq.matches){wrap.style.display='none';return;}
-    const io=new IntersectionObserver((entries)=>{ wrap.style.display=entries[0].isIntersecting?'none':'block'; },{threshold:0.01});
+    if (!mq.matches){ wrap.style.display='none'; return; }
+    const io = new IntersectionObserver((entries)=>{
+      wrap.style.display = entries[0].isIntersecting ? 'none' : 'block';
+    },{threshold:0.01});
     io.observe(btn);
   }
-  mq.addEventListener?mq.addEventListener('change',attach):mq.addListener(attach);
+  if (mq.addEventListener) mq.addEventListener('change', attach);
+  else mq.addListener(attach);
   attach();
 }
 
-/* Bootstrap */
+/* bootstrap */
 document.addEventListener('DOMContentLoaded', ()=>{
   const logo = document.querySelector('.brand img');
   if (logo) logo.src = `${ASSET_ROOT}/logo-fablemarq.png`;
@@ -339,33 +449,36 @@ document.addEventListener('click',(e)=>{
 <main class="container">
   <section class="hero" id="hero">
     <a id="coverLink" class="cover-link" href="#" title="Anteprima" aria-label="Apri anteprima">
-      <img class="cover" src="../assets/it/cover2.webp" alt="Copertina — anteprima" loading="eager" />
+      <img class="cover" src="../assets/it/cover1.webp" alt="Copertina — Libro I" loading="eager" />
     </a>
     <div class="copy">
       <h1 class="hero-title">
-        <span class="line1" id="titleLine1">Libro II</span>
-        <span class="line2" id="titleLine2">Il Segreto di Snarfel</span>
+        <span class="line1" id="titleLine1">Kiki Moon — Libro I</span>
+        <span class="line2" id="titleLine2">La Stella Perduta</span>
       </h1>
-      <p class="hook" data-bind="hook">Snarfel è tornato…</p>
+      <p class="hook" data-bind="hook">Una stella si spegne. Ma la luce di Kiki è appena iniziata.</p>
 
       <ul class="benefits" id="benefits">
         <li>Età 6–10 anni</li>
         <li>80 pagine illustrate a colori</li>
-        <li>Stampa premium</li>
+        <li>Ideale da leggere insieme</li>
       </ul>
 
       <div class="cta">
         <a id="buyNow" class="amazon-btn" href="#" target="_blank" rel="noopener nofollow sponsored" aria-label="Acquista su Amazon">
-          <span data-i18n="buy">acquista su amazon</span>
+          <span data-i18n="buy">Acquista su Amazon</span>
         </a>
       </div>
-      <p id="buyMeta" class="mini-trust"><span class="lock" aria-hidden="true">🔒</span> Acquisto e resi gestiti da Amazon.</p>
+      <p id="buyMeta" class="mini-trust">
+        <span class="lock" aria-hidden="true">🔒</span>
+        Acquisto e resi gestiti da Amazon.
+      </p>
     </div>
   </section>
 
   <div class="sticky-cta" id="stickyCta">
     <a id="buyNowSticky" class="amazon-btn" href="#" target="_blank" rel="noopener nofollow sponsored" aria-label="Acquista ora su Amazon">
-      <span data-i18n="buy">acquista su amazon</span>
+      <span data-i18n="buy">Acquista su Amazon</span>
     </a>
   </div>
 
@@ -379,14 +492,14 @@ document.addEventListener('click',(e)=>{
     <li data-book="b2">
       <a class="card-link" href="#"><img src="../assets/it/cover2.webp" alt="Libro II" loading="lazy"></a>
       <p class="caption">Libro II — Il Segreto di Snarfel</p>
-      <p class="meta">Il segreto si rivela</p>
+      <p class="meta">In lavorazione</p>
     </li>
     <li data-book="b3">
       <a class="card-link" href="#"><img src="../assets/it/cover3.webp" alt="Libro III" loading="lazy"></a>
       <p class="caption">Libro III — La Notte Infinita</p>
-      <p class="meta">Il tempo si è fermato</p>
+      <p class="meta">In lavorazione</p>
     </li>
-    <!-- Futuri -->
+    <!-- Futuri, nascosti -->
     <li data-book="b4" style="display:none">
       <a class="card-link" href="#"><img src="../assets/it/cover4.webp" alt="Libro IV" loading="lazy"></a>
       <p class="caption">Libro IV</p>
