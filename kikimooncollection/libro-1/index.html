@@ -100,9 +100,6 @@
       .award-item{width:96px}
       .award-item p{font-size:.74rem}
     }
-    /* ============================================
-       📱  MOBILE LAYOUT — Versione pulita e finale
-       ============================================ */
 
     /* ≤520px  →  cover a sinistra, testo a destra */
     @media (max-width:520px){
@@ -203,7 +200,6 @@
     @media (max-width:365px){
       :where(h1,p,li,span){ overflow-wrap:break-word; word-break:normal; }
 
-      /* Header */
       header .nav{ flex-wrap:wrap; gap:8px; }
       header nav{ margin-left:auto; gap:8px; }
       .lang-switch{
@@ -213,7 +209,6 @@
       }
       .lang-switch button{ padding:5px 8px; font-size:.9rem; }
 
-      /* Card */
       .container{ padding-inline:14px !important; }
       .book-sheet{
         box-sizing:border-box;
@@ -257,7 +252,6 @@
 
       .plot,.hook,.review,.cta-row,.trust{ text-align:left; }
 
-      /* Stemmi: una sola riga centrata */
       .awards{
         justify-content:center;
         flex-wrap:nowrap;
@@ -276,7 +270,6 @@
       }
     }
 
-    /* 🩹 Fix leggibilità testo stemmi */
     @media (max-width:397px){
       .award-item p{
         -webkit-line-clamp:unset;
@@ -289,7 +282,6 @@
       }
     }
 
-    /* 🧭 Scheda più larga */
     .container{
       width:min(1200px,96vw) !important;
       padding-inline:24px !important;
@@ -305,7 +297,7 @@
       .container{ width:99vw !important; padding-inline:10px !important; }
       .book-sheet{ width:100% !important; padding-inline:14px !important; }
     }
-    /* 🧩 <352px — stemmi elastici su una sola riga */
+
     @media (max-width:352px){
       .awards{
         display:flex;
@@ -314,7 +306,7 @@
         gap:6px !important;
       }
       .award-item{
-        flex:0 0 calc((100% - 12px) / 3) !important;  /* 3 badge = 1/3 ciascuno */
+        flex:0 0 calc((100% - 12px) / 3) !important;
         max-width:calc((100% - 12px) / 3) !important;
         text-align:center !important;
       }
@@ -329,7 +321,6 @@
         text-overflow:ellipsis !important;
       }
     }
-    /* 🧩 <352px — tre stemmi in riga, testo su due righe forzate */
     @media (max-width:352px){
       .awards{
         display:flex;
@@ -349,7 +340,6 @@
         margin:0 auto 4px !important;
       }
 
-      /* testo su due righe forzate */
       .award-item p{
         font-size:.66rem !important;
         line-height:1.1 !important;
@@ -384,15 +374,19 @@
 
     window.__setLang=function(newL){
       const L2=normLang(newL);
-      document.documentElement.lang=L2; localStorage.setItem('lang',L2); window.PREFERRED_LANG=L2;
-      document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active', b.dataset.lang===L2));
+      document.documentElement.lang=L2;
+      localStorage.setItem('lang',L2);
+      window.PREFERRED_LANG=L2;
+      document.querySelectorAll('.lang-switch button')
+        .forEach(b=>b.classList.toggle('active', b.dataset.lang===L2));
       if(typeof window.applyI18n==='function') window.applyI18n(L2);
 
-      // >>> COVER sincronizzata con la lingua
       const img = document.querySelector('.cover-lg');
       if (img) {
         img.src = `../../assets/${L2}/cover1.webp`;
-        img.alt = (L2==='en') ? 'Kiki Moon — Book I' : (L2==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
+        img.alt = (L2==='en')
+          ? 'Kiki Moon — Book I'
+          : (L2==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
       }
 
       const q=new URLSearchParams(location.search);
@@ -404,6 +398,11 @@
           a.setAttribute('href', u.pathname.replace(location.origin,'') + (u.search?('?'+u.searchParams.toString()):'')); 
         }catch(_){}
       });
+
+      // aggiorna anche i link Amazon in base alla nuova lingua
+      if (window.__updateAmazonHref) {
+        window.__updateAmazonHref(L2);
+      }
     };
   })();
   </script>
@@ -498,20 +497,37 @@
   function applyI18n(lang){
     const t=I18N[lang]||I18N.en;
     const meta=document.querySelector('meta[name="description"]'); if(meta) meta.content=t.meta_desc;
-    const map=[["nav_collection","[data-i18n='nav_collection']"],["title","[data-i18n='title']"],["release_label","[data-i18n='release_label']"],["release_date","[data-i18n='release_date']"],["genre_label","[data-i18n='genre_label']"],["genre","[data-i18n='genre']"],["langs_label","[data-i18n='langs_label']"],["plot","[data-i18n='plot']"],["hook","[data-i18n='hook']"],["review","[data-i18n='review']"],["buy","[data-i18n='buy']"],["buy_now","[data-i18n='buy_now']"],["trust","[data-i18n='trust']"],["fast_checkout","[data-i18n='fast_checkout']"]];
+    const map=[
+      ["nav_collection","[data-i18n='nav_collection']"],
+      ["title","[data-i18n='title']"],
+      ["release_label","[data-i18n='release_label']"],
+      ["release_date","[data-i18n='release_date']"],
+      ["genre_label","[data-i18n='genre_label']"],
+      ["genre","[data-i18n='genre']"],
+      ["langs_label","[data-i18n='langs_label']"],
+      ["plot","[data-i18n='plot']"],
+      ["hook","[data-i18n='hook']"],
+      ["review","[data-i18n='review']"],
+      ["buy","[data-i18n='buy']"],
+      ["buy_now","[data-i18n='buy_now']"],
+      ["trust","[data-i18n='trust']"],
+      ["fast_checkout","[data-i18n='fast_checkout']"]
+    ];
     map.forEach(([k,sel])=>{ const el=document.querySelector(sel); if(el) el.textContent=t[k]; });
   }
 
   document.addEventListener('DOMContentLoaded', ()=>{
     const L=window.PREFERRED_LANG||localStorage.getItem('lang')||'en';
-    document.querySelectorAll('.lang-switch button').forEach(b=>b.classList.toggle('active', b.dataset.lang===L));
+    document.querySelectorAll('.lang-switch button')
+      .forEach(b=>b.classList.toggle('active', b.dataset.lang===L));
     applyI18n(L);
 
-    // >>> COVER iniziale coerente con la lingua
     const img = document.querySelector('.cover-lg');
     if (img) {
       img.src = `../../assets/${L}/cover1.webp`;
-      img.alt = (L==='en') ? 'Kiki Moon — Book I' : (L==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
+      img.alt = (L==='en')
+        ? 'Kiki Moon — Book I'
+        : (L==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
     }
 
     const q=new URLSearchParams(location.search);
@@ -531,22 +547,21 @@
   });
   </script>
 
-  <!-- Redirect Amazon per paese (opzionale) -->
+  <!-- Redirect Amazon per paese + lingua -->
   <script>
     (function(){
       const map = { IT:'it', ES:'es', MX:'com.mx', US:'com', CA:'ca', GB:'co.uk', FR:'fr', DE:'de' };
-      const prefer = localStorage.getItem('amz_cc');
 
-      function getAsinForLang(){
-        const lang = (window.PREFERRED_LANG || document.documentElement.lang || 'en').toLowerCase();
-        if(lang === 'it') return 'B0G2MC6Z2X';
-        if(lang === 'es') return 'B0G2J42FDD';
-        return 'B0G2JLYKWY'; // EN default
+      function getAsinForLang(lang){
+        const l = (lang || window.PREFERRED_LANG || document.documentElement.lang || 'en').toLowerCase();
+        if(l === 'it') return 'B0G2MC6Z2X';   // IT
+        if(l === 'es') return 'B0G2J42FDD';   // ES
+        return 'B0G2JLYKWY';                 // EN default
       }
 
-      function setHref(cc){
+      function setHref(cc, lang){
         const tld = map[cc] || 'com';
-        const asin = getAsinForLang();
+        const asin = getAsinForLang(lang);
         const url = `https://www.amazon.${tld}/dp/${asin}`;
         const b1 = document.getElementById('buyBtn');
         const b2 = document.getElementById('buyBtnSticky');
@@ -554,13 +569,29 @@
         if(b2) b2.href = url;
       }
 
-      if (prefer) { setHref(prefer); return; }
-      const ctrl = new AbortController(); const timer = setTimeout(()=>ctrl.abort(), 900);
+      // espongo una funzione globale per aggiornare il link quando cambi lingua
+      window.__updateAmazonHref = function(lang){
+        const cc = (localStorage.getItem('amz_cc') || 'US').toUpperCase();
+        setHref(cc, lang);
+      };
+
+      const prefer = localStorage.getItem('amz_cc');
+      if (prefer) {
+        setHref(prefer.toUpperCase());
+        return;
+      }
+
+      const ctrl = new AbortController();
+      const timer = setTimeout(()=>ctrl.abort(), 900);
+
       fetch('https://ipapi.co/country/', {signal:ctrl.signal, cache:'no-store'})
-        .then(r=>r.ok?r.text():Promise.reject()).then(cc=>{
+        .then(r=>r.ok?r.text():Promise.reject())
+        .then(cc=>{
           clearTimeout(timer);
           cc=(cc||'').trim().toUpperCase();
-          if (cc) { localStorage.setItem('amz_cc', cc); setHref(cc); } else setHref('US');
+          const finalCc = cc || 'US';
+          localStorage.setItem('amz_cc', finalCc);
+          setHref(finalCc);
         })
         .catch(()=>{
           const lang = (navigator.language || '').slice(-2).toUpperCase();
