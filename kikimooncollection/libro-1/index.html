@@ -63,9 +63,23 @@
     .award-item{width:auto;text-align:center}
     .award-item img{display:block;height:84px;width:auto;margin:0 auto 6px;filter:drop-shadow(0 0 8px rgba(231,194,95,.3))}
     .award-item p{
-      margin:0;font-size:.75rem;color:var(--gold-soft);line-height:1.2;max-width:120px;
-      display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-wrap:balance;
-    }
+  margin:0;
+  font-size:.75rem;
+  color:var(--gold-soft);
+  line-height:1.2;
+  max-width:120px;
+  text-wrap:balance;
+  overflow:hidden;
+
+  /* standard */
+  line-clamp:2;
+
+  /* webkit */
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+
     @media (max-width:420px){ .award-item img{height:72px} }
 
     /* Recensione */
@@ -168,14 +182,20 @@
       }
       .award-item img{ height:66px; margin:0 auto 6px; }
       .award-item p{
-        font-size:.78rem;
-        line-height:1.15;
-        max-width:120px;
-        display:-webkit-box;
-        -webkit-line-clamp:2;
-        -webkit-box-orient:vertical;
-        overflow:hidden;
-      }
+  font-size:.78rem;
+  line-height:1.15;
+  max-width:120px;
+  overflow:hidden;
+
+  /* standard */
+  line-clamp:2;
+
+  /* webkit */
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+
     }
 
     /* 396–365px → 3 stemmi in una riga */
