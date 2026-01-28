@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="utf-8" />
@@ -13,27 +13,102 @@
   <link rel="stylesheet" href="../../css/shop.css" />
 
   <!-- Font titolo -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet" />
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5N15LT4Y34"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-5N15LT4Y34', { send_page_view: true });
+
+    // "src" valido = SOLO canale esterno (ig, qr, ads...). Evita ref interni.
+    const INTERNAL_SRC = new Set(['b1','b2','b3','hero','grid','preview','collection','site','book','libro','home']);
+
+    (function initAttribution(){
+      const qs = new URLSearchParams(location.search);
+
+      const rawSrc = (qs.get('src') || '').trim().toLowerCase();
+      if (rawSrc && !INTERNAL_SRC.has(rawSrc)) localStorage.setItem('fm_src', rawSrc);
+
+      // salva utm_* in sessione (se presenti)
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{
+        const v = qs.get(k);
+        if (v) sessionStorage.setItem(k, v);
+      });
+    })();
+
+    function fmCtx(extra){
+      const qs = new URLSearchParams(location.search);
+      const lang = localStorage.getItem('lang') || document.documentElement.lang || 'en';
+      const cc   = (localStorage.getItem('amz_cc') || 'US').toUpperCase();
+
+      const rawSrc = (qs.get('src') || '').trim().toLowerCase();
+      const trafficSrc = (rawSrc && !INTERNAL_SRC.has(rawSrc))
+        ? rawSrc
+        : (localStorage.getItem('fm_src') || 'site');
+
+      const ctx = {
+        page_path: location.pathname,
+        page_location: location.href,
+        lang,
+        cc,
+        src: trafficSrc,
+        book_id: 'b1'
+      };
+
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{
+        const v = qs.get(k) || sessionStorage.getItem(k);
+        if (v) ctx[k] = v;
+      });
+
+      return Object.assign(ctx, extra || {});
+    }
+
+    window.trackEvent = function(name, params){
+      try { gtag('event', name, fmCtx(params)); } catch(_){}
+    };
+  </script>
 
   <style>
-    :root{--bg:#0b1222;--ink:#e9edf6;--muted:#9aa3b2;--gold:#E7C25F;--gold-soft:#f4e3aa}
+    :root{
+      --bg:#0b1222;
+      --ink:#e9edf6;
+      --muted:#9aa3b2;
+      --gold:#E7C25F;
+      --gold-soft:#f4e3aa
+    }
     html,body{margin:0;padding:0}
-    body{font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:var(--bg);color:var(--ink)}
+    body{
+      font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Arial;
+      background:var(--bg);color:var(--ink)
+    }
     a{color:inherit;text-decoration:none}
     .container{width:min(1100px,92vw);margin:0 auto;padding:20px}
 
     /* Header */
-    header{position:sticky;top:0;z-index:20;background:rgba(11,18,34,.85);backdrop-filter:saturate(140%) blur(6px)}
+    header{
+      position:sticky;top:0;z-index:20;
+      background:rgba(11,18,34,.85);
+      backdrop-filter:saturate(140%) blur(6px)
+    }
     .nav{display:flex;align-items:center;gap:16px;padding:10px 0}
     .brand img{height:34px}
-    nav{display:flex;gap:12px;margin-left:auto}
+    nav{display:flex;gap:12px;margin-left:auto;align-items:center}
     nav a{padding:10px 12px;border-radius:10px}
     nav a:hover{background:rgba(231,194,95,.10)}
     .skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .skip-link:focus{left:12px;top:12px;width:auto;height:auto;background:#111;color:#fff;padding:8px 10px;border-radius:8px}
 
     /* Selettore lingua */
-    .lang-switch{display:inline-flex;gap:6px;margin-left:6px;padding:4px 6px;border:1px solid rgba(231,194,95,.35);border-radius:14px;background:rgba(231,194,95,.10)}
+    .lang-switch{
+      display:inline-flex;gap:6px;margin-left:6px;padding:4px 6px;
+      border:1px solid rgba(231,194,95,.35);
+      border-radius:14px;background:rgba(231,194,95,.10)
+    }
     .lang-switch button{all:unset;cursor:pointer;padding:6px 10px;border-radius:10px;font-weight:700;color:#ffe8b3}
     .lang-switch button.active{background:rgba(231,194,95,.22);box-shadow:0 4px 12px rgba(231,194,95,.18)}
 
@@ -41,63 +116,124 @@
     .book-sheet{
       display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;
       margin:18px 0 0;padding:16px;border-radius:16px;
-      background:rgba(231,194,95,.05);outline:1px solid rgba(231,194,95,.12);
+      background:rgba(231,194,95,.05);
+      outline:1px solid rgba(231,194,95,.12);
       box-shadow:0 10px 40px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04)
     }
     .cover-lg{
-      width:clamp(200px,26vw,280px);height:auto;aspect-ratio:2/3;object-fit:cover;
-      border-radius:12px;border:1px solid rgba(231,194,95,.15);background:#0f1730;box-shadow:0 8px 24px rgba(0,0,0,.25)
+      width:clamp(200px,26vw,280px);
+      height:auto;aspect-ratio:2/3;object-fit:cover;
+      border-radius:12px;border:1px solid rgba(231,194,95,.15);
+      background:#0f1730;box-shadow:0 8px 24px rgba(0,0,0,.25)
     }
     .sheet-text h1{
-      margin:0 0 8px;font-size:clamp(24px,4vw,34px);
+      margin:0 0 8px;
+      font-size:clamp(24px,4vw,34px);
       font-family:"Cinzel",serif;font-weight:700;
     }
     .meta{
-      list-style:none;padding:0;margin:0 0 12px;display:flex;gap:14px;flex-wrap:wrap;opacity:.9;font-size:.95rem
+      list-style:none;padding:0;margin:0 0 12px;
+      display:flex;gap:14px;flex-wrap:wrap;
+      opacity:.9;font-size:.95rem
     }
     .plot{opacity:.92;margin:6px 0 12px}
-    .hook{margin:0 0 14px;font-style:italic;color:#ffe8b3;border-left:3px solid rgba(231,194,95,.55);padding-left:10px}
+    .hook{
+      margin:0 0 14px;font-style:italic;color:#ffe8b3;
+      border-left:3px solid rgba(231,194,95,.55);padding-left:10px
+    }
 
-    /* Stemmi allineati */
-    .awards{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:18px;margin:16px 0 12px}
-    .award-item{width:auto;text-align:center}
-    .award-item img{display:block;height:84px;width:auto;margin:0 auto 6px;filter:drop-shadow(0 0 8px rgba(231,194,95,.3))}
+    /* AWARDS (fix Android: una riga su mobile) */
+    .awards{
+      display:flex;
+      flex-wrap:wrap; /* desktop ok */
+      justify-content:center;
+      align-items:flex-start;
+      gap:18px;
+      margin:16px 0 12px
+    }
+    .award-item{
+      text-align:center;
+      min-width:0;
+    }
+    .award-item img{
+      display:block;height:84px;width:auto;margin:0 auto 6px;
+      filter:drop-shadow(0 0 8px rgba(231,194,95,.3))
+    }
     .award-item p{
-  margin:0;
-  font-size:.75rem;
-  color:var(--gold-soft);
-  line-height:1.2;
-  max-width:120px;
-  text-wrap:balance;
-  overflow:hidden;
+      margin:0;
+      font-size:.75rem;
+      color:var(--gold-soft);
+      line-height:1.2;
+      max-width:120px;
+      overflow:hidden;
 
-  /* standard */
-  line-clamp:2;
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:2;
+    }
 
-  /* webkit */
-  display:-webkit-box;
-  -webkit-box-orient:vertical;
-  -webkit-line-clamp:2;
-}
-
-    @media (max-width:420px){ .award-item img{height:72px} }
+    /* MOBILE: 3 stemmi sempre in una riga */
+    @media (max-width:520px){
+      .awards{
+        flex-wrap:nowrap;
+        gap:8px;
+      }
+      .award-item{
+        flex:1 1 0;
+        max-width:calc((100% - 16px) / 3);
+      }
+      .award-item img{ height:60px; }
+      .award-item p{
+        max-width:none;
+        font-size:.72rem;
+      }
+    }
+    @media (max-width:360px){
+      .awards{ gap:6px; }
+      .award-item img{ height:46px; }
+      .award-item p{ font-size:.66rem; }
+    }
 
     /* Recensione */
-    .review{display:flex;align-items:flex-start;justify-content:center;gap:18px;max-width:600px;margin:22px auto 0;text-align:left;flex-wrap:wrap}
-    .review .stars{color:var(--gold);font-size:1.3rem;letter-spacing:2px;line-height:1;flex-shrink:0;min-width:90px;text-align:center}
-    .review p{color:#cfd3e0;font-size:.95rem;line-height:1.55;margin:0;text-align:justify;flex:1}
+    .review{
+      display:flex;align-items:flex-start;justify-content:center;
+      gap:18px;max-width:600px;margin:22px auto 0;
+      text-align:left;flex-wrap:wrap
+    }
+    .review .stars{
+      color:var(--gold);font-size:1.3rem;letter-spacing:2px;line-height:1;
+      flex-shrink:0;min-width:90px;text-align:center
+    }
+    .review p{
+      color:#cfd3e0;font-size:.95rem;line-height:1.55;margin:0;
+      text-align:justify;flex:1
+    }
 
     /* CTA */
     .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;justify-content:center}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:12px;line-height:1;font-weight:800;font-size:1rem;border:1px solid rgba(231,194,95,.55);background:rgba(231,194,95,.10);color:#ffe8b3;box-shadow:0 6px 18px rgba(231,194,95,.12);transition:transform .15s ease,box-shadow .15s ease}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:12px 20px;border-radius:12px;line-height:1;
+      font-weight:800;font-size:1rem;
+      border:1px solid rgba(231,194,95,.55);
+      background:rgba(231,194,95,.10);color:#ffe8b3;
+      box-shadow:0 6px 18px rgba(231,194,95,.12);
+      transition:transform .15s ease,box-shadow .15s ease
+    }
     .btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(231,194,95,.18)}
     .trust{color:#cfd3e0;font-size:.88rem;opacity:.9;margin-top:6px;text-align:center}
 
-    /* Sticky CTA mobile */
-    .sticky-buy{position:sticky;bottom:0;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:center;padding:12px;margin-top:22px;background:linear-gradient(180deg,rgba(7,12,26,0),rgba(7,12,26,.85));backdrop-filter:blur(6px);border-radius:14px}
+    /* Sticky CTA */
+    .sticky-buy{
+      position:sticky;bottom:0;
+      display:flex;flex-direction:column;align-items:center;gap:6px;
+      justify-content:center;padding:12px;margin-top:22px;
+      background:linear-gradient(180deg,rgba(7,12,26,0),rgba(7,12,26,.85));
+      backdrop-filter:blur(6px);border-radius:14px
+    }
     .sticky-buy .btn{width:100%}
 
-    /* Tablet/phone base */
+    /* Tablet/phone */
     @media (max-width:820px){
       .book-sheet{grid-template-columns:118px 1fr;gap:12px;padding:12px}
       .cover-lg{width:118px}
@@ -105,348 +241,317 @@
       .meta{gap:8px;font-size:.92rem}
       .plot{font-size:.95rem;margin:6px 0 10px}
       .hook{font-size:.95rem;margin-bottom:12px}
-      .review{display:flex;flex-direction:column;align-items:center;text-align:center;width:100%;max-width:100%;margin:20px 0 0;padding:0 8px;box-sizing:border-box}
-      .review .stars{text-align:center;margin-bottom:6px}
-      .review p{text-align:justify;font-size:.94rem;width:100%;line-height:1.55}
-    }
-    @media (max-width:420px){
-      .awards{justify-content:center !important;gap:12px !important;flex-wrap:wrap !important;overflow:visible !important}
-      .award-item{width:96px}
-      .award-item p{font-size:.74rem}
+      .review{flex-direction:column;align-items:center;text-align:center;max-width:100%;margin:20px 0 0;padding:0 8px}
+      .review p{text-align:justify;font-size:.94rem;width:100%}
     }
 
-    /* ≤520px  →  cover a sinistra, testo a destra */
-    @media (max-width:520px){
-      .book-sheet{
-        display:grid;
-        grid-template-columns:118px 1fr;
-        column-gap:10px;
-        row-gap:6px;
-        align-items:start;
-        text-align:left;
-        padding:12px;
-      }
-
-      .cover-lg{
-        grid-column:1;
-        grid-row:1 / 4;
-        width:118px;
-        aspect-ratio:2/3;
-        object-fit:cover;
-      }
-
-      .sheet-text{ display:contents; }
-
-      .sheet-text h1{
-        grid-column:2;
-        grid-row:1;
-        margin:0 0 6px;
-        line-height:1.2;
-        font-size:1.1rem;
-      }
-
-      .sheet-text .meta{
-        grid-column:2;
-        grid-row:2 / 4;
-        display:block;
-        margin:0 0 10px;
-        padding:0;
-      }
-      .sheet-text .meta li{
-        list-style:none;
-        margin:0 0 6px;
-      }
-      .sheet-text .meta strong{
-        display:block;
-        font-weight:700;
-        color:var(--muted);
-        margin:0 0 2px;
-      }
-
-      .plot,.hook,.awards,.review,.cta-row,.trust{
-        grid-column:1 / -1;
-        margin-left:0;
-      }
-
-      .awards{
-        display:flex;
-        flex-wrap:wrap;
-        justify-content:center;
-        align-items:flex-start;
-        gap:14px;
-        margin-top:10px;
-      }
-      .award-item{
-        width:92px;
-        text-align:center;
-      }
-      .award-item img{ height:66px; margin:0 auto 6px; }
-      .award-item p{
-  font-size:.78rem;
-  line-height:1.15;
-  max-width:120px;
-  overflow:hidden;
-
-  /* standard */
-  line-clamp:2;
-
-  /* webkit */
-  display:-webkit-box;
-  -webkit-box-orient:vertical;
-  -webkit-line-clamp:2;
-}
-
-    }
-
-    /* 396–365px → 3 stemmi in una riga */
-    @media (max-width:396px) and (min-width:365px){
-      .awards{
-        justify-content:center;
-        flex-wrap:nowrap;
-        gap:8px;
-      }
-      .award-item{
-        flex:0 0 auto;
-        width:auto;
-      }
-      .award-item img{ height:60px; }
-      .award-item p{
-        font-size:.72rem;
-        max-width:90px;
-      }
-    }
-
-    /* ≤365px → una colonna (cover→titolo→meta), testo sinistro */
+    /* super small */
     @media (max-width:365px){
-      :where(h1,p,li,span){ overflow-wrap:break-word; word-break:normal; }
-
-      header .nav{ flex-wrap:wrap; gap:8px; }
-      header nav{ margin-left:auto; gap:8px; }
-      .lang-switch{
-        transform:scale(.92);
-        transform-origin:right center;
-        padding:3px 5px;
-      }
-      .lang-switch button{ padding:5px 8px; font-size:.9rem; }
-
-      .container{ padding-inline:14px !important; }
-      .book-sheet{
-        box-sizing:border-box;
-        width:100%;
-        margin:12px 0 0;
-        padding:14px;
-        grid-template-columns:1fr;
-        grid-auto-flow:row;
-        text-align:left;
-      }
-
-      .cover-lg{
-        grid-column:1;
-        grid-row:1;
-        width:72%;
-        max-width:220px;
-        margin:0 auto 10px;
-      }
-      .sheet-text h1{
-        grid-column:1;
-        grid-row:2;
-        text-align:left;
-        font-size:1rem;
-        margin:0 0 6px;
-      }
-      .sheet-text .meta{
-        grid-column:1;
-        grid-row:3;
-        display:block;
-        text-align:left;
-        margin:0 0 10px;
-      }
-      .sheet-text .meta li{
-        margin:0 0 6px;
-      }
-      .sheet-text .meta strong{
-        display:block;
-        color:var(--muted);
-        margin:0 0 2px;
-      }
-
-      .plot,.hook,.review,.cta-row,.trust{ text-align:left; }
-
-      .awards{
-        justify-content:center;
-        flex-wrap:nowrap;
-        gap:8px;
-      }
-      .award-item{
-        flex:0 0 auto;
-        text-align:center;
-      }
-      .award-item img{ height:50px; }
-      .award-item p{
-        font-size:.68rem;
-        max-width:80px;
-        white-space:normal;
-        overflow:visible;
-      }
-    }
-
-    @media (max-width:397px){
-      .award-item p{
-        -webkit-line-clamp:unset;
-        line-clamp:unset;
-        display:block;
-        white-space:normal;
-        overflow:visible;
-        text-overflow:clip;
-        max-width:100px;
-      }
-    }
-
-    .container{
-      width:min(1200px,96vw) !important;
-      padding-inline:24px !important;
-    }
-    @media (max-width:820px){
-      .container{ width:96vw !important; padding-inline:18px !important; }
-    }
-    @media (max-width:520px){
-      .container{ width:98vw !important; padding-inline:12px !important; }
-      .book-sheet{ width:100% !important; padding-inline:16px !important; }
-    }
-    @media (max-width:365px){
-      .container{ width:99vw !important; padding-inline:10px !important; }
-      .book-sheet{ width:100% !important; padding-inline:14px !important; }
-    }
-
-    @media (max-width:352px){
-      .awards{
-        display:flex;
-        flex-wrap:nowrap !important;
-        justify-content:center !important;
-        gap:6px !important;
-      }
-      .award-item{
-        flex:0 0 calc((100% - 12px) / 3) !important;
-        max-width:calc((100% - 12px) / 3) !important;
-        text-align:center !important;
-      }
-      .award-item img{
-        height:46px !important;
-        margin:0 auto 4px !important;
-      }
-      .award-item p{
-        font-size:.66rem !important;
-        white-space:nowrap !important;
-        overflow:hidden !important;
-        text-overflow:ellipsis !important;
-      }
-    }
-    @media (max-width:352px){
-      .awards{
-        display:flex;
-        flex-wrap:nowrap !important;
-        justify-content:center !important;
-        gap:6px !important;
-      }
-
-      .award-item{
-        flex:0 0 calc((100% - 12px) / 3) !important;
-        max-width:calc((100% - 12px) / 3) !important;
-        text-align:center !important;
-      }
-
-      .award-item img{
-        height:46px !important;
-        margin:0 auto 4px !important;
-      }
-
-      .award-item p{
-        font-size:.66rem !important;
-        line-height:1.1 !important;
-        white-space:normal !important;
-        overflow:visible !important;
-        text-overflow:clip !important;
-        display:block !important;
-        max-width:80px !important;
-      }
+      header .nav{flex-wrap:wrap;gap:8px}
+      .lang-switch{transform:scale(.92);transform-origin:right center}
+      .container{padding-inline:14px}
+      .book-sheet{grid-template-columns:1fr;text-align:left}
+      .cover-lg{width:72%;max-width:220px;margin:0 auto 10px}
+      .sheet-text h1{font-size:1rem}
+      .meta{display:block}
+      .meta li{margin:0 0 6px}
+      .meta strong{display:block;color:var(--muted);margin:0 0 2px}
     }
   </style>
 
-  <!-- Motore lingua -->
   <script>
-  (function(){
-    function normLang(l){
-      const s=(l||'').toLowerCase();
-      if(s.startsWith('it'))return'it';
-      if(s.startsWith('es'))return'es';
-      return'en';
-    }
-    const qs=new URLSearchParams(location.search);
-    const urlL=qs.get('lang'); const saved=localStorage.getItem('lang');
-    const nav=(navigator.languages&&navigator.languages[0])||navigator.language||'en';
-    const L=normLang(urlL||saved||nav);
-    document.documentElement.lang=L; localStorage.setItem('lang',L); window.PREFERRED_LANG=L;
-    if(urlL){
-      const u=new URL(location.href);
-      u.searchParams.delete('lang');
-      history.replaceState({},'',u);
-    }
+    'use strict';
 
-    window.__setLang=function(newL){
-      const L2=normLang(newL);
-      document.documentElement.lang=L2;
-      localStorage.setItem('lang',L2);
-      window.PREFERRED_LANG=L2;
-      document.querySelectorAll('.lang-switch button')
-        .forEach(b=>b.classList.toggle('active', b.dataset.lang===L2));
-      if(typeof window.applyI18n==='function') window.applyI18n(L2);
+    /* ====== costanti ====== */
+    const ASSET_ROOT = '../../assets';
+    const AMZ_TLD = { IT:'it', ES:'es', FR:'fr', DE:'de', GB:'co.uk', US:'com', CA:'ca', MX:'com.mx', CO:'com.co' };
 
-      const img = document.querySelector('.cover-lg');
-      if (img) {
-        img.src = `../../assets/${L2}/cover1.webp`;
-        img.alt = (L2==='en')
-          ? 'Kiki Moon — Book I'
-          : (L2==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
-      }
+    const ASIN_BY_LANG = {
+      it: 'B0G2MC6Z2X',
+      en: 'B0G2JLYKWY',
+      es: 'B0G2J42FDD'
+    };
 
-      const q=new URLSearchParams(location.search);
-      document.querySelectorAll('a.nav-home, a.nav-collection').forEach(a=>{
-        try{
-          const u=new URL(a.getAttribute('href'), location.href);
-          u.searchParams.set('lang',L2);
-          if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
-          a.setAttribute('href', u.pathname.replace(location.origin,'') + (u.search?('?'+u.searchParams.toString()):'')); 
-        }catch(_){}
-      });
-
-      // aggiorna anche i link Amazon in base alla nuova lingua
-      if (window.__updateAmazonHref) {
-        window.__updateAmazonHref(L2);
+    const I18N = {
+      it:{
+        meta_desc:"Una stella si spegne e Kiki scopre che il coraggio nasce da una piccola luce testarda.",
+        nav_collection:"Collection",
+        title:"Libro I — La Stella Perduta",
+        release_label:"Data di uscita:",
+        release_date:"26 novembre 2025",
+        genre_label:"Genere:",
+        genre:"Avventura, magia",
+        langs_label:"Lingue:",
+        plot:"Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.",
+        hook:"«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»",
+        review:"Letto con mia figlia: una storia dolce, piena di magia e illustrazioni stupende. Kiki è adorabile e il messaggio finale resta nel cuore.",
+        buy:"Acquista su Amazon",
+        buy_now:"Acquista ora",
+        trust:"Acquisto e resi gestiti da Amazon.",
+        fast_checkout:"Checkout rapido sullo store del tuo paese."
+      },
+      en:{
+        meta_desc:"A star goes dark, and Kiki learns that courage begins with a stubborn little light.",
+        nav_collection:"Collection",
+        title:"Book I — The Lost Star",
+        release_label:"Release date:",
+        release_date:"November 26, 2025",
+        genre_label:"Genre:",
+        genre:"Adventure, magic",
+        langs_label:"Languages:",
+        plot:"In Moon’s sky, a star goes out. To relight it, Kiki must find Moon’s Breath and discover that courage starts with a stubborn little light.",
+        hook:"“Some secrets don’t shout: they shine. Kiki will find it before the world falls asleep.”",
+        review:"Read with my daughter: a sweet story full of magic and stunning illustrations. Kiki is adorable and the final message stays with you.",
+        buy:"Buy on Amazon",
+        buy_now:"Buy now",
+        trust:"Purchase and returns handled by Amazon.",
+        fast_checkout:"Fast checkout on your country store."
+      },
+      es:{
+        meta_desc:"Una estrella se apaga y Kiki descubre que el valor nace de una pequeña luz terca.",
+        nav_collection:"Colección",
+        title:"Libro I — La Estrella Perdida",
+        release_label:"Fecha de lanzamiento:",
+        release_date:"26 de noviembre de 2025",
+        genre_label:"Género:",
+        genre:"Aventura, magia",
+        langs_label:"Idiomas:",
+        plot:"En el cielo de Moon, una estrella se apaga. Para encenderla de nuevo, Kiki debe encontrar el Aliento de Moon y descubrir que el valor empieza con una pequeña luz terca.",
+        hook:"«Hay secretos que no gritan: brillan. Kiki lo encontrará antes de que el mundo se duerma.»",
+        review:"Leído con mi hija: una historia dulce, llena de magia e ilustraciones preciosas. Kiki es adorable y el mensaje final se queda contigo.",
+        buy:"Comprar en Amazon",
+        buy_now:"Comprar ahora",
+        trust:"Compra y devoluciones gestionadas por Amazon.",
+        fast_checkout:"Pago rápido en la tienda de tu país."
       }
     };
-  })();
+
+    /* ====== helpers ====== */
+    function normLang(l){
+      const s=(l||'').toLowerCase();
+      if(s.startsWith('it')) return 'it';
+      if(s.startsWith('es')) return 'es';
+      return 'en';
+    }
+    function qs(){ return new URLSearchParams(location.search); }
+
+    function withParams(href, params){
+      const u = new URL(href, location.href);
+      Object.entries(params).forEach(([k,v])=>{
+        if(v === undefined || v === null || v === '') return;
+        u.searchParams.set(k, String(v));
+      });
+      return u.pathname + (u.search ? ('?' + u.searchParams.toString()) : '');
+    }
+
+    function getInitialLang(){
+      const q = qs();
+      const urlL = q.get('lang');
+      const saved= localStorage.getItem('lang');
+      const nav  = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
+      return normLang(urlL || saved || nav);
+    }
+
+    // PAESE != LINGUA: usa ?cc=GB, altrimenti localStorage, altrimenti regione di navigator.language
+    function guessCcFromLocale(){
+      const loc = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toUpperCase();
+      const m = loc.match(/-([A-Z]{2})$/);
+      if (!m) return null;
+      const region = m[1];
+      return AMZ_TLD[region] ? region : null;
+    }
+    function getStoreCc(){
+      const q = qs();
+      const urlCc = (q.get('cc') || '').trim().toUpperCase();
+      if (urlCc && AMZ_TLD[urlCc]) return urlCc;
+
+      const saved = (localStorage.getItem('amz_cc') || '').trim().toUpperCase();
+      if (saved && AMZ_TLD[saved]) return saved;
+
+      return guessCcFromLocale() || 'US';
+    }
+    function persistStoreCc(cc){
+      const C = (cc||'').toUpperCase();
+      if (!AMZ_TLD[C]) return;
+      localStorage.setItem('amz_cc', C);
+    }
+
+    function getTrafficSrc(){
+      const q = qs();
+      const raw = (q.get('src') || '').trim().toLowerCase();
+      if (raw && !INTERNAL_SRC.has(raw)) {
+        localStorage.setItem('fm_src', raw);
+        return raw;
+      }
+      return localStorage.getItem('fm_src') || 'site';
+    }
+
+    function buildAmazonUrl({ cc, lang, placement }){
+      const tld = AMZ_TLD[cc] || 'com';
+      const asin = ASIN_BY_LANG[lang] || ASIN_BY_LANG.en;
+      const trafficSrc = getTrafficSrc();
+
+      const q = new URLSearchParams();
+      q.set('utm_source', trafficSrc);
+      q.set('utm_medium', `book1_${lang}`);
+      q.set('utm_campaign', 'readthrough');
+      if (placement) q.set('utm_content', placement);
+      q.set('src', trafficSrc);
+
+      return `https://www.amazon.${tld}/dp/${asin}?${q.toString()}`;
+    }
+
+    const state = { lang:'it', cc:'US' };
+
+    function applyI18n(){
+      const t = I18N[state.lang] || I18N.en;
+
+      document.documentElement.lang = state.lang;
+      localStorage.setItem('lang', state.lang);
+
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.content = t.meta_desc;
+
+      const map = [
+        ["nav_collection","[data-i18n='nav_collection']"],
+        ["title","[data-i18n='title']"],
+        ["release_label","[data-i18n='release_label']"],
+        ["release_date","[data-i18n='release_date']"],
+        ["genre_label","[data-i18n='genre_label']"],
+        ["genre","[data-i18n='genre']"],
+        ["langs_label","[data-i18n='langs_label']"],
+        ["plot","[data-i18n='plot']"],
+        ["hook","[data-i18n='hook']"],
+        ["review","[data-i18n='review']"],
+        ["buy","[data-i18n='buy']"],
+        ["buy_now","[data-i18n='buy_now']"],
+        ["trust","[data-i18n='trust']"],
+        ["fast_checkout","[data-i18n='fast_checkout']"]
+      ];
+      map.forEach(([k,sel])=>{
+        const el = document.querySelector(sel);
+        if (el) el.textContent = t[k];
+      });
+
+      // cover (evita flash sbagliato)
+      const img = document.querySelector('.cover-lg');
+      if (img){
+        img.src = `${ASSET_ROOT}/${state.lang}/cover1.webp`;
+        img.alt = (state.lang === 'en') ? 'Kiki Moon — Book I' : 'Kiki Moon — Libro I';
+      }
+
+      // UI switch
+      document.querySelectorAll('.lang-switch button')
+        .forEach(b => b.classList.toggle('active', b.dataset.lang === state.lang));
+
+      // nav links: propaga lang + src
+      const trafficSrc = getTrafficSrc();
+      const home = document.querySelector('a.nav-home');
+      if (home) home.href = withParams('../../index.html', { lang: state.lang, src: trafficSrc });
+
+      const coll = document.querySelector('a.nav-collection');
+      if (coll) coll.href = withParams('../index.html', { lang: state.lang, src: trafficSrc });
+
+      // link Amazon
+      const urlHero   = buildAmazonUrl({ cc: state.cc, lang: state.lang, placement:'hero_btn' });
+      const urlSticky = buildAmazonUrl({ cc: state.cc, lang: state.lang, placement:'sticky_btn' });
+
+      const b1 = document.getElementById('buyBtn');
+      const b2 = document.getElementById('buyBtnSticky');
+      if (b1) b1.href = urlHero;
+      if (b2) b2.href = urlSticky;
+    }
+
+    function bindTrackingOnce(){
+      if (window.__fmBound) return;
+      window.__fmBound = true;
+
+      window.trackEvent && window.trackEvent('view_book', { page:'book1' });
+
+      function bindClick(id, eventName, extra){
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('click', ()=>{
+          const href = el.href || el.getAttribute('href') || '';
+          window.trackEvent && window.trackEvent(eventName, Object.assign({
+            href,
+            destination: href.includes('amazon.') ? 'amazon' : 'internal'
+          }, extra || {}));
+        }, { passive:true });
+      }
+
+      bindClick('buyBtn',       'click_buy', { placement:'hero',   book_id:'b1' });
+      bindClick('buyBtnSticky', 'click_buy', { placement:'sticky', book_id:'b1' });
+
+      const home = document.querySelector('a.nav-home');
+      if (home){
+        home.addEventListener('click', ()=> window.trackEvent && window.trackEvent('click_nav', { item:'home' }), { passive:true });
+      }
+      const coll = document.querySelector('a.nav-collection');
+      if (coll){
+        coll.addEventListener('click', ()=> window.trackEvent && window.trackEvent('click_nav', { item:'collection' }), { passive:true });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // init lang + store
+      state.lang = getInitialLang();
+      state.cc   = getStoreCc();
+      persistStoreCc(state.cc);
+
+      // se arrivi con ?lang=..., lo ripuliamo per URL pulito
+      const q = qs();
+      if (q.get('lang')){
+        const u = new URL(location.href);
+        u.searchParams.delete('lang');
+        history.replaceState({},'',u);
+      }
+
+      applyI18n();
+      bindTrackingOnce();
+    });
+
+    document.addEventListener('click',(e)=>{
+      const b = e.target.closest('.lang-switch button[data-lang]');
+      if (!b) return;
+      e.preventDefault();
+
+      state.lang = normLang(b.dataset.lang);
+      applyI18n();
+
+      window.trackEvent && window.trackEvent('select_language', { language: state.lang });
+    });
   </script>
 </head>
+
 <body>
   <a href="#main" class="skip-link">Salta al contenuto</a>
 
   <header>
     <div class="container nav">
-      <a class="brand nav-home" href="../../index.html"><img src="../../assets/logo-fablemarq.png" alt="Fablemarq"></a>
+      <a class="brand nav-home" href="../../index.html">
+        <img src="../../assets/logo-fablemarq.png" alt="Fablemarq" decoding="async" />
+      </a>
+
       <nav>
         <a href="../index.html" class="nav-collection" data-i18n="nav_collection">Collection</a>
+
         <div class="lang-switch" aria-label="Language">
-          <button data-lang="en">EN</button>
-          <button data-lang="it">IT</button>
-          <button data-lang="es">ES</button>
+          <button data-lang="en" type="button">EN</button>
+          <button data-lang="it" type="button">IT</button>
+          <button data-lang="es" type="button">ES</button>
         </div>
       </nav>
     </div>
-  </.brand{flex:0 0 auto}>
+  </header>
 
-  <main id="main" class="container section">
+  <main id="main" class="container">
     <section class="book-sheet">
-      <img class="cover-lg" src="../../assets/cover1.webp" alt="Kiki Moon — Libro I" width="1000" height="1500">
+      <img class="cover-lg"
+           src="../../assets/it/cover1.webp"
+           alt="Kiki Moon — Libro I"
+           width="1000" height="1500"
+           loading="eager" decoding="async" />
 
       <div class="sheet-text">
         <h1 data-i18n="title">Libro I — La Stella Perduta</h1>
@@ -461,19 +566,21 @@
           Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.
         </p>
 
-        <p class="hook" data-i18n="hook">«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»</p>
+        <p class="hook" data-i18n="hook">
+          «Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»
+        </p>
 
         <div class="awards">
           <div class="award-item">
-            <img src="../../assets/awards/award-readers.png" alt="Readers’ Choice" width="160" height="160" loading="lazy" decoding="async">
+            <img src="../../assets/awards/award-readers.png" alt="Readers’ Choice" width="160" height="160" loading="lazy" decoding="async" />
             <p>Readers’ Choice</p>
           </div>
           <div class="award-item">
-            <img src="../../assets/awards/award-storytelling.png" alt="Storytelling Award 2025" width="160" height="160" loading="lazy" decoding="async">
+            <img src="../../assets/awards/award-storytelling.png" alt="Storytelling Award 2025" width="160" height="160" loading="lazy" decoding="async" />
             <p>Storytelling Award 2025</p>
           </div>
           <div class="award-item">
-            <img src="../../assets/awards/award-illustrated.png" alt="Best Illustrated Tale" width="160" height="160" loading="lazy" decoding="async">
+            <img src="../../assets/awards/award-illustrated.png" alt="Best Illustrated Tale" width="160" height="160" loading="lazy" decoding="async" />
             <p>Best Illustrated Tale</p>
           </div>
         </div>
@@ -496,7 +603,7 @@
       </div>
     </section>
 
-    <div class="sticky-buy">
+    <div class="sticky-buy" aria-label="Sticky buy">
       <a class="btn" id="buyBtnSticky"
          href="https://www.amazon.it/dp/B0G2MC6Z2X"
          target="_blank" rel="noopener nofollow sponsored" data-i18n="buy_now">
@@ -505,119 +612,5 @@
       <span class="trust" data-i18n="fast_checkout">Checkout rapido sullo store del tuo paese.</span>
     </div>
   </main>
-
-  <!-- I18N + propagazione lang -->
-  <script>
-  const I18N = {
-    it:{meta_desc:"Una stella si spegne e Kiki scopre che il coraggio nasce da una piccola luce testarda.",nav_collection:"Collection",title:"Libro I — La Stella Perduta",release_label:"Data di uscita:",release_date:"26 novembre 2025",genre_label:"Genere:",genre:"Avventura, magia",langs_label:"Lingue:",plot:"Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.",hook:"«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»",review:"Letto con mia figlia: una storia dolce, piena di magia e illustrazioni stupende. Kiki è adorabile e il messaggio finale resta nel cuore.",buy:"Acquista su Amazon",buy_now:"Acquista ora",trust:"Acquisto e resi gestiti da Amazon.",fast_checkout:"Checkout rapido sullo store del tuo paese."},
-    en:{meta_desc:"A star goes dark, and Kiki learns that courage begins with a stubborn little light.",nav_collection:"Collection",title:"Book I — The Lost Star",release_label:"Release date:",release_date:"November 26, 2025",genre_label:"Genre:",genre:"Adventure, magic",langs_label:"Languages:",plot:"In Moon’s sky, a star goes out. To relight it, Kiki must find Moon’s Breath and discover that courage starts with a stubborn little light.",hook:"“Some secrets don’t shout: they shine. Kiki will find it before the world falls asleep.”",review:"Read with my daughter: a sweet story full of magic and stunning illustrations. Kiki is adorable and the final message stays with you.",buy:"Buy on Amazon",buy_now:"Buy now",trust:"Purchase and returns handled by Amazon.",fast_checkout:"Fast checkout on your country store."},
-    es:{meta_desc:"Una estrella se apaga y Kiki descubre que el valor nace de una pequeña luz terca.",nav_collection:"Colección",title:"Libro I — La Estrella Perdida",release_label:"Fecha de lanzamiento:",release_date:"26 de noviembre de 2025",genre_label:"Género:",genre:"Aventura, magia",langs_label:"Idiomas:",plot:"En el cielo de Moon, una estrella se apaga. Para encenderla de nuevo, Kiki debe encontrar el Aliento de Moon y descubrir que el valor empieza con una pequeña luz terca.",hook:"«Hay secretos que no gritan: brillan. Kiki lo encontrará antes de que el mundo se duerma.»",review:"Leído con mi hija: una historia dulce, llena de magia e ilustraciones preciosas. Kiki es adorable y el mensaje final se queda contigo.",buy:"Comprar en Amazon",buy_now:"Comprar ahora",trust:"Compra y devoluciones gestionadas por Amazon.",fast_checkout:"Pago rápido en la tienda de tu país."}
-  };
-
-  function applyI18n(lang){
-    const t=I18N[lang]||I18N.en;
-    const meta=document.querySelector('meta[name="description"]'); if(meta) meta.content=t.meta_desc;
-    const map=[
-      ["nav_collection","[data-i18n='nav_collection']"],
-      ["title","[data-i18n='title']"],
-      ["release_label","[data-i18n='release_label']"],
-      ["release_date","[data-i18n='release_date']"],
-      ["genre_label","[data-i18n='genre_label']"],
-      ["genre","[data-i18n='genre']"],
-      ["langs_label","[data-i18n='langs_label']"],
-      ["plot","[data-i18n='plot']"],
-      ["hook","[data-i18n='hook']"],
-      ["review","[data-i18n='review']"],
-      ["buy","[data-i18n='buy']"],
-      ["buy_now","[data-i18n='buy_now']"],
-      ["trust","[data-i18n='trust']"],
-      ["fast_checkout","[data-i18n='fast_checkout']"]
-    ];
-    map.forEach(([k,sel])=>{ const el=document.querySelector(sel); if(el) el.textContent=t[k]; });
-  }
-
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const L=window.PREFERRED_LANG||localStorage.getItem('lang')||'en';
-    document.querySelectorAll('.lang-switch button')
-      .forEach(b=>b.classList.toggle('active', b.dataset.lang===L));
-    applyI18n(L);
-
-    const img = document.querySelector('.cover-lg');
-    if (img) {
-      img.src = `../../assets/${L}/cover1.webp`;
-      img.alt = (L==='en')
-        ? 'Kiki Moon — Book I'
-        : (L==='es' ? 'Kiki Moon — Libro I' : 'Kiki Moon — Libro I');
-    }
-
-    const q=new URLSearchParams(location.search);
-    document.querySelectorAll('a.nav-home, a.nav-collection').forEach(a=>{
-      try{
-        const u=new URL(a.getAttribute('href'), location.href);
-        u.searchParams.set('lang', L);
-        if(q.get('src') && !u.searchParams.get('src')) u.searchParams.set('src', q.get('src'));
-        a.setAttribute('href', u.pathname.replace(location.origin,'') + (u.search?('?'+u.searchParams.toString()):'')); 
-      }catch(_){}
-    });
-  });
-
-  document.addEventListener('click',(e)=>{
-    const b=e.target.closest('.lang-switch button[data-lang]'); if(!b) return;
-    e.preventDefault(); window.__setLang && window.__setLang(b.dataset.lang);
-  });
-  </script>
-
-  <!-- Redirect Amazon per paese + lingua -->
-  <script>
-    (function(){
-      const map = { IT:'it', ES:'es', MX:'com.mx', US:'com', CA:'ca', GB:'co.uk', FR:'fr', DE:'de' };
-
-      function getAsinForLang(lang){
-        const l = (lang || window.PREFERRED_LANG || document.documentElement.lang || 'en').toLowerCase();
-        if(l === 'it') return 'B0G2MC6Z2X';   // IT
-        if(l === 'es') return 'B0G2J42FDD';   // ES
-        return 'B0G2JLYKWY';                 // EN default
-      }
-
-      function setHref(cc, lang){
-        const tld = map[cc] || 'com';
-        const asin = getAsinForLang(lang);
-        const url = `https://www.amazon.${tld}/dp/${asin}`;
-        const b1 = document.getElementById('buyBtn');
-        const b2 = document.getElementById('buyBtnSticky');
-        if(b1) b1.href = url;
-        if(b2) b2.href = url;
-      }
-
-      // espongo una funzione globale per aggiornare il link quando cambi lingua
-      window.__updateAmazonHref = function(lang){
-        const cc = (localStorage.getItem('amz_cc') || 'US').toUpperCase();
-        setHref(cc, lang);
-      };
-
-      const prefer = localStorage.getItem('amz_cc');
-      if (prefer) {
-        setHref(prefer.toUpperCase());
-        return;
-      }
-
-      const ctrl = new AbortController();
-      const timer = setTimeout(()=>ctrl.abort(), 900);
-
-      fetch('https://ipapi.co/country/', {signal:ctrl.signal, cache:'no-store'})
-        .then(r=>r.ok?r.text():Promise.reject())
-        .then(cc=>{
-          clearTimeout(timer);
-          cc=(cc||'').trim().toUpperCase();
-          const finalCc = cc || 'US';
-          localStorage.setItem('amz_cc', finalCc);
-          setHref(finalCc);
-        })
-        .catch(()=>{
-          const lang = (navigator.language || '').slice(-2).toUpperCase();
-          setHref(lang || 'US');
-        });
-    })();
-  </script>
 </body>
 </html>
