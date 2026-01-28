@@ -64,21 +64,20 @@
   .hero-title .line1{display:block;font-size:clamp(22px,4.2vw,34px);color:var(--gold)}
   .hero-title .line2{display:block;font-size:clamp(22px,4.2vw,34px);color:var(--ink)}
 
+  /* Clamp compatibile: webkit + standard fallback */
   .hook{
-  margin:6px 0 12px;
-  color:#ffe8b3;
-  font-style:italic;
-  text-align:center;
-  overflow:hidden;
+    margin:6px 0 12px;
+    color:#ffe8b3;
+    font-style:italic;
+    text-align:center;
+    overflow:hidden;
 
-  display:-webkit-box;
-  -webkit-box-orient:vertical;
-  -webkit-line-clamp:2;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
 
-  display:box;
-  box-orient:vertical;
-  line-clamp:2;
-}
+    line-clamp:2; /* fallback/standard (warning VSCode) */
+  }
 
   .benefits{list-style:none;margin:8px 0 14px;padding:0;display:grid;gap:8px;justify-items:center;line-height:1.4}
   .benefits li{font-size:.98rem;color:#d8dcee;opacity:.95}
@@ -90,8 +89,8 @@
     min-height:60px;padding:14px 28px;border-radius:12px;
     font-weight:900;font-size:1rem;letter-spacing:.2px;
     color:var(--ctaText);background:linear-gradient(180deg,var(--ctaA),var(--ctaB));border:none;
-    box-shadow:0 8px 24px rgba(255,153,0,.35);transition: transform .12s ease, box-shadow .15s ease, filter .12s ease;
-
+    box-shadow:0 8px 24px rgba(255,153,0,.35);
+    transition:transform .12s ease, box-shadow .15s ease, filter .12s ease;
   }
   .amazon-btn:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(255,153,0,.45);filter:saturate(1.05)}
   .mini-trust{margin:6px 0 12px;font-size:.92rem;color:var(--muted);text-align:center}
@@ -117,10 +116,8 @@
 
   .posters li.coming a.card-link{pointer-events:none;cursor:default;opacity:.9}
 
-  /* Sticky CTA base: nascosta di default */
-  .sticky-cta{
-    display:none;
-  }
+  /* Sticky CTA base: SEMPRE nascosta di default (desktop incluso) */
+  .sticky-cta{display:none;}
 
   /* Sticky CTA mobile */
   @media (max-width:520px){
@@ -162,48 +159,34 @@ function normLang(l){
   if (s.startsWith('es')) return 'es';
   return 'en';
 }
-
-(function initLang(){
+function getLang(){
   const qs   = new URLSearchParams(location.search);
   const urlL = qs.get('lang');
   const saved= localStorage.getItem('lang');
   const nav  = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
-  const L    = normLang(urlL || saved || nav);
-  document.documentElement.lang = L;
-  localStorage.setItem('lang', L);
-  if (urlL){
-    const u = new URL(location.href);
-    u.searchParams.delete('lang');
-    history.replaceState({},'',u);
-  }
-  window.__setLang = function(newL){
-    const L2 = normLang(newL);
-    document.documentElement.lang = L2;
-    localStorage.setItem('lang', L2);
-    document.querySelectorAll('.lang-switch button')
-      .forEach(b => b.classList.toggle('active', b.dataset.lang === L2));
-    renderPage();
-  };
-})();
+  return normLang(urlL || saved || nav);
+}
 
 /* ====== store amazon ====== */
 const AMZ_TLD = {IT:'it',ES:'es',FR:'fr',DE:'de',GB:'co.uk',US:'com',CA:'ca',MX:'com.mx',CO:'com.co'};
 
 function suggestStoreFromLang(lang){
   const l = (lang || navigator.language || 'en').toLowerCase();
+  // usa region quando presente
   if (l.includes('-ca')) return 'CA';
-  if (l.includes('it'))  return 'IT';
-  if (l.includes('fr'))  return 'FR';
-  if (l.includes('de'))  return 'DE';
-  if (l.includes('gb') || l.includes('uk')) return 'GB';
-  if (l.startsWith('es')){
-    if (l.includes('-mx')) return 'MX';
-    if (l.includes('-co')) return 'CO';
-    return 'ES';
-  }
+  if (l.includes('-gb') || l.includes('-uk')) return 'GB';
+  if (l.includes('-mx')) return 'MX';
+  if (l.includes('-co')) return 'CO';
+
+  if (l.startsWith('it')) return 'IT';
+  if (l.startsWith('fr')) return 'FR';
+  if (l.startsWith('de')) return 'DE';
+  if (l.startsWith('es')) return 'ES';
   return 'US';
 }
-
+function getStoreCC(lang){
+  return (localStorage.getItem('amz_cc') || suggestStoreFromLang(lang)).toUpperCase();
+}
 (function initStoreOnce(){
   if (localStorage.getItem('amz_cc')) return;
   const cc = suggestStoreFromLang((navigator.languages && navigator.languages[0]) || navigator.language);
@@ -265,24 +248,59 @@ const ASIN_B1 = {
   es: "B0G2J42FDD"
 };
 
-function L(){ return localStorage.getItem('lang') || (document.documentElement.lang || 'en'); }
-
-function buildAmazonUrl(cc, asin, lang){
+function buildAmazonUrlPro({ cc, lang, asin, src, campaign="readthrough" }){
   const tld = AMZ_TLD[cc] || 'com';
   const q   = new URLSearchParams();
   q.set('utm_source','qr');
-  q.set('utm_medium','b1_'+lang);
-  q.set('utm_campaign','readthrough');
-  const src = new URLSearchParams(location.search).get('src');
+  q.set('utm_medium',`b1_${lang}`);
+  q.set('utm_campaign',campaign);
   if (src) q.set('src', src);
   return `https://www.amazon.${tld}/dp/${asin}?${q.toString()}`;
 }
 
+function setBuyLinks(defaultSrc){
+  const lang = getLang();
+  localStorage.setItem('lang', lang);
+  document.documentElement.lang = lang;
+
+  const cc   = getStoreCC(lang);
+  const asin = ASIN_B1[lang] || ASIN_B1.en;
+
+  const qs = new URLSearchParams(location.search);
+  const src = qs.get('src') || defaultSrc || '';
+
+  const url = buildAmazonUrlPro({ cc, lang, asin, src });
+
+  const mainBtn   = document.getElementById('buyNow');
+  const stickyBtn = document.getElementById('buyNowSticky');
+  if (mainBtn)   mainBtn.href   = url;
+  if (stickyBtn) stickyBtn.href = url;
+  return url;
+}
+
+/* Propaga lang/src ai link interni (menu, brand, anteprima ecc.) */
+function propagateInternalLinks(lang){
+  const qs = new URLSearchParams(location.search);
+  const src = qs.get('src');
+
+  // link home (logo)
+  const home = document.querySelector('a.brand');
+  if (home){
+    try{
+      const u = new URL(home.getAttribute('href'), location.href);
+      u.searchParams.set('lang', lang);
+      if (src) u.searchParams.set('src', src);
+      home.setAttribute('href', u.pathname + '?' + u.searchParams.toString());
+    }catch(_){}
+  }
+}
+
 /* ====== render ====== */
 function renderPage(){
-  const lang = L();
+  const lang = getLang();
   const dict = I18N[lang] || I18N.en;
 
+  // bottoni lingua attivi
   document.querySelectorAll('.lang-switch button')
     .forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 
@@ -335,22 +353,19 @@ function renderPage(){
   const sec = document.querySelector('.sec-title');
   if (sec) sec.textContent = dict.secTitle;
 
-  // Amazon URL (Libro I)
-  const cc   = localStorage.getItem('amz_cc') || suggestStoreFromLang(lang);
-  const asin = ASIN_B1[lang] || ASIN_B1.en;
-  const url  = buildAmazonUrl(cc, asin, lang);
-
-  const mainBtn   = document.getElementById('buyNow');
-  const stickyBtn = document.getElementById('buyNowSticky');
-  if (mainBtn)   mainBtn.href   = url;
-  if (stickyBtn) stickyBtn.href = url;
+  // CTA Amazon (link PRO)
+  setBuyLinks("collection_buy");
 
   // link anteprima Libro I
   const coverLink = document.getElementById('coverLink');
   if (coverLink){
     const u = new URL('libro-1/index.html', location.href);
     u.searchParams.set('lang', lang);
-    u.searchParams.set('src', 'b1');
+
+    const qs = new URLSearchParams(location.search);
+    const src = qs.get('src') || 'collection_hero';
+    u.searchParams.set('src', src);
+
     u.hash = 'anteprima';
     coverLink.href = u.pathname + '?' + u.searchParams.toString() + u.hash;
   }
@@ -363,17 +378,13 @@ function renderPage(){
     const b3 = grid.querySelector('li[data-book="b3"]');
 
     // Libro I NON deve apparire sotto se è in hero
-    if (b1) {
-      b1.style.display = 'none';
-    }
+    if (b1) b1.style.display = 'none';
 
-    // Libri successivi: “in lavorazione” / coming soon
     function setupComing(li, num) {
       if (!li) return;
 
-      // classi di stato
       li.classList.add('coming');
-      li.classList.remove('it', 'es');
+      li.classList.remove('it','es');
       if (lang === 'it') li.classList.add('it');
       if (lang === 'es') li.classList.add('es');
 
@@ -385,16 +396,17 @@ function renderPage(){
       const caption = (num === 2 ? dict.b2_caption : dict.b3_caption);
       const meta    = (num === 2 ? dict.b2_meta    : dict.b3_meta);
 
-      if (img) {
+      if (img){
         img.src = `${ASSET_ROOT}/${lang}/cover${num}.webp`;
         img.alt = caption;
       }
       if (cap) cap.textContent = caption;
       if (mt)  mt.textContent  = meta;
 
-      if (a) {
+      if (a){
         a.removeAttribute('href');
-        a.setAttribute('aria-disabled', 'true');
+        a.setAttribute('aria-disabled','true');
+        a.setAttribute('tabindex','-1');
       }
     }
 
@@ -402,25 +414,35 @@ function renderPage(){
     setupComing(b3, 3);
   }
 
+  // propaga lingua al menu/logo
+  propagateInternalLinks(lang);
+
   initStickyObserver();
 }
 
-/* sticky CTA */
+/* sticky CTA (solo mobile, mai desktop) */
 function initStickyObserver(){
   const wrap = document.getElementById('stickyCta');
   const btn  = document.getElementById('buyNow');
   if (!wrap || !btn) return;
+
   const mq = window.matchMedia('(max-width:520px)');
+
   function attach(){
+    // desktop: sticky sempre OFF
     if (!mq.matches){
-      wrap.style.display='none';
+      wrap.style.display = 'none';
       return;
     }
+
+    // mobile: sticky ON solo quando il bottone principale non è visibile
     const io = new IntersectionObserver((entries)=>{
       wrap.style.display = entries[0].isIntersecting ? 'none' : 'block';
     },{threshold:0.01});
+
     io.observe(btn);
   }
+
   if (mq.addEventListener) mq.addEventListener('change', attach);
   else mq.addListener(attach);
   attach();
@@ -428,23 +450,51 @@ function initStickyObserver(){
 
 /* bootstrap */
 document.addEventListener('DOMContentLoaded', ()=>{
+  // logo e favicon coerenti
   const logo = document.querySelector('.brand img');
   if (logo) logo.src = `${ASSET_ROOT}/logo-fablemarq.png`;
   const fav = document.querySelector('link[rel="icon"]');
   if (fav) fav.href = `${ASSET_ROOT}/logo-fablemarq.png`;
+
+  // lingua iniziale
+  const lang = getLang();
+  document.documentElement.lang = lang;
+  localStorage.setItem('lang', lang);
+
+  // se arrivi con ?lang=... lo ripuliamo (opzionale, ma coerente col tuo setup)
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('lang')){
+    const u = new URL(location.href);
+    u.searchParams.delete('lang');
+    history.replaceState({},'',u);
+  }
+
   renderPage();
 });
+
 document.addEventListener('click',(e)=>{
-  const b=e.target.closest('.lang-switch button[data-lang]');if(!b)return;
-  e.preventDefault();window.__setLang&&window.__setLang(b.dataset.lang);
+  const b = e.target.closest('.lang-switch button[data-lang]');
+  if (!b) return;
+  e.preventDefault();
+
+  const L2 = normLang(b.dataset.lang);
+  document.documentElement.lang = L2;
+  localStorage.setItem('lang', L2);
+
+  // aggiorna subito UI
+  document.querySelectorAll('.lang-switch button')
+    .forEach(btn => btn.classList.toggle('active', btn.dataset.lang === L2));
+
+  renderPage();
 });
 </script>
 </head>
+
 <body>
 <header>
   <div class="container nav">
     <a class="brand" href="../index.html">
-      <img src="../assets/logo-fablemarq.webp" alt="Fablemarq" decoding="async">
+      <img src="../assets/logo-fablemarq.png" alt="Fablemarq" decoding="async">
     </a>
     <nav>
       <div class="lang-switch" aria-label="Language">
@@ -461,11 +511,13 @@ document.addEventListener('click',(e)=>{
     <a id="coverLink" class="cover-link" href="#" title="Anteprima" aria-label="Apri anteprima">
       <img class="cover" src="../assets/it/cover1.webp" alt="Copertina — Libro I" loading="eager" />
     </a>
+
     <div class="copy">
       <h1 class="hero-title">
         <span class="line1" id="titleLine1">Kiki Moon — Libro I</span>
         <span class="line2" id="titleLine2">La Stella Perduta</span>
       </h1>
+
       <p class="hook" data-bind="hook">Una stella si spegne. Ma la luce di Kiki è appena iniziata.</p>
 
       <ul class="benefits" id="benefits">
@@ -479,6 +531,7 @@ document.addEventListener('click',(e)=>{
           <span data-i18n="buy">Acquista su Amazon</span>
         </a>
       </div>
+
       <p id="buyMeta" class="mini-trust">
         <span class="lock" aria-hidden="true">🔒</span>
         Acquisto e resi gestiti da Amazon.
@@ -494,21 +547,25 @@ document.addEventListener('click',(e)=>{
 
   <h2 class="sec-title">Altri libri della saga</h2>
   <ul class="posters" id="gridBooks">
-    <li data-book="b1">
+    <!-- Libro I: nascosto sempre (è già in HERO) -->
+    <li data-book="b1" style="display:none">
       <a class="card-link" href="#"><img src="../assets/it/cover1.webp" alt="Libro I" loading="lazy"></a>
       <p class="caption">Libro I — La Stella Perduta</p>
       <p class="meta">L’inizio dell’avventura</p>
     </li>
+
     <li data-book="b2">
       <a class="card-link" href="#"><img src="../assets/it/cover2.webp" alt="Libro II" loading="lazy"></a>
       <p class="caption">Libro II — Il Segreto di Snarfel</p>
       <p class="meta">In lavorazione</p>
     </li>
+
     <li data-book="b3">
       <a class="card-link" href="#"><img src="../assets/it/cover3.webp" alt="Libro III" loading="lazy"></a>
       <p class="caption">Libro III — La Notte Infinita</p>
       <p class="meta">In lavorazione</p>
     </li>
+
     <!-- Futuri, nascosti -->
     <li data-book="b4" style="display:none">
       <a class="card-link" href="#"><img src="../assets/it/cover4.webp" alt="Libro IV" loading="lazy"></a>
