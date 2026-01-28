@@ -137,6 +137,63 @@
     }
   </style>
 
+  <!-- Analytics (sostituisci con il tuo ID reale) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    'use strict';
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { send_page_view: true });
+
+    // src: solo canali esterni (qr, ig, ads...). Ref interni esclusi.
+    const INTERNAL_SRC = new Set([
+      'b1','b2','b3','hero','grid','preview','collection','site',
+      'collection_hero','collection_buy'
+    ]);
+
+    (function initAttribution(){
+      const qs = new URLSearchParams(location.search);
+
+      const rawSrc = (qs.get('src') || '').trim().toLowerCase();
+      if (rawSrc && !INTERNAL_SRC.has(rawSrc)) localStorage.setItem('fm_src', rawSrc);
+
+      // salva eventuali utm_* (sessione)
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{
+        const v = qs.get(k);
+        if (v) sessionStorage.setItem(k, v);
+      });
+    })();
+
+    function fmCtx(extra){
+      const qs = new URLSearchParams(location.search);
+      const lang = localStorage.getItem('lang') || document.documentElement.lang || 'en';
+
+      const rawSrc = (qs.get('src') || '').trim().toLowerCase();
+      const trafficSrc = (rawSrc && !INTERNAL_SRC.has(rawSrc))
+        ? rawSrc
+        : (localStorage.getItem('fm_src') || 'site');
+
+      const ctx = {
+        page_path: location.pathname,
+        page_location: location.href,
+        lang,
+        src: trafficSrc
+      };
+
+      ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{
+        const v = qs.get(k) || sessionStorage.getItem(k);
+        if (v) ctx[k] = v;
+      });
+
+      return Object.assign(ctx, extra || {});
+    }
+
+    window.trackEvent = function(name, params){
+      try { gtag('event', name, fmCtx(params)); } catch(_){}
+    };
+  </script>
+
   <script>
   'use strict';
 
@@ -217,15 +274,14 @@
     localStorage.setItem('amz_cc', C);
   }
 
-  /* ====== ASIN per lingua (estendibile per paese se un domani serve) ====== */
+  /* ====== ASIN per lingua ====== */
   const ASIN_BY_LANG = {
     it: "B0G2MC6Z2X",
     en: "B0G2JLYKWY",
     es: "B0G2J42FDD"
   };
   const ASIN_BY_CC_LANG = {
-    // Esempio (vuoto finché non serve):
-    // GB: { it:"...", en:"...", es:"..." }
+    // estendibile se mai servisse
   };
   function getAsin(cc, lang){
     const C = (cc || 'US').toUpperCase();
@@ -233,14 +289,30 @@
     return (ASIN_BY_CC_LANG[C] && ASIN_BY_CC_LANG[C][L]) || ASIN_BY_LANG[L] || ASIN_BY_LANG.en;
   }
 
-  function buildAmazonUrl({ cc, lang, asin, src, campaign="readthrough", medium="collection" }){
+  function getTrafficSrc(){
+    const qs = getQS();
+    const raw = (qs.get('src') || '').trim().toLowerCase();
+    if (raw && !INTERNAL_SRC.has(raw)) {
+      localStorage.setItem('fm_src', raw);
+      return raw;
+    }
+    return localStorage.getItem('fm_src') || 'site';
+  }
+
+  function buildAmazonUrl({ cc, lang, asin, placement, campaign="readthrough" }){
     const tld = AMZ_TLD[cc] || 'com';
     const q = new URLSearchParams();
-    q.set('utm_source','site');
-    q.set('utm_medium', medium);
-    q.set('utm_campaign', campaign);
-    q.set('utm_content', `b1_${lang}_${cc}`);
-    if (src) q.set('src', src);
+
+    const trafficSrc = getTrafficSrc();
+
+    q.set('utm_source', trafficSrc);               // qr / ig / ads / site
+    q.set('utm_medium', `collection_${lang}`);     // pagina + lingua
+    q.set('utm_campaign', campaign);               // funnel
+    if (placement) q.set('utm_content', placement);
+
+    // parametro leggibile (utile anche fuori dai report)
+    q.set('src', trafficSrc);
+
     return `https://www.amazon.${tld}/dp/${asin}?${q.toString()}`;
   }
 
@@ -291,7 +363,8 @@
     lang: 'it',
     mqSticky: null,
     stickyIO: null,
-    stickyInited: false
+    stickyInited: false,
+    trackingBound: false
   };
 
   function updateMetaDescription(lang){
@@ -303,23 +376,22 @@
   }
 
   function setBuyLinks(){
-    const qs = getQS();
-    const src = qs.get('src') || 'collection';
     const cc = getStoreCc();
     persistStoreCc(cc);
 
     const asin = getAsin(cc, state.lang);
-    const url = buildAmazonUrl({ cc, lang: state.lang, asin, src });
+
+    const urlHero   = buildAmazonUrl({ cc, lang: state.lang, asin, placement:'hero_btn' });
+    const urlSticky = buildAmazonUrl({ cc, lang: state.lang, asin, placement:'sticky_btn' });
 
     const mainBtn = document.getElementById('buyNow');
     const stickyBtn = document.getElementById('buyNowSticky');
-    if (mainBtn) mainBtn.href = url;
-    if (stickyBtn) stickyBtn.href = url;
+    if (mainBtn) mainBtn.href = urlHero;
+    if (stickyBtn) stickyBtn.href = urlSticky;
   }
 
   function propagateLinks(){
-    const qs = getQS();
-    const src = qs.get('src') || 'collection';
+    const src = getTrafficSrc();
 
     // Logo: torna alla home propagando lang/src
     const brand = document.querySelector('a.brand');
@@ -327,10 +399,10 @@
       brand.setAttribute('href', withParams(brand.getAttribute('href') || '../index.html', { lang: state.lang, src }));
     }
 
-    // Anteprima: libro-1 con lang + src
+    // Anteprima: libro-1 con lang + src esterno
     const coverLink = document.getElementById('coverLink');
     if (coverLink){
-      const href = withParams('libro-1/index.html', { lang: state.lang, src: 'collection_hero' });
+      const href = withParams('libro-1/index.html', { lang: state.lang, src, ref: 'collection_hero' });
       coverLink.href = href + '#anteprima';
     }
   }
@@ -374,6 +446,29 @@
 
     setupComing(grid.querySelector('li[data-book="b2"]'), 2);
     setupComing(grid.querySelector('li[data-book="b3"]'), 3);
+  }
+
+  function bindTrackingOnce(){
+    if (state.trackingBound) return;
+    state.trackingBound = true;
+
+    window.trackEvent && window.trackEvent('view_collection', { book_id:'b1' });
+
+    function bindClick(id, eventName, extra){
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('click', () => {
+        const href = el.href || el.getAttribute('href') || '';
+        window.trackEvent && window.trackEvent(eventName, Object.assign({
+          href,
+          destination: href.includes('amazon.') ? 'amazon' : 'internal'
+        }, extra || {}));
+      }, { passive:true });
+    }
+
+    bindClick('buyNow',       'click_buy',     { placement:'hero',   book_id:'b1' });
+    bindClick('buyNowSticky', 'click_buy',     { placement:'sticky', book_id:'b1' });
+    bindClick('coverLink',    'click_preview', { placement:'hero_cover', book_id:'b1' });
   }
 
   function renderPage(){
@@ -440,6 +535,9 @@
     // sticky (una volta sola)
     initStickyOnce();
     refreshSticky();
+
+    // tracking
+    bindTrackingOnce();
   }
 
   /* ====== sticky CTA: una volta sola, niente memory leak ====== */
@@ -485,7 +583,12 @@
   }
 
   function setLang(newLang){
-    state.lang = normLang(newLang);
+    const L2 = normLang(newLang);
+    if (L2 === state.lang) return;
+    state.lang = L2;
+
+    window.trackEvent && window.trackEvent('select_language', { language: L2 });
+
     renderPage();
   }
 
