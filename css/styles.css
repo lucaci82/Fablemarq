@@ -1,3 +1,5 @@
+@import url("responsive-fixes.css");
+
 :root{
   --bg:#0B1222;
   --surface:#0F1730;
