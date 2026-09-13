@@ -1,3 +1,5 @@
+@import url("awards.css");
+
 /* Shared styles for Kiki Moon book pages. */
 .book-page{background:#0b1222;color:#e9edf6}
 .book-page main.container{padding-top:16px;padding-bottom:34px}
