@@ -45,8 +45,8 @@ header{
 .brand{display:inline-flex;align-items:center;flex:0 0 auto;min-height:44px}
 .brand img{display:block;height:34px;width:auto;max-width:min(220px,38vw)}
 
-/* The home header reuses title-card.png, already needed by the hero, instead of
-   downloading the much larger standalone PNG wordmark. */
+/* Reuse title-card.png in the header so the standalone multi-megabyte wordmark
+   does not need to be downloaded. */
 .brand--reuse-title{
   width:190px;height:36px;min-height:36px;
   overflow:hidden;align-items:flex-start;
@@ -81,9 +81,22 @@ nav a{
 }
 .skip-link:focus{top:12px}
 
-.lang-switch-home{display:inline-flex;align-items:center;gap:3px;padding:3px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.04)}
-.lang-switch-home button{appearance:none;border:0;background:transparent;color:#9fa7b6;min-width:36px;min-height:34px;border-radius:9px;font:800 .76rem/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
-.lang-switch-home button.active,.lang-switch-home button[aria-pressed="true"]{background:rgba(255,255,255,.10);color:#fff}
+.lang-switch-home,.site-lang-switch{
+  display:inline-flex;align-items:center;gap:3px;padding:3px;
+  border:1px solid rgba(255,255,255,.10);border-radius:12px;
+  background:rgba(255,255,255,.04)
+}
+.lang-switch-home button,.site-lang-switch button{
+  appearance:none;border:0;background:transparent;color:#9fa7b6;
+  min-width:36px;min-height:34px;border-radius:9px;
+  font:800 .76rem/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  cursor:pointer
+}
+.lang-switch-home button.active,.lang-switch-home button[aria-pressed="true"],
+.site-lang-switch button.active,.site-lang-switch button[aria-pressed="true"]{
+  background:rgba(255,255,255,.10);color:#fff
+}
+.header-lang{flex:0 0 auto;margin-left:2px}
 
 /* Preserve book-cover proportions in the premium homepage rail. */
 .home-page .featured-row .book-tile:first-child .book-tile__visual{background:radial-gradient(circle at 50% 30%,rgba(112,151,235,.14),transparent 55%),#0b1020}
@@ -102,24 +115,31 @@ footer{display:none}
   .cta-buy{padding-inline:14px}
 }
 
+@media (max-width:620px){
+  .container{width:calc(100% - 24px)}
+  .nav{gap:5px}
+  .brand--reuse-title{width:112px;height:26px;min-height:26px}
+  .brand--reuse-title img{width:112px;height:auto;max-width:none}
+  nav{gap:1px}
+  nav a{min-height:40px;padding:7px 5px;font-size:.78rem}
+  .header-lang{margin-left:0}
+  .header-lang.lang-switch-home,.header-lang.site-lang-switch{gap:1px;padding:2px;border-radius:10px}
+  .header-lang.lang-switch-home button,.header-lang.site-lang-switch button{
+    min-width:27px;min-height:34px;padding:0 4px;border-radius:8px;font-size:.67rem
+  }
+}
+
 @media (max-width:520px){
   :root{--header-h:58px}
-  .container{width:calc(100% - 24px)}
-  .nav{gap:8px}
-  .brand img{height:29px;max-width:36vw}
-  .brand--reuse-title{width:142px;height:29px;min-height:29px}
-  .brand--reuse-title img{width:142px;height:auto;max-width:none}
-  nav{gap:4px}
-  nav a{min-height:42px;padding:8px;font-size:.9rem}
   .cta-buy{padding:9px 13px;font-size:.9rem}
 }
 
 @media (max-width:380px){
   .container{width:calc(100% - 18px)}
-  .brand img{height:27px;max-width:32vw}
-  .brand--reuse-title{width:118px;height:25px;min-height:25px}
-  .brand--reuse-title img{width:118px;height:auto;max-width:none}
-  nav a{padding-inline:6px;font-size:.84rem}
+  .brand--reuse-title{width:96px;height:23px;min-height:23px}
+  .brand--reuse-title img{width:96px;height:auto;max-width:none}
+  nav a{padding-inline:4px;font-size:.73rem}
+  .header-lang.lang-switch-home button,.header-lang.site-lang-switch button{min-width:25px;padding-inline:3px;font-size:.64rem}
   .cta-buy{padding-inline:10px}
 }
 
@@ -127,9 +147,9 @@ footer{display:none}
   :root{--header-h:54px}
   .nav{min-height:54px;padding-block:5px}
   .brand img{height:27px}
-  .brand--reuse-title{width:140px;height:27px;min-height:27px}
-  .brand--reuse-title img{width:140px;height:auto;max-width:none}
-  nav a{min-height:40px;padding-block:6px}
+  .brand--reuse-title{width:112px;height:25px;min-height:25px}
+  .brand--reuse-title img{width:112px;height:auto;max-width:none}
+  nav a{min-height:38px;padding-block:6px}
 }
 
 @media (prefers-reduced-motion:reduce){
