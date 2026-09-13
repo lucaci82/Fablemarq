@@ -1,34 +1,264 @@
-:root{--home-bg:#05070c;--home-card:#0d1119;--home-ink:#f5f6f8;--home-muted:#9ca5b3;--home-line:rgba(255,255,255,.10);--kids:#77a7ff;--crime:#dd4a4e;--survive:#e48a31}
+:root{
+  --home-bg:#05070c;
+  --home-card:#0d1119;
+  --home-card-2:#101621;
+  --home-ink:#f5f6f8;
+  --home-muted:#9ca5b3;
+  --home-line:rgba(255,255,255,.10);
+  --kids:#77a7ff;
+  --crime:#dd4a4e;
+  --survive:#e48a31;
+}
+
 .home-page{background:var(--home-bg);color:var(--home-ink)}
-.home-page header{background:rgba(5,7,12,.84)}
+.home-page header{background:rgba(5,7,12,.88)}
 .home-page .container{width:min(1280px,calc(100% - 44px))}
 .home-page main{overflow:hidden}
 .home-page section{scroll-margin-top:calc(var(--header-h) + 18px)}
-.home-hero{position:relative;isolation:isolate;overflow:hidden;min-height:clamp(620px,82svh,860px);display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,#080b12 0%,#05070c 100%)}
-.home-hero::before{content:"";position:absolute;inset:0;z-index:-3;background:radial-gradient(850px 620px at 18% 38%,rgba(81,117,192,.16),transparent 70%),radial-gradient(760px 540px at 86% 30%,rgba(187,52,52,.13),transparent 72%),radial-gradient(560px 480px at 70% 80%,rgba(229,139,49,.08),transparent 72%)}
-.home-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(5,7,12,.90) 0%,rgba(5,7,12,.64) 43%,rgba(5,7,12,.12) 72%,rgba(5,7,12,.28) 100%),linear-gradient(180deg,transparent 65%,#05070c 100%)}
-.home-hero__glow{position:absolute;inset:0;z-index:-2;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(180deg,#000 20%,transparent 86%)}
-.home-hero__grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);gap:clamp(38px,6vw,90px);align-items:center;padding-block:clamp(64px,8vw,104px)}
-.home-hero__copy{position:relative;z-index:4;max-width:680px}
-.hero-brandlockup{display:inline-flex;flex-direction:column;align-items:flex-start;margin-bottom:24px;color:#d8bd68}.hero-brandlockup>span{font:500 clamp(1.08rem,1.7vw,1.38rem)/1 Georgia,"Times New Roman",serif;letter-spacing:.18em}.hero-brandlockup small{margin-top:6px;color:#7f8795;font-size:.52rem;font-weight:800;letter-spacing:.34em}
-.hero-kicker{margin:0 0 11px;color:#aeb5c1;font-size:.78rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
-.home-hero h1{margin:0;max-width:10ch;font-size:clamp(4rem,8.2vw,7.6rem);line-height:.84;letter-spacing:-.07em;text-transform:uppercase;text-wrap:balance}
-.home-hero__sub{max-width:600px;margin:22px 0 0;color:#b2b8c3;font-size:clamp(1rem,1.8vw,1.18rem);line-height:1.58}
-.home-hero__actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:27px}.hero-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:11px 18px;border-radius:999px;text-decoration:none;font-size:.88rem;font-weight:900;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}.hero-btn--kids{background:#e8eefc;color:#08101f;box-shadow:0 12px 30px rgba(119,167,255,.18)}.hero-btn--gamebooks{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14)}
-@media(hover:hover){.hero-btn:hover{transform:translateY(-2px)}.hero-btn--gamebooks:hover{background:rgba(255,255,255,.13)}}
-.hero-covers{position:relative;height:560px;perspective:1100px}.hero-cover{position:absolute;display:block;width:245px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.14);box-shadow:0 34px 80px rgba(0,0,0,.52);transition:transform .28s ease,filter .28s ease;will-change:transform}.hero-cover img{display:block;width:100%;height:auto}.hero-cover--kids{z-index:3;left:42%;top:54px;transform:translateX(-50%) rotate(-1.5deg);width:268px}.hero-cover--crime{z-index:2;right:0;top:8px;transform:rotate(6deg);filter:saturate(.92)}.hero-cover--survive{z-index:1;left:0;bottom:0;transform:rotate(-7deg);filter:saturate(.92)}
-@media(hover:hover){.hero-cover--kids:hover{transform:translateX(-50%) translateY(-8px) rotate(-.5deg) scale(1.025)}.hero-cover--crime:hover{transform:translateY(-6px) rotate(4deg) scale(1.02)}.hero-cover--survive:hover{transform:translateY(-6px) rotate(-5deg) scale(1.02)}}
-.publisher-section{padding:clamp(58px,7vw,96px) 0;content-visibility:auto;contain-intrinsic-size:720px}.publisher-section--featured{padding-top:20px}.publisher-section--collections{padding-top:28px;padding-bottom:80px}.section-kicker{margin:0 0 8px;color:#d4b65d;font-size:.73rem;font-weight:900;letter-spacing:.17em;text-transform:uppercase}.section-heading{margin:0;color:#f6f7f9;font-size:clamp(2rem,4vw,3.5rem);line-height:.98;letter-spacing:-.05em}.section-intro{max-width:650px;margin:12px 0 0;color:var(--home-muted);font-size:clamp(.96rem,1.7vw,1.08rem)}
-.world-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:30px}.world-card{position:relative;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(230px,.96fr);min-height:470px;overflow:hidden;border:1px solid var(--home-line);border-radius:24px;background:var(--home-card);box-shadow:0 24px 70px rgba(0,0,0,.28);isolation:isolate;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.world-card::before{content:"";position:absolute;inset:0;z-index:-2}.world-card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(5,8,14,.84) 0%,rgba(5,8,14,.65) 43%,rgba(5,8,14,.08) 77%)}.world-card--kids::before{background:radial-gradient(480px 360px at 80% 25%,rgba(119,167,255,.36),transparent 70%),linear-gradient(145deg,#111b36,#0a0f1b)}.world-card--gamebooks::before{background:radial-gradient(420px 320px at 80% 22%,rgba(171,35,41,.28),transparent 70%),radial-gradient(360px 300px at 72% 78%,rgba(228,138,49,.16),transparent 70%),linear-gradient(145deg,#171116,#080b11)}
+
+/* Brand-led hero. No mixed book collage: the two editorial worlds are introduced
+   below, in separate visual areas. */
+.home-hero{
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:clamp(460px,66svh,650px);display:flex;align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg,#080b12 0%,#05070c 100%);
+}
+.home-hero::before{
+  content:"";position:absolute;inset:0;z-index:-2;
+  background:
+    radial-gradient(760px 520px at 15% 35%,rgba(87,126,204,.14),transparent 72%),
+    radial-gradient(720px 500px at 86% 64%,rgba(197,74,47,.10),transparent 74%);
+}
+.home-hero::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.75),transparent 88%);
+}
+.home-hero__inner{padding-block:clamp(64px,8vw,104px);max-width:980px;margin-inline:0}
+.hero-kicker{
+  margin:0 0 13px;color:#b9c0cb;font-size:.76rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+}
+.home-hero h1{
+  margin:0;max-width:9ch;font-size:clamp(4rem,8vw,7rem);line-height:.86;letter-spacing:-.065em;
+  text-transform:uppercase;text-wrap:balance;color:#f7f8fa;
+}
+.home-hero__sub{
+  max-width:690px;margin:23px 0 0;color:#b3bac5;font-size:clamp(1rem,1.7vw,1.16rem);line-height:1.62;
+}
+.home-hero__actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.hero-btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:11px 18px;border-radius:999px;
+  text-decoration:none;font-size:.88rem;font-weight:900;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.hero-btn--kids{background:#e8eefc;color:#08101f;box-shadow:0 12px 30px rgba(119,167,255,.18)}
+.hero-btn--gamebooks{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.14)}
+@media(hover:hover){
+  .hero-btn:hover{transform:translateY(-2px)}
+  .hero-btn--gamebooks:hover{background:rgba(255,255,255,.13)}
+}
+
+.publisher-section{padding:clamp(58px,7vw,96px) 0;content-visibility:auto;contain-intrinsic-size:720px}
+.publisher-section--catalog{padding-top:26px}
+.publisher-section--collections{padding-top:26px;padding-bottom:78px}
+.section-kicker{margin:0 0 8px;color:#d4b65d;font-size:.73rem;font-weight:900;letter-spacing:.17em;text-transform:uppercase}
+.section-heading{margin:0;color:#f6f7f9;font-size:clamp(2rem,4vw,3.5rem);line-height:.98;letter-spacing:-.05em}
+.section-intro{max-width:700px;margin:12px 0 0;color:var(--home-muted);font-size:clamp(.96rem,1.7vw,1.08rem)}
+
+/* World selector: Kids and Gamebooks remain visually independent. */
+.world-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:30px}
+.world-card{
+  position:relative;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(210px,.92fr);min-height:430px;
+  overflow:hidden;border:1px solid var(--home-line);border-radius:24px;background:var(--home-card);
+  box-shadow:0 24px 70px rgba(0,0,0,.28);isolation:isolate;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.world-card::before{content:"";position:absolute;inset:0;z-index:-2}
+.world-card::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(5,8,14,.82) 0%,rgba(5,8,14,.60) 44%,rgba(5,8,14,.08) 78%)}
+.world-card--kids::before{background:radial-gradient(460px 350px at 80% 28%,rgba(119,167,255,.34),transparent 70%),linear-gradient(145deg,#111b36,#0a0f1b)}
+.world-card--gamebooks::before{background:radial-gradient(430px 330px at 80% 24%,rgba(171,35,41,.27),transparent 70%),radial-gradient(340px 290px at 76% 78%,rgba(228,138,49,.15),transparent 70%),linear-gradient(145deg,#171116,#080b11)}
 @media(hover:hover){.world-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.19);box-shadow:0 32px 86px rgba(0,0,0,.38)}}
-.world-card__copy{align-self:end;padding:clamp(28px,4vw,42px);padding-right:12px;z-index:3}.world-card__eyebrow{display:block;margin-bottom:8px;color:#c6ccd6;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.world-card h3{margin:0;max-width:15ch;font-size:clamp(1.85rem,3vw,2.75rem);line-height:.97;letter-spacing:-.045em}.world-card p{max-width:36ch;margin:12px 0 18px;color:#bec4cf;font-size:.94rem;line-height:1.5}.world-card__actions{display:flex;gap:9px;flex-wrap:wrap}.world-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border-radius:999px;background:#f4f6fa;color:#0b101a;text-decoration:none;font-weight:900;font-size:.84rem}.world-btn--ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.13)}
-.world-card__visual{position:relative;min-width:0;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:26px 20px}.world-card__visual--kids img{width:min(100%,240px);border-radius:13px;transform:rotate(2deg);box-shadow:0 30px 54px rgba(0,0,0,.48)}.world-card__visual--gamebooks{display:block}.world-cover{position:absolute;width:min(58%,188px);border-radius:11px;box-shadow:0 25px 50px rgba(0,0,0,.46);border:1px solid rgba(255,255,255,.12)}.world-cover--crime{right:12px;top:48px;transform:rotate(5deg);z-index:2}.world-cover--survive{left:2px;bottom:40px;transform:rotate(-6deg);z-index:1}
-.section-head-row{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}.rail-hint{color:#7f8998;font-size:.78rem}.book-rail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.book-card{min-width:0;border:1px solid var(--home-line);border-radius:20px;overflow:hidden;background:#0d1118;box-shadow:0 20px 50px rgba(0,0,0,.24);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.book-card__cover{display:block;position:relative;aspect-ratio:16/11;overflow:hidden;background:#090c12}.book-card__cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(5,7,12,.78) 100%);pointer-events:none}.book-card__cover img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;padding:18px;transition:transform .25s ease}.book-card--kids .book-card__cover{background:radial-gradient(circle at 50% 28%,rgba(105,152,245,.20),transparent 50%),#0a1020}.book-card--crime .book-card__cover{background:radial-gradient(circle at 50% 25%,rgba(190,45,49,.22),transparent 55%),#0b0b0f}.book-card--survive .book-card__cover{background:radial-gradient(circle at 50% 25%,rgba(221,129,38,.18),transparent 55%),#0d0b09}@media(hover:hover){.book-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.18);box-shadow:0 28px 64px rgba(0,0,0,.32)}.book-card:hover .book-card__cover img{transform:scale(1.025)}}
-.book-card__body{padding:17px 18px 20px}.book-card__meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px;color:#929aa8;font-size:.67rem;text-transform:uppercase;letter-spacing:.11em;font-weight:850}.book-card__meta b{font-size:.61rem;padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.06);color:#aeb5c1}.book-card h3{margin:0;font-size:clamp(1.12rem,2vw,1.45rem);line-height:1.08;letter-spacing:-.025em}.book-card p{margin:8px 0 14px;color:#969eab;font-size:.88rem;line-height:1.46}.book-card__actions{display:flex;flex-wrap:wrap;gap:8px}.card-btn{display:inline-flex;align-items:center;justify-content:center;min-height:41px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.09);color:#f2f4f7;text-decoration:none;font-weight:850;font-size:.8rem}.card-btn--buy{background:#ffb020;color:#211400;border-color:transparent}
-.collection-rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:24px}.collection-pill{position:relative;min-height:116px;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.09);background:#0c1017;color:#f5f6f8;text-decoration:none;overflow:hidden}.collection-pill::before{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none}.collection-pill span{position:relative;font-size:.9rem;font-weight:950;letter-spacing:.08em}.collection-pill small{position:relative;margin-top:4px;color:#9ea6b3;font-size:.67rem;text-transform:uppercase;letter-spacing:.08em}.collection-pill--kids::before{background:radial-gradient(circle at 80% 20%,#5f8dde,transparent 60%)}.collection-pill--crime::before{background:radial-gradient(circle at 80% 20%,#b93237,transparent 60%)}.collection-pill--survive::before{background:radial-gradient(circle at 80% 20%,#d47c2a,transparent 60%)}.collection-pill--mystery::before{background:radial-gradient(circle at 80% 20%,#6758be,transparent 60%)}.collection-pill--real::before{background:radial-gradient(circle at 80% 20%,#a98e32,transparent 60%)}
-.home-footer{display:block;border-top:1px solid rgba(255,255,255,.07);padding:26px 0 34px;color:#818a98;font-size:.8rem}.footer-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.footer-brand{font-weight:900;letter-spacing:.13em;color:#cfd4df}
-@media(max-width:1000px){.home-hero__grid{grid-template-columns:minmax(0,1fr) minmax(330px,.78fr)}.hero-covers{height:500px}.hero-cover{width:205px}.hero-cover--kids{width:228px}.world-grid{grid-template-columns:1fr}.world-card{min-height:410px}.book-rail{grid-template-columns:repeat(3,minmax(260px,1fr));overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none}.book-rail::-webkit-scrollbar{display:none}.book-card{scroll-snap-align:start}.collection-rail{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:760px){.home-page .container{width:calc(100% - 26px)}.home-hero{min-height:auto}.home-hero__grid{grid-template-columns:1fr;gap:24px;padding-block:44px 54px}.home-hero__copy{text-align:left}.hero-brandlockup{margin-bottom:18px}.home-hero h1{font-size:clamp(3.5rem,15vw,5.7rem);max-width:8ch}.home-hero__sub{font-size:.96rem;max-width:34ch}.hero-covers{height:430px;width:min(100%,430px);margin:0 auto}.hero-cover{width:170px}.hero-cover--kids{width:195px;left:50%;top:48px}.hero-cover--crime{right:7px;top:12px}.hero-cover--survive{left:4px;bottom:2px}.publisher-section{padding:48px 0}.section-heading{font-size:2.15rem}.world-card{grid-template-columns:1fr;min-height:0}.world-card::after{background:linear-gradient(180deg,rgba(5,8,14,.04) 0%,rgba(5,8,14,.24) 48%,rgba(5,8,14,.96) 100%)}.world-card__visual{grid-row:1;min-height:260px;padding:20px}.world-card__copy{grid-row:2;padding:20px 20px 23px}.world-card h3{font-size:2rem;max-width:17ch}.world-card__visual--kids img{width:170px}.world-card__visual--gamebooks{min-height:270px}.world-cover{width:142px}.world-cover--crime{right:calc(50% - 118px);top:24px}.world-cover--survive{left:calc(50% - 118px);bottom:18px}.book-rail{grid-template-columns:none;display:flex;gap:12px;margin-right:-13px;padding-right:13px}.book-card{flex:0 0 min(82vw,330px)}.book-card__cover{aspect-ratio:4/3}.collection-rail{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-right:-13px;padding:0 13px 8px 0;scrollbar-width:none}.collection-rail::-webkit-scrollbar{display:none}.collection-pill{flex:0 0 180px;scroll-snap-align:start}.rail-hint{display:none}}
-@media(max-width:420px){.home-hero__grid{padding-top:34px}.home-hero h1{font-size:clamp(3.2rem,16vw,4.6rem)}.hero-brandlockup>span{font-size:1rem}.hero-covers{height:380px}.hero-cover{width:148px}.hero-cover--kids{width:174px;top:44px}.home-hero__actions{gap:8px}.hero-btn{padding-inline:14px;font-size:.82rem}.section-heading{font-size:1.95rem}.world-card h3{font-size:1.8rem}.world-card__visual--gamebooks{min-height:246px}.world-cover{width:128px}.book-card{flex-basis:84vw}}
-@media(max-height:560px) and (orientation:landscape){.home-hero__grid{grid-template-columns:1fr 360px;padding-block:30px}.home-hero h1{font-size:3.7rem}.hero-covers{height:340px}.hero-cover{width:145px}.hero-cover--kids{width:165px}}
-@media(prefers-reduced-motion:reduce){.hero-cover,.hero-btn,.world-card,.book-card,.book-card__cover img{transition:none!important}}
+
+.world-card__copy{grid-column:1;grid-row:1;align-self:end;padding:clamp(28px,3.4vw,40px);padding-right:10px;z-index:3}
+.world-card__eyebrow,.catalog-block__label{display:block;margin-bottom:8px;color:#c6ccd6;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+.world-card h3{margin:0;max-width:15ch;font-size:clamp(1.75rem,2.7vw,2.5rem);line-height:.98;letter-spacing:-.045em}
+.world-card p{max-width:36ch;margin:12px 0 18px;color:#bec4cf;font-size:.93rem;line-height:1.5}
+.world-card__actions{display:flex;gap:9px;flex-wrap:wrap}
+.world-btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border-radius:999px;
+  background:#f4f6fa;color:#0b101a;text-decoration:none;font-weight:900;font-size:.84rem;
+}
+.world-btn--ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.13)}
+.world-card__visual{grid-column:2;grid-row:1;position:relative;min-width:0;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:26px 18px}
+.world-card__visual--kids img{display:block;width:min(100%,220px);border-radius:13px;transform:rotate(1.5deg);box-shadow:0 30px 54px rgba(0,0,0,.48)}
+.world-card__visual--gamebooks{display:block}
+.world-cover{position:absolute;width:min(60%,178px);border-radius:11px;box-shadow:0 25px 50px rgba(0,0,0,.46);border:1px solid rgba(255,255,255,.12)}
+.world-cover--crime{right:10px;top:47px;transform:rotate(4deg);z-index:2}
+.world-cover--survive{left:2px;bottom:36px;transform:rotate(-5deg);z-index:1}
+
+/* Catalog is explicitly separated by editorial division. */
+.catalog-block{
+  margin-top:28px;padding:22px;border:1px solid rgba(255,255,255,.085);border-radius:22px;background:rgba(255,255,255,.018);
+}
+.catalog-block--kids{background:linear-gradient(145deg,rgba(39,66,128,.16),rgba(255,255,255,.015))}
+.catalog-block--gamebooks{background:linear-gradient(145deg,rgba(85,25,29,.13),rgba(255,255,255,.015))}
+.catalog-block__head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:16px}
+.catalog-block__head h3{margin:0;font-size:clamp(1.35rem,2.2vw,1.9rem);line-height:1.06;letter-spacing:-.03em}
+.catalog-block__head>a{color:#cbd1db;text-decoration:none;font-size:.82rem;font-weight:850;white-space:nowrap}
+@media(hover:hover){.catalog-block__head>a:hover{color:#fff}}
+
+.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.book-card{
+  min-width:0;display:grid;grid-template-columns:150px minmax(0,1fr);overflow:hidden;
+  border:1px solid rgba(255,255,255,.09);border-radius:18px;background:#0b0f16;
+  box-shadow:0 18px 44px rgba(0,0,0,.22);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.book-card__cover{display:block;position:relative;min-height:232px;background:#090c12;overflow:hidden;border-right:1px solid rgba(255,255,255,.07)}
+.book-card__cover img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .25s ease}
+.book-card--kids .book-card__cover{background:radial-gradient(circle at 50% 25%,rgba(105,152,245,.20),transparent 55%),#0a1020}
+.book-card--crime .book-card__cover{background:radial-gradient(circle at 50% 25%,rgba(190,45,49,.22),transparent 55%),#0b0b0f}
+.book-card--survive .book-card__cover{background:radial-gradient(circle at 50% 25%,rgba(221,129,38,.18),transparent 55%),#0d0b09}
+@media(hover:hover){
+  .book-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.17);box-shadow:0 26px 60px rgba(0,0,0,.30)}
+  .book-card:hover .book-card__cover img{transform:scale(1.02)}
+}
+.book-card__body{align-self:center;padding:17px 18px 19px;min-width:0}
+.book-card__meta{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;margin-bottom:8px;color:#929aa8;font-size:.65rem;text-transform:uppercase;letter-spacing:.09em;font-weight:850}
+.book-card__meta b{flex:0 0 auto;font-size:.59rem;padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.06);color:#aeb5c1}
+.book-card h4{margin:0;font-size:clamp(1.12rem,1.8vw,1.38rem);line-height:1.08;letter-spacing:-.025em;overflow-wrap:anywhere}
+.book-card p{margin:8px 0 14px;color:#969eab;font-size:.87rem;line-height:1.46}
+.book-card__actions{display:flex;flex-wrap:wrap;gap:8px}
+.card-btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:41px;padding:8px 12px;border-radius:10px;
+  background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.09);color:#f2f4f7;text-decoration:none;font-weight:850;font-size:.8rem;
+}
+.card-btn--buy{background:#ffb020;color:#211400;border-color:transparent}
+
+.collection-rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:24px}
+.collection-pill{
+  position:relative;min-height:105px;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.09);background:#0c1017;color:#f5f6f8;text-decoration:none;overflow:hidden;
+}
+.collection-pill::before{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none}
+.collection-pill span{position:relative;font-size:.88rem;font-weight:950;letter-spacing:.08em}
+.collection-pill small{position:relative;margin-top:4px;color:#9ea6b3;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em}
+.collection-pill--kids::before{background:radial-gradient(circle at 80% 20%,#5f8dde,transparent 60%)}
+.collection-pill--crime::before{background:radial-gradient(circle at 80% 20%,#b93237,transparent 60%)}
+.collection-pill--survive::before{background:radial-gradient(circle at 80% 20%,#d47c2a,transparent 60%)}
+.collection-pill--mystery::before{background:radial-gradient(circle at 80% 20%,#6758be,transparent 60%)}
+.collection-pill--horror::before{background:radial-gradient(circle at 80% 20%,#7d2831,transparent 60%)}
+.collection-pill--scifi::before{background:radial-gradient(circle at 80% 20%,#2c7f93,transparent 60%)}
+.collection-pill--real::before{background:radial-gradient(circle at 80% 20%,#a98e32,transparent 60%)}
+
+.home-footer{display:block;border-top:1px solid rgba(255,255,255,.07);padding:26px 0 34px;color:#818a98;font-size:.8rem}
+.footer-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.footer-brand{font-weight:900;letter-spacing:.13em;color:#cfd4df}
+
+@media(max-width:1100px){
+  .world-grid{grid-template-columns:1fr}
+  .world-card{grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);min-height:390px}
+  .world-card__visual--kids img{width:min(100%,210px)}
+  .book-grid{grid-template-columns:1fr}
+  .collection-rail{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+@media(max-width:760px){
+  .home-page .container{width:calc(100% - 26px)}
+  .home-hero{min-height:430px}
+  .home-hero__inner{padding-block:52px 58px}
+  .home-hero h1{font-size:clamp(3.4rem,14vw,5.1rem);max-width:8ch}
+  .home-hero__sub{font-size:.96rem;max-width:38ch}
+  .publisher-section{padding:52px 0}
+  .publisher-section--catalog,.publisher-section--collections{padding-top:18px}
+  .world-card{grid-template-columns:minmax(0,1fr) 220px;min-height:360px}
+  .world-card__copy{padding:26px 10px 26px 26px}
+  .world-card__visual{padding:22px 16px}
+  .world-cover{width:150px}
+  .catalog-block{padding:18px}
+  .collection-rail{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding-bottom:6px;scrollbar-width:none}
+  .collection-rail::-webkit-scrollbar{display:none}
+  .collection-pill{flex:0 0 min(42vw,180px);scroll-snap-align:start}
+}
+
+@media(max-width:640px){
+  .home-hero{min-height:405px}
+  .home-hero__inner{padding-block:44px 50px}
+  .hero-kicker{font-size:.69rem;letter-spacing:.13em}
+  .home-hero h1{font-size:clamp(3.2rem,15vw,4.65rem);line-height:.88}
+  .home-hero__sub{margin-top:18px}
+  .home-hero__actions{margin-top:22px}
+  .hero-btn{min-height:46px;padding:10px 16px}
+
+  .world-card{grid-template-columns:1fr;min-height:0}
+  .world-card::after{background:linear-gradient(180deg,rgba(5,8,14,.12) 0%,rgba(5,8,14,.66) 48%,rgba(5,8,14,.90) 100%)}
+  .world-card__visual{grid-column:1;grid-row:1;height:220px;padding:18px}
+  .world-card__visual--kids img{width:145px;max-height:190px;object-fit:contain}
+  .world-card__visual--gamebooks{height:230px;max-width:330px;width:100%;margin:0 auto}
+  .world-cover{width:132px}
+  .world-cover--crime{right:45px;top:17px}
+  .world-cover--survive{left:45px;bottom:16px}
+  .world-card__copy{grid-column:1;grid-row:2;padding:22px 22px 24px}
+  .world-card h3{font-size:clamp(1.7rem,8vw,2.25rem)}
+  .world-card p{max-width:none}
+
+  .catalog-block__head{align-items:flex-start}
+  .catalog-block__head h3{font-size:1.35rem}
+  .book-card{grid-template-columns:112px minmax(0,1fr);border-radius:16px}
+  .book-card__cover{min-height:178px}
+  .book-card__body{padding:14px 14px 15px}
+  .book-card__meta{font-size:.58rem;gap:6px}
+  .book-card__meta b{font-size:.54rem;padding:3px 5px}
+  .book-card h4{font-size:1.04rem}
+  .book-card p{font-size:.8rem;margin-bottom:11px}
+  .card-btn{min-height:40px;padding:7px 10px;font-size:.75rem}
+
+  .home-footer .footer-row{align-items:flex-start;flex-direction:column}
+}
+
+@media(max-width:430px){
+  .home-page .container{width:calc(100% - 24px)}
+  .home-hero{min-height:380px}
+  .home-hero__inner{padding-block:38px 44px}
+  .home-hero h1{font-size:clamp(3rem,15.5vw,4.2rem)}
+  .home-hero__sub{font-size:.92rem;line-height:1.55}
+  .section-heading{font-size:clamp(1.8rem,9vw,2.45rem)}
+  .section-intro{font-size:.91rem}
+  .catalog-block{padding:15px;border-radius:18px}
+  .catalog-block__head{gap:10px}
+  .catalog-block__head>a{font-size:.74rem}
+  .book-grid{gap:10px}
+  .book-card{grid-template-columns:100px minmax(0,1fr)}
+  .book-card__cover{min-height:160px}
+  .book-card__body{padding:12px 12px 13px}
+  .book-card p{display:none}
+  .collection-pill{flex-basis:148px;min-height:96px}
+}
+
+@media(max-width:350px){
+  .home-page .container{width:calc(100% - 18px)}
+  .home-hero{min-height:360px}
+  .home-hero h1{font-size:2.9rem}
+  .hero-btn{font-size:.8rem;padding-inline:13px}
+  .world-cover--crime{right:28px}
+  .world-cover--survive{left:28px}
+  .book-card{grid-template-columns:92px minmax(0,1fr)}
+  .book-card__cover{min-height:148px}
+  .book-card__meta{display:block}
+  .book-card__meta b{display:inline-flex;margin-top:5px}
+}
+
+@media(max-height:520px) and (orientation:landscape){
+  .home-hero{min-height:calc(100svh - var(--header-h));align-items:center}
+  .home-hero__inner{padding-block:28px}
+  .home-hero h1{font-size:clamp(3rem,9vw,4.7rem)}
+  .home-hero__sub{margin-top:12px}
+  .home-hero__actions{margin-top:16px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-btn,.world-card,.book-card,.book-card__cover img{transition:none!important}
+  .world-card__visual--kids img,.world-cover{transform:none!important}
+}

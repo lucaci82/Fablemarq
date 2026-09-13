@@ -12,37 +12,123 @@
   --focus:#FACC15;
   --header-h:64px;
 }
+
 *{box-sizing:border-box}
 html{margin:0;padding:0;background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{margin:0;padding:0;min-width:320px;min-height:100vh;min-height:100dvh;overflow-x:hidden;font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-img,svg,video,canvas{max-width:100%} img{height:auto} button,a{-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;padding:0;min-width:320px;min-height:100vh;min-height:100dvh;overflow-x:hidden;
+  font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img,svg,video,canvas{max-width:100%}
+img{height:auto}
+button,a{-webkit-tap-highlight-color:transparent}
 a{color:var(--link)}
-a:focus-visible,.btn:focus-visible,.cta-buy:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:12px}
+a:focus-visible,.btn:focus-visible,.cta-buy:focus-visible,button:focus-visible{
+  outline:2px solid var(--focus);outline-offset:3px;border-radius:12px;
+}
+
 .container{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:20px 0}
-header{position:sticky;top:0;z-index:50;min-height:var(--header-h);background:rgba(7,10,17,.88);border-bottom:1px solid rgba(255,255,255,.07);-webkit-backdrop-filter:saturate(140%) blur(14px);backdrop-filter:saturate(140%) blur(14px)}
+
+header{
+  position:sticky;top:0;z-index:50;min-height:var(--header-h);
+  background:rgba(7,10,17,.88);border-bottom:1px solid rgba(255,255,255,.07);
+  -webkit-backdrop-filter:saturate(140%) blur(14px);backdrop-filter:saturate(140%) blur(14px);
+}
 .nav{min-height:var(--header-h);display:flex;align-items:center;gap:16px;padding:8px 0}
-.brand,.brand-wordmark{display:inline-flex;align-items:center;flex:0 0 auto;min-height:44px;text-decoration:none;color:#e6c76a}
+.brand{display:inline-flex;align-items:center;flex:0 0 auto;min-height:44px;text-decoration:none;color:#e6c76a}
 .brand img{display:block;height:34px;width:auto;max-width:min(220px,38vw)}
-.brand-wordmark{flex-direction:column;align-items:flex-start;justify-content:center;line-height:1}
-.brand-wordmark__main{font:500 1.25rem/.92 Georgia,"Times New Roman",serif;letter-spacing:.115em;color:#d9bd63;text-shadow:0 0 18px rgba(217,189,99,.10)}
-.brand-wordmark__sub{margin-top:4px;font:800 .46rem/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.31em;color:#8f97a8}
-.brand--reuse-title{position:relative;width:170px;height:36px;min-height:36px;overflow:visible;align-items:center;text-decoration:none}
-.brand--reuse-title img{display:none}
-.brand--reuse-title::before{content:"FABLEMARQ";font:500 1.14rem/1 Georgia,"Times New Roman",serif;letter-spacing:.1em;color:#d9bd63}
+
+/* Official Fablemarq artwork is reused and cropped to the wordmark area.
+   This keeps the real brand asset instead of recreating the logo in CSS. */
+.brand--reuse-title{
+  width:176px;height:34px;min-height:34px;overflow:hidden;align-items:flex-start;
+}
+.brand--reuse-title img{
+  display:block;width:176px;height:auto;max-width:none;transform:translateY(-1px);
+}
+
 nav{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-left:auto;min-width:0}
-nav a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;color:rgba(231,234,246,.94);text-decoration:none;padding:9px 12px;border-radius:10px;white-space:nowrap;transition:background .15s ease,color .15s ease,transform .15s ease}
-@media (hover:hover){nav a:hover{background:rgba(255,255,255,.07);color:#fff}}
-.cta-buy{margin-left:2px;padding:10px 17px;border:0;border-radius:999px;background:var(--cta);color:var(--cta-text);font-weight:800;text-decoration:none;box-shadow:0 8px 22px rgba(255,176,32,.22);transition:transform .12s ease,background .12s ease,box-shadow .12s ease}
-@media (hover:hover){.cta-buy:hover{background:var(--cta-hover);transform:translateY(-1px);box-shadow:0 10px 28px rgba(255,176,32,.3)}}
+nav a{
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+  color:rgba(231,234,246,.94);text-decoration:none;padding:9px 12px;border-radius:10px;white-space:nowrap;
+  transition:background .15s ease,color .15s ease,transform .15s ease;
+}
+@media(hover:hover){nav a:hover{background:rgba(255,255,255,.07);color:#fff}}
+
+.cta-buy{
+  margin-left:2px;padding:10px 17px;border:0;border-radius:999px;background:var(--cta);color:var(--cta-text);
+  font-weight:800;text-decoration:none;box-shadow:0 8px 22px rgba(255,176,32,.22);
+  transition:transform .12s ease,background .12s ease,box-shadow .12s ease;
+}
+@media(hover:hover){.cta-buy:hover{background:var(--cta-hover);transform:translateY(-1px);box-shadow:0 10px 28px rgba(255,176,32,.3)}}
 .cta-buy:active{background:var(--cta-press);transform:translateY(0)}
-.skip-link{position:fixed;left:12px;top:-80px;z-index:1000;background:#111;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;transition:top .15s ease}.skip-link:focus{top:12px}
-.lang-switch-home,.site-lang-switch{display:inline-flex;align-items:center;gap:3px;padding:3px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.04)}
-.lang-switch-home button,.site-lang-switch button{appearance:none;border:0;background:transparent;color:#9fa7b6;min-width:36px;min-height:34px;border-radius:9px;font:800 .76rem/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
-.lang-switch-home button.active,.lang-switch-home button[aria-pressed="true"],.site-lang-switch button.active,.site-lang-switch button[aria-pressed="true"]{background:rgba(255,255,255,.10);color:#fff}
+
+.skip-link{
+  position:fixed;left:12px;top:-80px;z-index:1000;background:#111;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;
+  transition:top .15s ease;
+}
+.skip-link:focus{top:12px}
+
+.lang-switch-home,.site-lang-switch{
+  display:inline-flex;align-items:center;gap:3px;padding:3px;border:1px solid rgba(255,255,255,.10);border-radius:12px;
+  background:rgba(255,255,255,.04);
+}
+.lang-switch-home button,.site-lang-switch button{
+  appearance:none;border:0;background:transparent;color:#9fa7b6;min-width:36px;min-height:34px;border-radius:9px;
+  font:800 .76rem/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;
+}
+.lang-switch-home button.active,.lang-switch-home button[aria-pressed="true"],
+.site-lang-switch button.active,.site-lang-switch button[aria-pressed="true"]{
+  background:rgba(255,255,255,.10);color:#fff;
+}
 .header-lang{flex:0 0 auto;margin-left:2px}
-footer{display:none}
-@media(max-width:820px){:root{--header-h:60px}.container{width:min(100% - 28px,1100px)}.brand-wordmark__main{font-size:1.08rem}.brand-wordmark__sub{font-size:.42rem}.brand--reuse-title{width:145px}.brand--reuse-title::before{font-size:1rem}nav{gap:6px}nav a{padding:8px 10px;font-size:.95rem}.cta-buy{padding-inline:14px}}
-@media(max-width:620px){.container{width:calc(100% - 24px)}.nav{gap:5px}.brand-wordmark__main{font-size:.94rem;letter-spacing:.09em}.brand-wordmark__sub{display:none}.brand--reuse-title{width:108px}.brand--reuse-title::before{font-size:.86rem;letter-spacing:.08em}nav{gap:1px}nav a{min-height:40px;padding:7px 5px;font-size:.78rem}.header-lang{margin-left:0}.header-lang.lang-switch-home,.header-lang.site-lang-switch{gap:1px;padding:2px;border-radius:10px}.header-lang.lang-switch-home button,.header-lang.site-lang-switch button{min-width:27px;min-height:34px;padding:0 4px;border-radius:8px;font-size:.67rem}}
-@media(max-width:380px){.container{width:calc(100% - 18px)}.brand-wordmark__main{font-size:.82rem}.brand--reuse-title{width:96px}.brand--reuse-title::before{font-size:.78rem}nav a{padding-inline:4px;font-size:.73rem}.header-lang.lang-switch-home button,.header-lang.site-lang-switch button{min-width:25px;padding-inline:3px;font-size:.64rem}}
-@media(max-height:520px) and (orientation:landscape){:root{--header-h:54px}.nav{min-height:54px;padding-block:5px}nav a{min-height:38px;padding-block:6px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+@media(max-width:820px){
+  :root{--header-h:60px}
+  .container{width:min(100% - 28px,1100px)}
+  .brand--reuse-title{width:146px;height:30px;min-height:30px}
+  .brand--reuse-title img{width:146px}
+  nav{gap:6px}
+  nav a{padding:8px 10px;font-size:.95rem}
+  .cta-buy{padding-inline:14px}
+}
+
+@media(max-width:620px){
+  .container{width:calc(100% - 24px)}
+  .nav{gap:5px}
+  .brand--reuse-title{width:108px;height:25px;min-height:25px}
+  .brand--reuse-title img{width:108px}
+  nav{gap:1px}
+  nav a{min-height:40px;padding:7px 5px;font-size:.78rem}
+  .header-lang{margin-left:0}
+  .header-lang.lang-switch-home,.header-lang.site-lang-switch{gap:1px;padding:2px;border-radius:10px}
+  .header-lang.lang-switch-home button,.header-lang.site-lang-switch button{
+    min-width:27px;min-height:34px;padding:0 4px;border-radius:8px;font-size:.67rem;
+  }
+}
+
+/* At the smallest phone widths, division/home headers become two rows instead of
+   squeezing the logo, navigation and three language controls into one line. */
+@media(max-width:360px){
+  .home-page header .nav,.division-page header .nav{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand lang" "nav nav";
+    row-gap:2px;column-gap:8px;padding:6px 0 5px;
+  }
+  .home-page header .brand,.division-page header .brand{grid-area:brand}
+  .home-page header nav,.division-page header nav{grid-area:nav;margin:0;justify-content:flex-start}
+  .home-page header .header-lang,.division-page header .header-lang{grid-area:lang;justify-self:end}
+  .home-page header .brand--reuse-title,.division-page header .brand--reuse-title{width:116px;height:26px;min-height:26px}
+  .home-page header .brand--reuse-title img,.division-page header .brand--reuse-title img{width:116px}
+  .home-page header nav a,.division-page header nav a{min-height:34px;padding:4px 9px;font-size:.75rem}
+}
+
+@media(max-height:520px) and (orientation:landscape){
+  :root{--header-h:54px}
+  .nav{min-height:54px;padding-block:5px}
+  nav a{min-height:38px;padding-block:6px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
