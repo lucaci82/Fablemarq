@@ -15,7 +15,7 @@
 
 .home-hero{
   position:relative;isolation:isolate;
-  min-height:clamp(500px,68svh,760px);
+  min-height:clamp(460px,62svh,680px);
   display:grid;place-items:center;overflow:hidden;
   border-bottom:1px solid rgba(255,255,255,.055);
   background:
@@ -28,11 +28,12 @@
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
   background:linear-gradient(180deg,rgba(8,12,21,.05),rgba(8,12,21,.26) 60%,#080c15 100%);
 }
-.home-hero__inner{width:min(980px,calc(100% - 32px));padding:66px 0 58px;text-align:center}
-.home-hero__mark{display:block;width:min(840px,88vw);margin:0 auto;filter:drop-shadow(0 20px 54px rgba(0,0,0,.45))}
-.home-hero__tagline{margin:14px auto 0;font-size:clamp(1.08rem,2vw,1.38rem);letter-spacing:.08em;text-transform:uppercase;color:#d9deea;font-weight:700}
-.home-hero__sub{max-width:610px;margin:12px auto 0;color:var(--home-muted);font-size:clamp(.95rem,1.6vw,1.05rem)}
-.home-hero__cue{display:inline-flex;margin-top:26px;align-items:center;gap:8px;color:#d8c98e;text-decoration:none;font-weight:800;font-size:.88rem;letter-spacing:.08em;text-transform:uppercase}
+.home-hero__inner{width:min(980px,calc(100% - 32px));padding:52px 0 46px;text-align:center}
+.home-hero__brand{width:min(840px,88vw);margin:0 auto}
+.home-hero__mark{display:block;width:100%;margin:0 auto;filter:drop-shadow(0 20px 54px rgba(0,0,0,.45))}
+.home-hero__tagline{margin:12px auto 0;font-size:clamp(1.08rem,2vw,1.38rem);letter-spacing:.08em;text-transform:uppercase;color:#d9deea;font-weight:700}
+.home-hero__sub{max-width:610px;margin:10px auto 0;color:var(--home-muted);font-size:clamp(.95rem,1.6vw,1.05rem)}
+.home-hero__cue{display:inline-flex;margin-top:22px;align-items:center;gap:8px;color:#d8c98e;text-decoration:none;font-weight:800;font-size:.88rem;letter-spacing:.08em;text-transform:uppercase}
 .home-hero__cue::after{content:"↓";font-size:1rem}
 
 .publisher-section{padding:clamp(48px,7vw,86px) 0;content-visibility:auto;contain-intrinsic-size:700px}
@@ -122,22 +123,52 @@
 
 @media(max-width:620px){
   .home-page .container{width:calc(100% - 24px)}
-  .home-page header .nav{gap:6px}
-  .home-page header nav{gap:2px}
-  .home-page header nav a{padding-inline:7px;font-size:.82rem}
-  .home-hero{min-height:520px}
-  .home-hero__inner{padding:48px 0 52px}
-  .home-hero__mark{width:min(94vw,720px)}
-  .home-hero__tagline{font-size:.92rem;letter-spacing:.1em}
-  .home-hero__sub{font-size:.91rem;max-width:330px}
-  .publisher-section{padding:46px 0}
+  .home-page header .nav{gap:4px}
+  .home-page header nav{gap:0}
+  .home-page header nav a{padding-inline:4px;font-size:.74rem}
+
+  .home-hero{min-height:400px}
+  .home-hero__inner{padding:30px 0 34px}
+  .home-hero__brand{width:min(90vw,560px);height:clamp(78px,23vw,98px);overflow:hidden}
+  .home-hero__mark{width:100%;max-width:none}
+  .home-hero__tagline{margin-top:16px;font-size:.88rem;letter-spacing:.105em}
+  .home-hero__sub{font-size:.9rem;max-width:315px;line-height:1.55}
+  .home-hero__cue{margin-top:20px;font-size:.8rem}
+
+  .publisher-section{padding:40px 0}
   .section-heading{font-size:2rem}
-  .world-card{min-height:440px;border-radius:19px}
-  .world-card--kids .world-art{width:47%;right:-8px;top:32px}
-  .world-card--kids .world-card__copy,.world-card--gamebooks .world-card__copy{right:20px}
-  .world-card__copy{left:20px;bottom:21px}
-  .world-card p{max-width:78%;font-size:.9rem}
-  .poster-stack{right:2px;top:22px;transform:scale(.88);transform-origin:top right}
+  .section-intro{font-size:.92rem;line-height:1.55}
+
+  /* On phones, artwork and copy occupy separate zones. This prevents long
+     translated headlines from ever colliding with book covers. */
+  .world-card{min-height:0;border-radius:19px;display:flex;flex-direction:column}
+  .world-card::after{background:linear-gradient(180deg,rgba(5,8,14,.04) 0%,rgba(5,8,14,.18) 38%,rgba(5,8,14,.92) 100%)}
+  .world-card--kids .world-art{
+    position:relative;right:auto;top:auto;width:100%;height:235px;order:1;
+    transform:none;filter:none;display:flex;align-items:flex-start;justify-content:center;
+    padding:22px 20px 0
+  }
+  .world-card--kids .world-art img{
+    width:auto;height:210px;max-width:58%;object-fit:contain;border-radius:11px;
+    filter:drop-shadow(0 22px 28px rgba(0,0,0,.42))
+  }
+  .poster-stack{
+    position:relative;right:auto;top:auto;width:100%;height:230px;order:1;
+    transform:none;margin:0;opacity:.98
+  }
+  .poster-mini{width:132px}
+  .poster-mini--crime{right:calc(50% - 118px);top:20px}
+  .poster-mini--survive{left:calc(50% - 118px);bottom:14px}
+  .world-card__copy,
+  .world-card--kids .world-card__copy,
+  .world-card--gamebooks .world-card__copy{
+    position:relative;left:auto;right:auto;bottom:auto;order:2;padding:18px 20px 22px
+  }
+  .world-card h3{font-size:clamp(1.7rem,8vw,2.15rem);line-height:1.02}
+  .world-card p{max-width:none;margin-top:9px;font-size:.9rem;line-height:1.52}
+  .world-card__actions{gap:8px}
+  .world-btn{font-size:.82rem;padding:9px 13px}
+
   .featured-head{align-items:flex-start;flex-direction:column;margin-bottom:14px}
   .featured-row{
     display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
@@ -150,10 +181,11 @@
 }
 
 @media(max-width:370px){
-  .home-page header .brand--reuse-title{width:105px;height:23px;min-height:23px}
-  .home-page header .brand--reuse-title img{width:105px;max-width:none;height:auto}
-  .home-page header nav a{font-size:.76rem;padding-inline:5px}
-  .world-card p{max-width:88%}
+  .home-page header nav a{font-size:.69rem;padding-inline:3px}
+  .home-hero{min-height:380px}
+  .world-card--kids .world-art{height:220px}
+  .world-card--kids .world-art img{height:196px}
+  .world-btn{font-size:.78rem;padding-inline:11px}
 }
 
 @media(prefers-reduced-motion:reduce){
