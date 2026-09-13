@@ -43,10 +43,15 @@
 .plot{margin:8px 0 13px;color:#e4e7f0;line-height:1.65}
 .hook{margin:0 0 16px;padding-left:12px;border-left:3px solid rgba(231,194,95,.58);color:#ffe8b3;font-style:italic;line-height:1.55}
 
-.awards{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:16px;margin:17px 0 13px}
-.award-item{min-width:0;text-align:center}
-.award-item img{display:block;width:auto;height:76px;margin:0 auto 6px;filter:drop-shadow(0 0 8px rgba(231,194,95,.25))}
-.award-item p{margin:0;max-width:115px;color:#f4e3aa;font-size:.72rem;line-height:1.22}
+.awards{display:flex;flex-wrap:wrap;justify-content:center;align-items:stretch;gap:9px;margin:18px 0 14px}
+.award-item{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:42px;max-width:180px;padding:8px 12px;
+  border:1px solid rgba(231,194,95,.28);border-radius:999px;
+  background:linear-gradient(180deg,rgba(231,194,95,.11),rgba(231,194,95,.045));
+  color:#f4e3aa;text-align:center;font-size:.72rem;font-weight:800;line-height:1.2;
+  letter-spacing:.015em;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)
+}
 
 .review{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:14px;max-width:640px;margin:20px auto 0}
 .review .stars{min-width:88px;color:#e7c25f;font-size:1.2rem;letter-spacing:2px;line-height:1.2;text-align:center}
@@ -107,10 +112,8 @@
   .plot,.hook,.awards,.review,.cta-row,.status-row,.trust{grid-column:1 / -1;min-width:0}
   .plot{margin-top:8px}
   .review p{text-align:left}
-  .awards{flex-wrap:nowrap;gap:7px}
-  .award-item{flex:1 1 0;max-width:calc((100% - 14px)/3)}
-  .award-item img{height:54px}
-  .award-item p{max-width:none;font-size:.66rem}
+  .awards{gap:6px}
+  .award-item{flex:1 1 30%;min-width:82px;max-width:none;padding:7px 8px;font-size:.65rem}
   .sticky-buy{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 }
 
@@ -122,8 +125,7 @@
   .sheet-text h1{grid-column:1;grid-row:2}
   .sheet-text .meta{grid-column:1;grid-row:3}
   .awards{gap:5px}
-  .award-item img{height:46px}
-  .award-item p{font-size:.62rem}
+  .award-item{font-size:.61rem;padding:7px 6px}
 }
 
 @media (prefers-reduced-motion:reduce){.btn{transition:none}}
