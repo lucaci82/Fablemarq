@@ -6,6 +6,7 @@
     'b1','b2','b3','hero','grid','preview','collection','site',
     'collection_hero','collection_buy'
   ]);
+  const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
   const AMZ_TLD = { IT:'it', ES:'es', FR:'fr', DE:'de', GB:'co.uk', US:'com', CA:'ca', MX:'com.mx', CO:'com.co' };
   const ASIN_BY_LANG = {
     it:'B0G2MC6Z2X',
@@ -16,54 +17,30 @@
   const I18N = {
     it:{
       title:'Kiki Moon Collection — Fablemarq',
-      description:"Continua l'avventura: acquista il primo libro della saga Kiki Moon e scopri i prossimi in arrivo.",
-      skip:'Salta al contenuto',
-      language:'Lingua',
-      hero1:'Kiki Moon — Libro I',
-      hero2:'La Stella Perduta',
+      description:"Continua l'avventura: acquista il primo libro della saga Kiki Moon e scopri il prossimo capitolo in lavorazione.",
+      skip:'Salta al contenuto',language:'Lingua',hero1:'Kiki Moon — Libro I',hero2:'La Stella Perduta',
       hook:'Una stella si spegne. Ma la luce di Kiki è appena iniziata.',
       benefits:['Età 6–10 anni','80 pagine illustrate a colori','Ideale da leggere insieme'],
-      buy:'Acquista su Amazon',
-      trust:'Acquisto e resi gestiti da Amazon.',
-      preview:'Apri anteprima del Libro I',
-      section:'Altri libri della saga',
-      b2:'Libro II — Il Segreto di Snarfel',
-      b3:'Libro III — La Notte Infinita',
-      progress:'In lavorazione'
+      buy:'Acquista su Amazon',trust:'Acquisto e resi gestiti da Amazon.',preview:'Scopri il Libro I',
+      section:'Prossimo libro della saga',b2:'Libro II — Il Segreto di Snarfel',progress:'In lavorazione'
     },
     en:{
       title:'Kiki Moon Collection — Fablemarq',
-      description:"Continue the adventure: get the first book of the Kiki Moon saga and discover what's coming next.",
-      skip:'Skip to content',
-      language:'Language',
-      hero1:'Kiki Moon — Book I',
-      hero2:'The Lost Star',
+      description:"Continue the adventure: get the first Kiki Moon book and discover the next chapter now in progress.",
+      skip:'Skip to content',language:'Language',hero1:'Kiki Moon — Book I',hero2:'The Lost Star',
       hook:"A star goes dark. Kiki's light is just beginning.",
       benefits:['Ages 6–10','80 full-color illustrated pages','Perfect for family reading'],
-      buy:'Buy on Amazon',
-      trust:'Purchase and returns handled by Amazon.',
-      preview:'Open Book I preview',
-      section:'Other books in the series',
-      b2:"Book II — Snarfel's Secret",
-      b3:'Book III — The Endless Night',
-      progress:'In progress'
+      buy:'Buy on Amazon',trust:'Purchase and returns handled by Amazon.',preview:'Discover Book I',
+      section:'Next book in the series',b2:"Book II — Snarfel's Secret",progress:'In progress'
     },
     es:{
       title:'Kiki Moon Collection — Fablemarq',
-      description:'Sigue la aventura: compra el primer libro de la saga Kiki Moon y descubre los próximos en camino.',
-      skip:'Saltar al contenido',
-      language:'Idioma',
-      hero1:'Kiki Moon — Libro I',
-      hero2:'La Estrella Perdida',
+      description:'Sigue la aventura: compra el primer libro de Kiki Moon y descubre el próximo capítulo en desarrollo.',
+      skip:'Saltar al contenido',language:'Idioma',hero1:'Kiki Moon — Libro I',hero2:'La Estrella Perdida',
       hook:'Una estrella se apaga. La luz de Kiki acaba de empezar.',
       benefits:['Edades 6–10','80 páginas ilustradas a color','Perfecto para leer en familia'],
-      buy:'Comprar en Amazon',
-      trust:'Compra y devoluciones gestionadas por Amazon.',
-      preview:'Abrir vista previa del Libro I',
-      section:'Otros libros de la saga',
-      b2:'Libro II — El Secreto de Snarfel',
-      b3:'Libro III — La Noche Infinita',
-      progress:'En desarrollo'
+      buy:'Comprar en Amazon',trust:'Compra y devoluciones gestionadas por Amazon.',preview:'Descubre el Libro I',
+      section:'Próximo libro de la saga',b2:'Libro II — El Secreto de Snarfel',progress:'En desarrollo'
     }
   };
 
@@ -76,9 +53,18 @@
   };
 
   function initialLang(){
-    const q = qs();
     const browser = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
-    return normLang(q.get('lang') || localStorage.getItem('lang') || browser);
+    return normLang(qs().get('lang') || localStorage.getItem('lang') || browser);
+  }
+
+  function initAttribution(){
+    const q = qs();
+    const raw = (q.get('src') || '').trim().toLowerCase();
+    if (raw && !INTERNAL_SRC.has(raw)) localStorage.setItem('fm_src', raw);
+    UTM_KEYS.forEach(key => {
+      const value = q.get(key);
+      if (value) sessionStorage.setItem(key, value);
+    });
   }
 
   function guessCountry(){
@@ -88,8 +74,8 @@
   }
 
   function storeCountry(){
-    const qCountry = (qs().get('cc') || '').trim().toUpperCase();
-    if (AMZ_TLD[qCountry]) return qCountry;
+    const fromUrl = (qs().get('cc') || '').trim().toUpperCase();
+    if (AMZ_TLD[fromUrl]) return fromUrl;
     const saved = (localStorage.getItem('amz_cc') || '').trim().toUpperCase();
     if (AMZ_TLD[saved]) return saved;
     return guessCountry() || 'US';
@@ -97,16 +83,13 @@
 
   function trafficSource(){
     const raw = (qs().get('src') || '').trim().toLowerCase();
-    if (raw && !INTERNAL_SRC.has(raw)) {
-      localStorage.setItem('fm_src', raw);
-      return raw;
-    }
+    if (raw && !INTERNAL_SRC.has(raw)) return raw;
     return localStorage.getItem('fm_src') || 'site';
   }
 
-  function withParams(href, params){
+  function withParams(href, values){
     const url = new URL(href, location.href);
-    Object.entries(params).forEach(([key,value]) => {
+    Object.entries(values).forEach(([key,value]) => {
       if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, String(value));
     });
     return url.pathname + (url.search ? `?${url.searchParams.toString()}` : '');
@@ -115,8 +98,6 @@
   function amazonUrl(lang, placement){
     const cc = storeCountry();
     localStorage.setItem('amz_cc', cc);
-    const tld = AMZ_TLD[cc] || 'com';
-    const asin = ASIN_BY_LANG[lang] || ASIN_BY_LANG.en;
     const src = trafficSource();
     const query = new URLSearchParams({
       utm_source:src,
@@ -125,13 +106,17 @@
       utm_content:placement,
       src
     });
-    return `https://www.amazon.${tld}/dp/${asin}?${query.toString()}`;
+    UTM_KEYS.forEach(key => {
+      const value = qs().get(key) || sessionStorage.getItem(key);
+      if (value && !query.has(key)) query.set(key, value);
+    });
+    return `https://www.amazon.${AMZ_TLD[cc] || 'com'}/dp/${ASIN_BY_LANG[lang] || ASIN_BY_LANG.en}?${query.toString()}`;
   }
 
   let lang = initialLang();
   let trackingBound = false;
 
-  function text(selector, value){
+  function setText(selector, value){
     const el = document.querySelector(selector);
     if (el) el.textContent = value;
   }
@@ -145,16 +130,14 @@
     const desc = document.querySelector('meta[name="description"]');
     if (desc) desc.content = t.description;
 
-    text('.skip-link', t.skip);
-    text('#titleLine1', t.hero1);
-    text('#titleLine2', t.hero2);
-    text('#heroHook', t.hook);
-    text('#sectionTitle', t.section);
-    text('#book2Caption', t.b2);
-    text('#book3Caption', t.b3);
-    text('#book2Meta', t.progress);
-    text('#book3Meta', t.progress);
-    text('#buyMetaText', t.trust);
+    setText('.skip-link', t.skip);
+    setText('#titleLine1', t.hero1);
+    setText('#titleLine2', t.hero2);
+    setText('#heroHook', t.hook);
+    setText('#sectionTitle', t.section);
+    setText('#book2Caption', t.b2);
+    setText('#book2Meta', t.progress);
+    setText('#buyMetaText', t.trust);
 
     document.querySelectorAll('[data-i18n="buy"]').forEach(el => { el.textContent = t.buy; });
     document.querySelectorAll('.lang-switch').forEach(el => el.setAttribute('aria-label', t.language));
@@ -182,10 +165,9 @@
     if (preload) preload.href = `${ASSET_ROOT}/${lang}/cover1.webp`;
 
     const b2 = document.getElementById('book2Cover');
-    const b3 = document.getElementById('book3Cover');
     if (b2) { b2.src = `${ASSET_ROOT}/${lang}/cover2.webp`; b2.alt = t.b2; }
-    if (b3) { b3.src = `${ASSET_ROOT}/${lang}/cover3.webp`; b3.alt = t.b3; }
-    document.querySelectorAll('.collection-card').forEach(card => card.dataset.status = t.progress);
+    const card = document.querySelector('.collection-card');
+    if (card) card.dataset.status = t.progress;
 
     const src = trafficSource();
     const brand = document.querySelector('a.brand');
@@ -203,14 +185,19 @@
     if (buySticky) buySticky.href = amazonUrl(lang, 'sticky_btn');
   }
 
-  function track(name, params){
-    try { window.gtag && window.gtag('event', name, Object.assign({
+  function track(name, extra){
+    const ctx = {
       page_path:location.pathname,
       page_location:location.href,
       lang,
       src:trafficSource(),
       book_id:'b1'
-    }, params || {})); } catch (_) {}
+    };
+    UTM_KEYS.forEach(key => {
+      const value = qs().get(key) || sessionStorage.getItem(key);
+      if (value) ctx[key] = value;
+    });
+    try { window.gtag && window.gtag('event', name, Object.assign(ctx, extra || {})); } catch (_) {}
   }
 
   function bindTracking(){
@@ -230,7 +217,6 @@
     const main = document.getElementById('buyNow');
     const mq = window.matchMedia('(max-width:520px)');
     if (!wrap || !main || !('IntersectionObserver' in window)) return;
-
     const observer = new IntersectionObserver(entries => {
       wrap.style.display = mq.matches && !entries[0].isIntersecting ? 'block' : 'none';
     }, { threshold:.01 });
@@ -251,7 +237,7 @@
   });
 
   document.addEventListener('DOMContentLoaded', () => {
-    trafficSource();
+    initAttribution();
     const current = new URL(location.href);
     if (current.searchParams.has('lang')) {
       current.searchParams.delete('lang');
