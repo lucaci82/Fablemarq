@@ -50,6 +50,7 @@
   }
   </script>
 
+  <script src="js/language.js"></script>
   <script>
   (function(){
     const urlLang = new URL(location.href).searchParams.get('lang');
@@ -88,6 +89,11 @@
       <a href="kids/" data-internal data-nav="kids" data-i18n="navKids">Kids</a>
       <a href="gamebooks/" data-internal data-nav="gamebooks" data-i18n="navGamebooks">Gamebooks</a>
     </nav>
+    <div class="lang-switch-home header-lang" aria-label="Lingua">
+      <button type="button" data-lang="it" aria-pressed="true">IT</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="es" aria-pressed="false">ES</button>
+    </div>
   </div>
 </header>
 
@@ -95,7 +101,9 @@
   <section class="home-hero" aria-labelledby="homeTagline">
     <div id="wow-canvas" aria-hidden="true"></div>
     <div class="home-hero__inner">
-      <img class="home-hero__mark" src="assets/title-card.png" alt="Fablemarq" width="1183" height="513" loading="eager" decoding="async" fetchpriority="high">
+      <div class="home-hero__brand">
+        <img class="home-hero__mark" src="assets/title-card.png" alt="Fablemarq" width="1183" height="513" loading="eager" decoding="async" fetchpriority="high">
+      </div>
       <h1 class="home-hero__tagline" id="homeTagline" data-i18n="tagline">Stories you enter.</h1>
       <p class="home-hero__sub" data-i18n="heroSub">Due universi editoriali. Un solo marchio. Scegli dove entrare.</p>
       <a class="home-hero__cue" href="#worlds" data-i18n="chooseTitle">Scegli il tuo mondo</a>
