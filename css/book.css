@@ -1,0 +1,129 @@
+/* Shared styles for Kiki Moon book pages. */
+.book-page{background:#0b1222;color:#e9edf6}
+.book-page main.container{padding-top:16px;padding-bottom:34px}
+.book-page a{color:inherit}
+
+.book-page header nav{gap:8px}
+.book-page .nav-collection{color:rgba(231,234,246,.94);text-decoration:none}
+.lang-switch{
+  display:inline-flex;align-items:center;gap:4px;padding:4px;
+  border:1px solid rgba(231,194,95,.32);border-radius:14px;
+  background:rgba(231,194,95,.08)
+}
+.lang-switch button{
+  appearance:none;border:0;background:transparent;color:#ffe8b3;
+  min-width:40px;min-height:38px;padding:6px 8px;border-radius:10px;
+  font:700 .88rem/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  cursor:pointer
+}
+.lang-switch button.active,.lang-switch button[aria-pressed="true"]{
+  background:rgba(231,194,95,.22);box-shadow:0 4px 12px rgba(231,194,95,.14)
+}
+
+.book-sheet{
+  display:grid;grid-template-columns:minmax(200px,280px) minmax(0,1fr);
+  gap:clamp(18px,3vw,30px);align-items:start;
+  margin:10px 0 0;padding:clamp(14px,2.2vw,22px);border-radius:18px;
+  background:linear-gradient(145deg,rgba(231,194,95,.06),rgba(15,23,48,.55));
+  border:1px solid rgba(231,194,95,.13);
+  box-shadow:0 14px 38px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035)
+}
+.cover-lg{
+  display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;
+  border-radius:13px;border:1px solid rgba(231,194,95,.16);
+  background:#0f1730;box-shadow:0 10px 28px rgba(0,0,0,.28)
+}
+.sheet-text{min-width:0}
+.sheet-text h1{
+  margin:0 0 8px;font:700 clamp(1.5rem,3.5vw,2.25rem)/1.15 Georgia,"Times New Roman",serif;
+  color:#f4e8bd;letter-spacing:-.018em
+}
+.meta{list-style:none;padding:0;margin:0 0 14px;display:flex;gap:10px 18px;flex-wrap:wrap;color:#d6dbea;font-size:.93rem}
+.meta strong{color:#aeb7ca}
+.plot{margin:8px 0 13px;color:#e4e7f0;line-height:1.65}
+.hook{margin:0 0 16px;padding-left:12px;border-left:3px solid rgba(231,194,95,.58);color:#ffe8b3;font-style:italic;line-height:1.55}
+
+.awards{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:16px;margin:17px 0 13px}
+.award-item{min-width:0;text-align:center}
+.award-item img{display:block;width:auto;height:76px;margin:0 auto 6px;filter:drop-shadow(0 0 8px rgba(231,194,95,.25))}
+.award-item p{margin:0;max-width:115px;color:#f4e3aa;font-size:.72rem;line-height:1.22}
+
+.review{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:14px;max-width:640px;margin:20px auto 0}
+.review .stars{min-width:88px;color:#e7c25f;font-size:1.2rem;letter-spacing:2px;line-height:1.2;text-align:center}
+.review p{margin:0;color:#cfd3e0;font-size:.94rem;line-height:1.55;text-align:left}
+
+.cta-row,.status-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:46px;
+  padding:12px 20px;border:1px solid rgba(231,194,95,.5);border-radius:12px;
+  background:rgba(231,194,95,.11);color:#ffe8b3;text-decoration:none;
+  font-weight:800;line-height:1.1;box-shadow:0 6px 18px rgba(231,194,95,.09);
+  transition:transform .15s ease,box-shadow .15s ease,background .15s ease
+}
+@media (hover:hover){.btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(231,194,95,.15);background:rgba(231,194,95,.15)}}
+.btn:focus-visible{outline:2px solid #facc15;outline-offset:3px}
+.btn[aria-disabled="true"]{cursor:default;opacity:.72;pointer-events:none}
+.trust{margin:7px 0 0;color:#cfd3e0;font-size:.86rem;text-align:center;opacity:.9}
+
+.sticky-buy{
+  position:sticky;bottom:max(0px,env(safe-area-inset-bottom));z-index:8;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:12px;margin-top:18px;border-radius:14px;
+  background:linear-gradient(180deg,rgba(7,12,26,0),rgba(7,12,26,.9));
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)
+}
+.sticky-buy .btn{width:min(100%,520px)}
+
+.book-status{
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+  padding:10px 16px;border:1px solid rgba(231,194,95,.32);border-radius:999px;
+  color:#f4e3aa;background:rgba(231,194,95,.07);font-weight:800
+}
+
+@media (max-width:820px){
+  .book-sheet{grid-template-columns:132px minmax(0,1fr);gap:14px;padding:14px}
+  .sheet-text h1{font-size:clamp(1.15rem,4vw,1.45rem)}
+  .meta{display:block;font-size:.88rem;line-height:1.38}
+  .meta li{margin-bottom:5px}
+  .review{grid-template-columns:1fr;gap:7px}
+  .review .stars{text-align:center}
+}
+
+@media (max-width:520px){
+  .book-page header .nav{gap:6px}
+  .book-page header nav{gap:4px}
+  .book-page .nav-collection{min-height:40px;padding-inline:6px;font-size:.85rem}
+  .lang-switch{gap:2px;padding:3px}
+  .lang-switch button{min-width:35px;min-height:36px;padding:5px 6px;font-size:.8rem}
+
+  .book-sheet{
+    grid-template-columns:112px minmax(0,1fr);
+    column-gap:12px;row-gap:8px;padding:12px;border-radius:15px
+  }
+  .cover-lg{grid-column:1;grid-row:1 / 4;width:112px}
+  .sheet-text{display:contents}
+  .sheet-text h1{grid-column:2;grid-row:1;margin:0;font-size:clamp(1rem,4.8vw,1.18rem);overflow-wrap:anywhere}
+  .sheet-text .meta{grid-column:2;grid-row:2 / 4;margin:0;font-size:.84rem}
+  .plot,.hook,.awards,.review,.cta-row,.status-row,.trust{grid-column:1 / -1;min-width:0}
+  .plot{margin-top:8px}
+  .review p{text-align:left}
+  .awards{flex-wrap:nowrap;gap:7px}
+  .award-item{flex:1 1 0;max-width:calc((100% - 14px)/3)}
+  .award-item img{height:54px}
+  .award-item p{max-width:none;font-size:.66rem}
+  .sticky-buy{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+}
+
+@media (max-width:365px){
+  .book-page .brand--reuse-title{width:98px;height:22px;min-height:22px}
+  .book-page .brand--reuse-title img{width:98px;max-width:none;height:auto}
+  .book-sheet{grid-template-columns:1fr;padding:12px}
+  .cover-lg{grid-column:1;grid-row:1;width:min(72vw,220px);margin:0 auto 8px}
+  .sheet-text h1{grid-column:1;grid-row:2}
+  .sheet-text .meta{grid-column:1;grid-row:3}
+  .awards{gap:5px}
+  .award-item img{height:46px}
+  .award-item p{font-size:.62rem}
+}
+
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
