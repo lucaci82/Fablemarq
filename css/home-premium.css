@@ -1,3 +1,5 @@
+@import url("home-cinematic.css");
+
 :root{
   --home-ink:#f4f6fb;
   --home-muted:#aeb6c8;
@@ -139,8 +141,6 @@
   .section-heading{font-size:2rem}
   .section-intro{font-size:.92rem;line-height:1.55}
 
-  /* On phones, artwork and copy occupy separate zones. This prevents long
-     translated headlines from ever colliding with book covers. */
   .world-card{min-height:0;border-radius:19px;display:flex;flex-direction:column}
   .world-card::after{background:linear-gradient(180deg,rgba(5,8,14,.04) 0%,rgba(5,8,14,.18) 38%,rgba(5,8,14,.92) 100%)}
   .world-card--kids .world-art{
