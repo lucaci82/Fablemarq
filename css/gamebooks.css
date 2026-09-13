@@ -1,0 +1,93 @@
+.gamebooks-page{background:
+  radial-gradient(900px 560px at 76% -2%,rgba(125,31,35,.17),transparent 70%),
+  radial-gradient(760px 520px at 12% 24%,rgba(224,126,43,.07),transparent 72%),
+  #07090e;color:#f3f4f7}
+.gamebooks-page header{background:rgba(7,9,14,.89)}
+.gamebooks-hero{position:relative;overflow:hidden;padding:clamp(42px,7vw,88px) 0 48px;border-bottom:1px solid rgba(255,255,255,.055)}
+.gamebooks-hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(180deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(180deg,rgba(0,0,0,.65),transparent)}
+.gamebooks-hero__grid{position:relative;display:grid;grid-template-columns:minmax(0,1.18fr) minmax(300px,.82fr);gap:clamp(28px,5vw,64px);align-items:center}
+.gamebooks-mark{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px;padding:6px 10px;border:1px solid rgba(213,66,65,.25);border-radius:999px;background:rgba(153,40,43,.10);color:#efc3c2;font-size:.72rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase}
+.gamebooks-hero h1{margin:0;max-width:830px;font-size:clamp(2.7rem,7vw,6.5rem);line-height:.88;letter-spacing:-.065em;text-transform:uppercase;color:#f7f7f8}
+.gamebooks-hero h1 span{display:block;color:#d8dbdf}
+.gamebooks-hero__lead{max-width:650px;margin:20px 0 0;color:#b7bdc8;font-size:clamp(1rem,1.9vw,1.14rem);line-height:1.6}
+.gamebooks-principles{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0 0;padding:0;list-style:none}
+.gamebooks-principles li{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07);color:#d8dbe1;font-size:.76rem;font-weight:850}
+.gamebooks-hero__art{position:relative;height:390px}
+.gb-cover{position:absolute;width:190px;aspect-ratio:2/3;border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,.13);box-shadow:0 26px 52px rgba(0,0,0,.46);display:flex;flex-direction:column;justify-content:flex-end;text-transform:uppercase;overflow:hidden}
+.gb-cover::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.72));z-index:0}
+.gb-cover>*{position:relative;z-index:1}
+.gb-cover small{font-size:.6rem;letter-spacing:.16em;font-weight:900;opacity:.74}
+.gb-cover strong{font-size:1.45rem;line-height:.9;letter-spacing:-.05em;margin-top:7px}
+.gb-cover--crime{right:45px;top:6px;transform:rotate(7deg);background:radial-gradient(circle at 70% 18%,rgba(201,54,58,.34),transparent 37%),linear-gradient(160deg,#4a1419,#180d10 58%,#07080a);border-color:rgba(216,72,72,.32)}
+.gb-cover--survive{left:24px;bottom:0;transform:rotate(-8deg);background:radial-gradient(circle at 72% 18%,rgba(230,139,46,.27),transparent 38%),linear-gradient(160deg,#60350e,#1a120b 58%,#08090b);border-color:rgba(235,145,53,.31)}
+
+.gamebook-section{padding:clamp(48px,7vw,86px) 0;content-visibility:auto;contain-intrinsic-size:780px}
+.gamebook-section--muted{background:rgba(255,255,255,.015);border-block:1px solid rgba(255,255,255,.045)}
+.gamebook-section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.gamebook-section__copy{max-width:680px}
+.gamebook-kicker{margin:0 0 7px;color:#d3a06f;font-size:.72rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+.gamebook-heading{margin:0;font-size:clamp(1.9rem,4vw,3.15rem);line-height:1;letter-spacing:-.05em;color:#f4f5f7}
+.gamebook-intro{margin:12px 0 0;color:#aeb5c1;font-size:clamp(.94rem,1.6vw,1.04rem)}
+
+.series-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.series-card{--series:#d84b45;position:relative;overflow:hidden;min-height:350px;padding:clamp(18px,3vw,28px);border:1px solid rgba(255,255,255,.09);border-radius:21px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));box-shadow:0 20px 48px rgba(0,0,0,.20)}
+.series-card::before{content:"";position:absolute;width:310px;height:310px;right:-100px;top:-120px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--series) 28%,transparent),transparent 68%);pointer-events:none}
+.series-card--crime{--series:#d84b45}
+.series-card--survive{--series:#e49336}
+.series-card--mystery{--series:#7667d8}
+.series-card--real{--series:#d5b64e}
+.series-card__top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.series-name{display:inline-flex;align-items:center;gap:8px;color:#f2f3f5;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;font-weight:950}
+.series-name::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--series);box-shadow:0 0 18px color-mix(in srgb,var(--series) 60%,transparent)}
+.series-status{padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.06);color:#b5bcc8;font-size:.67rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em}
+.series-card__content{position:relative;z-index:1;margin-top:76px;max-width:520px}
+.series-card h3{margin:0;font-size:clamp(2rem,4.7vw,3.8rem);line-height:.91;letter-spacing:-.055em;text-transform:uppercase}
+.series-card__hook{margin:14px 0 0;max-width:500px;color:#c4c9d1;font-size:clamp(.94rem,1.6vw,1.04rem);line-height:1.52}
+.series-card__note{display:inline-flex;margin-top:18px;align-items:center;gap:7px;color:#9ba4b2;font-size:.78rem;font-weight:800}
+.series-card__note::before{content:"";width:18px;height:1px;background:var(--series)}
+.series-card--coming{min-height:220px}
+.series-card--coming .series-card__content{margin-top:42px}
+.series-card--coming h3{font-size:clamp(1.65rem,3.5vw,2.6rem)}
+
+.how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:22px}
+.how-card{padding:19px;border:1px solid rgba(255,255,255,.075);border-radius:16px;background:rgba(255,255,255,.028)}
+.how-card__num{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.07);color:#d9dde5;font-weight:950;font-size:.8rem}
+.how-card h3{margin:14px 0 0;font-size:1.02rem}
+.how-card p{margin:7px 0 0;color:#9fa7b4;font-size:.87rem;line-height:1.5}
+
+.gamebooks-footnote{margin:22px 0 0;color:#8f98a6;font-size:.78rem;max-width:720px}
+
+@media(max-width:900px){
+  .gamebooks-hero__grid{grid-template-columns:1fr}
+  .gamebooks-hero__copy{text-align:center}
+  .gamebooks-hero__lead{margin-inline:auto}
+  .gamebooks-principles{justify-content:center}
+  .gamebooks-hero__art{height:330px;max-width:480px;width:100%;margin:0 auto}
+  .series-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:620px){
+  .gamebooks-hero{padding-top:30px}
+  .gamebooks-hero h1{font-size:clamp(2.55rem,15vw,4.4rem)}
+  .gamebooks-hero__lead{font-size:.94rem}
+  .gamebooks-hero__art{height:285px}
+  .gb-cover{width:145px;padding:14px}
+  .gb-cover--crime{right:32px}
+  .gb-cover--survive{left:32px}
+  .gb-cover strong{font-size:1.12rem}
+  .gamebook-section{padding:46px 0}
+  .gamebook-section__head{align-items:flex-start;flex-direction:column}
+  .series-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:0 12px 8px 0;margin-right:-12px;scrollbar-width:none}
+  .series-grid::-webkit-scrollbar{display:none}
+  .series-card{flex:0 0 min(86vw,390px);scroll-snap-align:start;min-height:330px;padding:18px}
+  .series-card--coming{min-height:250px}
+  .series-card__content{margin-top:66px}
+  .how-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:360px){
+  .gb-cover--crime{right:14px}
+  .gb-cover--survive{left:14px}
+}
+
+@media(prefers-reduced-motion:reduce){.gb-cover{transform:none}}

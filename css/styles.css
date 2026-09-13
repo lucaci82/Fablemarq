@@ -81,6 +81,14 @@ nav a{
 }
 .skip-link:focus{top:12px}
 
+.lang-switch-home{display:inline-flex;align-items:center;gap:3px;padding:3px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.04)}
+.lang-switch-home button{appearance:none;border:0;background:transparent;color:#9fa7b6;min-width:36px;min-height:34px;border-radius:9px;font:800 .76rem/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+.lang-switch-home button.active,.lang-switch-home button[aria-pressed="true"]{background:rgba(255,255,255,.10);color:#fff}
+
+/* Preserve book-cover proportions in the premium homepage rail. */
+.home-page .featured-row .book-tile:first-child .book-tile__visual{background:radial-gradient(circle at 50% 30%,rgba(112,151,235,.14),transparent 55%),#0b1020}
+.home-page .featured-row .book-tile:first-child .book-tile__visual img{object-fit:contain;object-position:center;padding:14px}
+
 footer{display:none}
 
 @media (max-width:820px){
