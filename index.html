@@ -5,18 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Fablemarq — Stories, worlds and illustrated adventures</title>
   <meta name="description" content="Fablemarq crea mondi narrativi, libri illustrati e avventure per lettori curiosi. Scopri la Kiki Moon Collection.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="theme-color" content="#0b1222">
   <meta name="color-scheme" content="dark">
-  <meta property="og:title" content="Fablemarq">
-  <meta property="og:description" content="Stories, worlds and illustrated adventures.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/title-card.png">
 
-  <link rel="icon" href="assets/logo-fablemarq.png" type="image/png">
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="canonical" href="https://fablemarq.com/">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="assets/title-card.png" fetchpriority="high">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/hero-clean.css">
+
+  <meta property="og:title" content="Fablemarq — Stories, worlds and illustrated adventures">
+  <meta property="og:description" content="Stories, worlds and illustrated adventures. Discover the Kiki Moon Collection.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://fablemarq.com/">
+  <meta property="og:image" content="https://fablemarq.com/assets/title-card.png">
+  <meta property="og:image:width" content="1183">
+  <meta property="og:image:height" content="513">
+  <meta property="og:site_name" content="Fablemarq">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fablemarq">
+  <meta name="twitter:description" content="Stories, worlds and illustrated adventures.">
+  <meta name="twitter:image" content="https://fablemarq.com/assets/title-card.png">
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"Fablemarq",
+    "url":"https://fablemarq.com/",
+    "description":"Stories, worlds and illustrated adventures.",
+    "inLanguage":["it","en","es"]
+  }
+  </script>
 
   <script>
   (function(){
@@ -69,8 +90,8 @@
 
 <header>
   <div class="container nav">
-    <a class="brand" href="./" aria-label="Fablemarq home">
-      <img src="assets/logo-fablemarq.png" alt="Fablemarq" decoding="async">
+    <a class="brand brand--reuse-title" href="./" aria-label="Fablemarq home">
+      <img src="assets/title-card.png" alt="" aria-hidden="true" width="1183" height="513" decoding="async">
     </a>
     <nav aria-label="Navigazione principale">
       <a data-kiki href="kikimooncollection/">Kiki Moon</a>
@@ -83,7 +104,7 @@
   <section class="hero" aria-label="Fablemarq">
     <div id="wow-canvas" aria-hidden="true"></div>
     <div class="hero-layer">
-      <img class="title-card" src="assets/title-card.png" alt="Fablemarq" loading="eager" decoding="async" fetchpriority="high">
+      <img class="title-card" src="assets/title-card.png" alt="Fablemarq — A new world begins" width="1183" height="513" loading="eager" decoding="async" fetchpriority="high">
     </div>
   </section>
 </main>
@@ -102,7 +123,6 @@
 })();
 </script>
 
-<script defer src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script defer src="js/wow.js"></script>
+<script defer src="js/wow-loader.js"></script>
 </body>
 </html>
