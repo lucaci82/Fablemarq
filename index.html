@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fablemarq — Home</title>
-  <meta name="description" content="Fablemarq Studio">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fablemarq — Stories, worlds and illustrated adventures</title>
+  <meta name="description" content="Fablemarq crea mondi narrativi, libri illustrati e avventure per lettori curiosi. Scopri la Kiki Moon Collection.">
   <meta name="theme-color" content="#0b1222">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="Fablemarq">
+  <meta property="og:description" content="Stories, worlds and illustrated adventures.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/title-card.png">
 
-  <!-- Percorsi relativi -->
   <link rel="icon" href="assets/logo-fablemarq.png" type="image/png">
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="preload" as="image" href="assets/title-card.png">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preload" as="image" href="assets/title-card.png" fetchpriority="high">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/hero-clean.css">
 
-  <!-- Bootstrap lingua -->
   <script>
   (function(){
     const urlLang = new URL(location.href).searchParams.get('lang');
@@ -24,30 +28,34 @@
     const lang = norm(urlLang || saved || nav);
     document.documentElement.lang = lang;
     localStorage.setItem('lang', lang);
-    if (urlLang){ const u=new URL(location.href); u.searchParams.delete('lang'); history.replaceState({},'',u); }
+    if (urlLang){
+      const u = new URL(location.href);
+      u.searchParams.delete('lang');
+      history.replaceState({},'',u);
+    }
     window.PREFERRED_LANG = lang;
   })();
   </script>
 
-  <!-- i18n minimale -->
   <script>
   const HOME_I18N = {
-    en: { skip:"Skip to content", cta:"Shop", kiki:"Kiki Moon" },
-    it: { skip:"Salta al contenuto", cta:"Acquista", kiki:"Kiki Moon" },
-    es: { skip:"Saltar al contenido", cta:"Comprar", kiki:"Kiki Moon" }
+    en: { skip:"Skip to content", cta:"Shop", kiki:"Kiki Moon", nav:"Main navigation" },
+    it: { skip:"Salta al contenuto", cta:"Acquista", kiki:"Kiki Moon", nav:"Navigazione principale" },
+    es: { skip:"Saltar al contenido", cta:"Comprar", kiki:"Kiki Moon", nav:"Navegación principal" }
   };
   function applyHomeI18n(lang){
     const t = HOME_I18N[lang] || HOME_I18N.en;
     const skip = document.querySelector('.skip-link');
     const cta  = document.querySelector('a.cta-buy');
     const kiki = document.querySelector('nav a[data-kiki]');
+    const nav  = document.querySelector('header nav');
     if (skip) skip.textContent = t.skip;
-    if (cta)  cta.textContent  = t.cta;
+    if (cta) cta.textContent = t.cta;
     if (kiki) kiki.textContent = t.kiki;
+    if (nav) nav.setAttribute('aria-label', t.nav);
   }
   </script>
 
-  <!-- Tag Analytics (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5N15LT4Y34"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -61,11 +69,10 @@
 
 <header>
   <div class="container nav">
-    <!-- LOGO -->
-    <a class="brand" href="./">
-      <img src="assets/logo-fablemarq.png" alt="Fablemarq">
+    <a class="brand" href="./" aria-label="Fablemarq home">
+      <img src="assets/logo-fablemarq.png" alt="Fablemarq" decoding="async">
     </a>
-    <nav>
+    <nav aria-label="Navigazione principale">
       <a data-kiki href="kikimooncollection/">Kiki Moon</a>
       <a class="cta-buy" href="kikimooncollection/">Acquista</a>
     </nav>
@@ -73,22 +80,21 @@
 </header>
 
 <main id="main">
-<section class="hero">
-  <div id="wow-canvas"></div>
-  <div class="hero-layer">
-    <img class="title-card" src="assets/title-card.png" alt="Fablemarq">
-  </div>
-</section>
+  <section class="hero" aria-label="Fablemarq">
+    <div id="wow-canvas" aria-hidden="true"></div>
+    <div class="hero-layer">
+      <img class="title-card" src="assets/title-card.png" alt="Fablemarq" loading="eager" decoding="async" fetchpriority="high">
+    </div>
+  </section>
 </main>
 
-<!-- Propaga lingua ai link -->
 <script>
 (function(){
   const lang = window.PREFERRED_LANG || localStorage.getItem('lang') || 'en';
   applyHomeI18n(lang);
   document.querySelectorAll('nav a[href^="kikimooncollection"]').forEach(a=>{
     try{
-      const u=new URL(a.getAttribute('href'),location.href);
+      const u = new URL(a.getAttribute('href'),location.href);
       u.searchParams.set('lang',lang);
       a.setAttribute('href',u.pathname+'?'+u.searchParams.toString());
     }catch(_){}
@@ -96,7 +102,6 @@
 })();
 </script>
 
-<!-- JS relativi -->
 <script defer src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
 <script defer src="js/wow.js"></script>
 </body>
