@@ -5,18 +5,24 @@
   border:0;border-radius:0;background:transparent;box-shadow:none;
   color:#f4e3aa;text-align:center;font-size:.7rem;font-weight:800;line-height:1.2;letter-spacing:.01em
 }
-.book-page .award-item img{display:block;width:82px;height:82px;margin:0 auto 6px;filter:drop-shadow(0 7px 12px rgba(0,0,0,.28));transition:transform .18s ease,filter .18s ease}
-.book-page .award-item span{display:block;max-width:118px}
-@media(hover:hover){.book-page .award-item:hover img{transform:translateY(-2px) scale(1.025);filter:drop-shadow(0 10px 16px rgba(0,0,0,.32))}}
+.book-page .award-item::before{
+  content:"";display:block;width:82px;height:82px;margin:0 auto 6px;
+  background:center/contain no-repeat;
+  filter:drop-shadow(0 7px 12px rgba(0,0,0,.28));
+  transition:transform .18s ease,filter .18s ease
+}
+.book-page .award-item:nth-child(1)::before{background-image:url("../assets/awards/award-readers.svg")}
+.book-page .award-item:nth-child(2)::before{background-image:url("../assets/awards/award-storytelling.svg")}
+.book-page .award-item:nth-child(3)::before{background-image:url("../assets/awards/award-illustrated.svg")}
+@media(hover:hover){.book-page .award-item:hover::before{transform:translateY(-2px) scale(1.025);filter:drop-shadow(0 10px 16px rgba(0,0,0,.32))}}
 @media(max-width:520px){
   .book-page .awards{flex-wrap:nowrap;gap:7px}
   .book-page .award-item{flex:1 1 0;min-width:0;max-width:calc((100% - 14px)/3);font-size:.61rem}
-  .book-page .award-item img{width:62px;height:62px;margin-bottom:4px}
-  .book-page .award-item span{max-width:92px}
+  .book-page .award-item::before{width:62px;height:62px;margin-bottom:4px}
 }
 @media(max-width:365px){
   .book-page .awards{gap:4px}
   .book-page .award-item{font-size:.56rem}
-  .book-page .award-item img{width:52px;height:52px}
+  .book-page .award-item::before{width:52px;height:52px}
 }
-@media(prefers-reduced-motion:reduce){.book-page .award-item img{transition:none}}
+@media(prefers-reduced-motion:reduce){.book-page .award-item::before{transition:none}}
