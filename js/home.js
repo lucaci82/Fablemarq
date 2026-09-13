@@ -13,7 +13,7 @@
       kidsEyebrow:'Fablemarq Kids',kidsTitle:'Meraviglia da leggere insieme',kidsText:'Storie illustrate, mondi luminosi e personaggi da ricordare. Oggi: Kiki Moon.',kidsExplore:'Scopri Kids',kidsBuy:'Acquista Kiki Moon',
       gameEyebrow:'Fablemarq Gamebooks',gameTitle:'Le tue scelte cambiano la storia',gameText:'Crime, survival, mystery e situazioni impossibili. Niente dadi: solo decisioni e conseguenze.',gameExplore:'Scopri Gamebooks',
       featuredKicker:'In evidenza',featuredTitle:'Libri da scoprire ora',kikiLabel:'Fablemarq Kids',kikiTitle:'Kiki Moon — La Stella Perduta',kikiText:'Una storia illustrata per lettori dai 6 ai 10 anni.',details:'Dettagli',buy:'Amazon',available:'Disponibile',
-      crimeLabel:'Gamebooks · Crime',crimeTitle:'SEI ACCUSATO',crimeText:'Hai 48 ore per dimostrare che non sei stato tu.',surviveLabel:'Gamebooks · Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveText:"Sette persone. Una galleria crollata. L'aria non basterà per tutti.",
+      crimeLabel:'Gamebooks · Crime',crimeTitle:"L'ACCUSATO",crimeText:'Hai 48 ore per dimostrare che non sei stato tu.',surviveLabel:'Gamebooks · Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveText:"Sette persone. Una galleria crollata. L'aria non basterà per tutti.",
       development:'In sviluppo',soon:'Prossimamente',gamebooksCta:'Vai ai Gamebooks',footer:'Fablemarq — Independent publishing studio',language:'Lingua'
     },
     en:{
@@ -23,7 +23,7 @@
       kidsEyebrow:'Fablemarq Kids',kidsTitle:'Wonder made to read together',kidsText:'Illustrated stories, luminous worlds and memorable characters. Now: Kiki Moon.',kidsExplore:'Explore Kids',kidsBuy:'Buy Kiki Moon',
       gameEyebrow:'Fablemarq Gamebooks',gameTitle:'Your choices change the story',gameText:'Crime, survival, mystery and impossible situations. No dice: just decisions and consequences.',gameExplore:'Explore Gamebooks',
       featuredKicker:'Featured',featuredTitle:'Books to discover now',kikiLabel:'Fablemarq Kids',kikiTitle:'Kiki Moon — The Lost Star',kikiText:'A full-color illustrated story for readers ages 6–10.',details:'Details',buy:'Amazon',available:'Available',
-      crimeLabel:'Gamebooks · Crime',crimeTitle:'SEI ACCUSATO',crimeText:'You have 48 hours to prove you did not do it.',surviveLabel:'Gamebooks · Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveText:'Seven people. A collapsed tunnel. There will not be enough air for everyone.',
+      crimeLabel:'Gamebooks · Crime',crimeTitle:"L'ACCUSATO",crimeText:'You have 48 hours to prove you did not do it.',surviveLabel:'Gamebooks · Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveText:'Seven people. A collapsed tunnel. There will not be enough air for everyone.',
       development:'In development',soon:'Coming soon',gamebooksCta:'Explore Gamebooks',footer:'Fablemarq — Independent publishing studio',language:'Language'
     },
     es:{
@@ -33,7 +33,7 @@
       kidsEyebrow:'Fablemarq Kids',kidsTitle:'Maravilla para leer juntos',kidsText:'Historias ilustradas, mundos luminosos y personajes para recordar. Ahora: Kiki Moon.',kidsExplore:'Descubre Kids',kidsBuy:'Comprar Kiki Moon',
       gameEyebrow:'Fablemarq Gamebooks',gameTitle:'Tus decisiones cambian la historia',gameText:'Crime, supervivencia, misterio y situaciones imposibles. Sin dados: solo decisiones y consecuencias.',gameExplore:'Descubre Gamebooks',
       featuredKicker:'Destacados',featuredTitle:'Libros para descubrir ahora',kikiLabel:'Fablemarq Kids',kikiTitle:'Kiki Moon — La Estrella Perdida',kikiText:'Una historia ilustrada a todo color para lectores de 6 a 10 años.',details:'Detalles',buy:'Amazon',available:'Disponible',
-      crimeLabel:'Gamebooks · Crime',crimeTitle:'SEI ACCUSATO',crimeText:'Tienes 48 horas para demostrar que no fuiste tú.',surviveLabel:'Gamebooks · Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveText:'Siete personas. Un túnel derrumbado. El aire no alcanzará para todos.',
+      crimeLabel:'Gamebooks · Crime',crimeTitle:"L'ACCUSATO",crimeText:'Tienes 48 horas para demostrar que no fuiste tú.',surviveLabel:'Gamebooks · Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveText:'Siete personas. Un túnel derrumbado. El aire no alcanzará para todos.',
       development:'En desarrollo',soon:'Próximamente',gamebooksCta:'Ver Gamebooks',footer:'Fablemarq — Independent publishing studio',language:'Idioma'
     }
   };
