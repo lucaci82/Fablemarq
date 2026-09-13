@@ -1,0 +1,168 @@
+/* Cinematic desktop/tablet refinement for the Fablemarq home page.
+   Loaded after home-premium.css so it can improve wide layouts without
+   disturbing the phone layout, which already uses vertically separated zones. */
+
+@media (min-width:621px){
+  .world-grid{gap:20px}
+
+  .world-card{
+    display:grid;
+    grid-template-columns:minmax(0,1.08fr) minmax(190px,.92fr);
+    align-items:stretch;
+    min-height:440px;
+    isolation:isolate;
+  }
+
+  /* Netflix-style principle: copy lives in a protected reading zone while
+     artwork owns a separate visual zone. They never share the same column. */
+  .world-card::after{
+    z-index:0;
+    background:linear-gradient(90deg,rgba(5,8,14,.86) 0%,rgba(5,8,14,.68) 44%,rgba(5,8,14,.18) 70%,rgba(5,8,14,.06) 100%);
+    pointer-events:none;
+  }
+
+  .world-card__copy,
+  .world-card--kids .world-card__copy,
+  .world-card--gamebooks .world-card__copy{
+    position:relative;
+    grid-column:1;
+    grid-row:1;
+    align-self:end;
+    left:auto;
+    right:auto;
+    bottom:auto;
+    z-index:3;
+    padding:clamp(26px,3vw,38px) 8px clamp(26px,3vw,36px) clamp(26px,3vw,38px);
+    min-width:0;
+  }
+
+  .world-card h3{
+    max-width:15ch;
+    font-size:clamp(1.72rem,2.35vw,2.5rem);
+    line-height:.98;
+    letter-spacing:-.045em;
+    text-wrap:balance;
+  }
+
+  .world-card p{
+    max-width:34ch;
+    margin:11px 0 18px;
+    line-height:1.52;
+  }
+
+  .world-card__actions{position:relative;z-index:4}
+
+  .world-card--kids .world-art{
+    position:relative;
+    grid-column:2;
+    grid-row:1;
+    align-self:stretch;
+    justify-self:stretch;
+    right:auto;
+    top:auto;
+    width:100%;
+    height:100%;
+    z-index:1;
+    transform:none;
+    filter:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px 24px;
+    overflow:hidden;
+  }
+
+  .world-card--kids .world-art img{
+    display:block;
+    width:min(100%,230px);
+    max-height:360px;
+    object-fit:contain;
+    border-radius:13px;
+    transform:rotate(2deg);
+    filter:drop-shadow(0 28px 38px rgba(0,0,0,.48));
+    transition:transform .28s ease,filter .28s ease;
+  }
+
+  .poster-stack{
+    position:relative;
+    grid-column:2;
+    grid-row:1;
+    align-self:stretch;
+    justify-self:stretch;
+    right:auto;
+    top:auto;
+    width:100%;
+    height:100%;
+    min-height:440px;
+    z-index:1;
+    opacity:.95;
+    overflow:hidden;
+  }
+
+  .poster-mini{
+    width:clamp(122px,10vw,152px);
+    padding:14px;
+    box-shadow:0 24px 48px rgba(0,0,0,.46);
+  }
+
+  .poster-mini--crime{right:18px;top:52px;transform:rotate(5deg)}
+  .poster-mini--survive{left:0;bottom:46px;transform:rotate(-6deg)}
+
+  @media (hover:hover){
+    .world-card--kids:hover .world-art img{
+      transform:rotate(1deg) scale(1.025);
+      filter:drop-shadow(0 32px 44px rgba(0,0,0,.54));
+    }
+    .world-card--gamebooks:hover .poster-mini--crime{transform:rotate(4deg) translateY(-3px)}
+    .world-card--gamebooks:hover .poster-mini--survive{transform:rotate(-5deg) translateY(-2px)}
+  }
+
+  .featured-row{gap:18px}
+  .book-tile{border-radius:20px;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .book-tile__visual{aspect-ratio:4/3}
+  .book-tile__body{padding:18px}
+
+  @media (hover:hover){
+    .book-tile:hover{
+      transform:translateY(-3px);
+      border-color:rgba(255,255,255,.18);
+      box-shadow:0 26px 58px rgba(0,0,0,.30);
+    }
+  }
+}
+
+/* Tablet: one wide cinematic card per row, with a generous protected copy
+   column and artwork still isolated on the right. */
+@media (min-width:621px) and (max-width:900px){
+  .world-card{
+    grid-template-columns:minmax(0,1.18fr) minmax(220px,.82fr);
+    min-height:390px;
+  }
+  .poster-stack{min-height:390px}
+  .world-card h3{font-size:clamp(1.9rem,4.2vw,2.65rem);max-width:17ch}
+  .world-card p{max-width:42ch}
+  .poster-mini{width:142px}
+  .poster-mini--crime{right:34px;top:42px}
+  .poster-mini--survive{left:24px;bottom:34px}
+}
+
+/* Compact desktop widths are where the previous overlap was easiest to trigger.
+   Keep visual typography controlled and reserve a little more room for copy. */
+@media (min-width:901px) and (max-width:1120px){
+  .world-card{
+    grid-template-columns:minmax(0,1.15fr) minmax(170px,.85fr);
+  }
+  .world-card h3{font-size:clamp(1.58rem,2.35vw,2rem);max-width:16ch}
+  .world-card p{font-size:.9rem}
+  .world-card__copy,
+  .world-card--kids .world-card__copy,
+  .world-card--gamebooks .world-card__copy{padding-left:26px;padding-bottom:28px}
+  .world-card--kids .world-art{padding-inline:16px}
+  .poster-mini{width:124px}
+  .poster-mini--crime{right:12px;top:62px}
+  .poster-mini--survive{left:-2px;bottom:58px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .world-card--kids .world-art img,.poster-mini,.book-tile{transition:none!important}
+}
