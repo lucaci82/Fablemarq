@@ -1,0 +1,24 @@
+@import url("cover-crime-inline.css");
+@import url("cover-survive-inline.css");
+
+.home-page .poster-mini--crime,
+.home-page .poster-mini--survive{
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.home-page .hero-cover.poster-mini--crime,
+.home-page .hero-cover.poster-mini--survive{
+  aspect-ratio:900/1439;
+}
+.home-page .world-cover.poster-mini--crime,
+.home-page .world-cover.poster-mini--survive{
+  display:block;
+  aspect-ratio:900/1439;
+}
+.home-page .book-card__cover.poster-mini--crime,
+.home-page .book-card__cover.poster-mini--survive{
+  background-size:contain;
+  background-position:center;
+  background-repeat:no-repeat;
+}
