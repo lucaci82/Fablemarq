@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.fablemarq.com/sitemap.xml
+
+Sitemap: https://fablemarq.com/sitemap.xml
