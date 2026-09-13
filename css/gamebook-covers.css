@@ -1,3 +1,6 @@
+@import url("cover-crime-inline.css");
+@import url("cover-survive-inline.css");
+
 :root{--gb-cover-ratio:900 / 1439}
 .gamebooks-page .gb-cover{aspect-ratio:var(--gb-cover-ratio);padding:0;background-size:cover;background-position:center;background-repeat:no-repeat;overflow:hidden}
 .gamebooks-page .gb-cover::before{display:none}.gamebooks-page .gb-cover small,.gamebooks-page .gb-cover strong{display:none}
