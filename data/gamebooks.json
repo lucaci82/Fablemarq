@@ -1,0 +1,117 @@
+{
+  "updated": "2026-09-15",
+  "books": [
+    {
+      "slug": "l-accusato",
+      "title": "L'ACCUSATO",
+      "series": "crime",
+      "seriesLabel": "Crime",
+      "status": "development",
+      "cover": "crime-laccusato.avif",
+      "width": 360,
+      "height": 575,
+      "accent": "#dc343d",
+      "hook": {
+        "it": "Hai 48 ore per dimostrare che non sei stato tu.",
+        "en": "You have 48 hours to prove you did not do it.",
+        "es": "Tienes 48 horas para demostrar que no fuiste tú."
+      }
+    },
+    {
+      "slug": "72-ore-sottoterra",
+      "title": "72 ORE SOTTOTERRA",
+      "series": "survive",
+      "seriesLabel": "Survive",
+      "status": "development",
+      "cover": "survive-72-ore-sottoterra.avif",
+      "width": 320,
+      "height": 480,
+      "accent": "#ff671f",
+      "hook": {
+        "it": "Sette persone. Una galleria crollata. L'aria non basterà per tutti.",
+        "en": "Seven people. A collapsed tunnel. There will not be enough air for everyone.",
+        "es": "Siete personas. Un túnel derrumbado. El aire no alcanzará para todos."
+      }
+    },
+    {
+      "slug": "non-tornare-a-casa",
+      "title": "NON TORNARE A CASA",
+      "series": "thriller",
+      "seriesLabel": "Thriller",
+      "status": "development",
+      "cover": "thriller-non-tornare-a-casa.avif",
+      "width": 320,
+      "height": 480,
+      "accent": "#57aef7",
+      "hook": {
+        "it": "La voce era sua. Anche il messaggio.",
+        "en": "The voice was hers. So was the message.",
+        "es": "La voz era la suya. El mensaje también."
+      }
+    },
+    {
+      "slug": "la-stanza-chiusa",
+      "title": "LA STANZA CHIUSA",
+      "series": "mystery",
+      "seriesLabel": "Mystery",
+      "status": "development",
+      "cover": "mystery-la-stanza-chiusa.avif",
+      "width": 360,
+      "height": 540,
+      "accent": "#9255ff",
+      "hook": {
+        "it": "Una donna scomparsa. Una camera sigillata. Ogni indizio mente.",
+        "en": "A missing woman. A sealed room. Every clue lies.",
+        "es": "Una mujer desaparecida. Una habitación sellada. Cada pista miente."
+      }
+    },
+    {
+      "slug": "la-casa-dei-sussurri",
+      "title": "LA CASA DEI SUSSURRI",
+      "series": "horror",
+      "seriesLabel": "Horror",
+      "status": "development",
+      "cover": "horror-la-casa-dei-sussurri.avif",
+      "width": 360,
+      "height": 540,
+      "accent": "#b7ca39",
+      "hook": {
+        "it": "Ogni porta si chiude da sola. Non tutte si riaprono.",
+        "en": "Every door closes by itself. Not all of them open again.",
+        "es": "Cada puerta se cierra sola. No todas vuelven a abrirse."
+      }
+    },
+    {
+      "slug": "protocollo-omega",
+      "title": "PROTOCOLLO OMEGA",
+      "series": "sci-fi",
+      "seriesLabel": "Sci-Fi",
+      "status": "development",
+      "cover": "sci-fi-protocollo-omega.avif",
+      "width": 320,
+      "height": 480,
+      "accent": "#12c9e8",
+      "hook": {
+        "it": "Un segnale impossibile. Una stazione isolata. Qualcosa è già salito a bordo.",
+        "en": "An impossible signal. An isolated station. Something is already on board.",
+        "es": "Una señal imposible. Una estación aislada. Algo ya está a bordo."
+      }
+    },
+    {
+      "slug": "sindaco-per-un-anno",
+      "title": "SINDACO PER UN ANNO",
+      "series": "real-life",
+      "seriesLabel": "Real Life",
+      "status": "development",
+      "cover": "real-life-sindaco-per-un-anno.avif",
+      "width": 360,
+      "height": 540,
+      "accent": "#f2b72f",
+      "hook": {
+        "it": "Stesse promesse. Nuovi problemi. Tu decidi cosa fare.",
+        "en": "Same promises. New problems. You decide what to do.",
+        "es": "Las mismas promesas. Nuevos problemas. Tú decides qué hacer."
+      }
+    }
+  ]
+}
