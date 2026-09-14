@@ -5,29 +5,68 @@
   const INTERNAL_SRC = new Set(['site','home','kids','gamebooks','collection','book','preview','hero','grid','b1','b2','b3']);
   const I18N = {
     it:{
-      pageTitle:'Fablemarq Gamebooks — Le tue scelte cambiano la storia',description:'Fablemarq Gamebooks: crime, survive, mystery e real life. Libri-game per adulti basati solo sulle tue decisioni.',skip:'Salta al contenuto',
-      navKids:'Kids',navGamebooks:'Gamebooks',brand:'Fablemarq Gamebooks',heroA:'Non leggi soltanto la storia.',heroB:'Decidi cosa succede.',heroLead:'Thriller interattivi per adulti. Niente dadi, niente schede personaggio: solo decisioni, conseguenze e strade che cambiano.',
-      p1:'Niente dadi',p2:'Niente schede',p3:'Solo decisioni e conseguenze',catalogKicker:'Catalogo',catalogTitle:'Scegli la tensione',catalogIntro:'Ogni linea ha una propria atmosfera, ma la stessa regola: sei tu a decidere.',development:'In sviluppo',coming:'Coming soon',
-      crime:'Crime',crimeTitle:"L'ACCUSATO",crimeHook:'Hai 48 ore per dimostrare che non sei stato tu.',crimeNote:'Primo titolo della linea Crime',survive:'Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveHook:"Sette persone. Una galleria crollata. L'aria non basterà per tutti.",surviveNote:'Primo titolo della linea Survive',
-      mystery:'Mystery',mysteryTitle:'MYSTERY',mysteryHook:'La verità è nascosta. Le tue scelte stabiliranno quanto vicino riuscirai ad arrivare.',mysteryNote:'Linea in preparazione',real:'Real Life',realTitle:'REAL LIFE',realHook:'Ruoli quotidiani, conseguenze imprevedibili e decisioni che sembrano semplici finché non le prendi.',realNote:'Linea in preparazione',
+      pageTitle:'Fablemarq Gamebooks — Le tue scelte cambiano la storia',
+      description:'Fablemarq Gamebooks: Crime, Survive, Thriller, Mystery, Horror, Sci-Fi e Real Life. Libri-game per adulti basati sulle tue decisioni.',
+      ogDescription:'Non leggi soltanto la storia. Decidi cosa succede.',
+      skip:'Salta al contenuto',navKids:'Kids',navGamebooks:'Gamebooks',brand:'Fablemarq Gamebooks',
+      heroA:'Non leggi soltanto la storia.',heroB:'Decidi cosa succede.',heroLead:'Thriller interattivi per adulti. Niente dadi, niente schede personaggio: solo decisioni, conseguenze e strade che cambiano.',
+      p1:'Niente dadi',p2:'Niente schede',p3:'Solo decisioni e conseguenze',browseCta:'Esplora il catalogo',howCta:'Come funziona',
+      catalogKicker:'Catalogo',catalogTitle:'Scegli la tensione',catalogIntro:'Seleziona una serie oppure cerca un titolo: il catalogo si aggiorna immediatamente.',
+      searchLabel:'Cerca nel catalogo Gamebooks',searchPlaceholder:'Cerca titolo, serie o atmosfera',filtersLabel:'Filtra Gamebooks per serie',
+      filterAll:'Tutti',filterCrime:'Crime',filterSurvive:'Survive',filterThriller:'Thriller',filterMystery:'Mystery',filterHorror:'Horror',filterSciFi:'Sci-Fi',filterRealLife:'Real Life',
+      development:'In sviluppo',coming:'Prossimamente',
+      crimeHook:'Hai 48 ore per dimostrare che non sei stato tu.',
+      surviveHook:"Sette persone. Una galleria crollata. L'aria non basterà per tutti.",
+      thrillerHook:'La voce era sua. Anche il messaggio.',
+      mysteryBookHook:'Una donna scomparsa. Una camera sigillata. Ogni indizio mente.',
+      horrorHook:'Ogni porta si chiude da sola. Non tutte si riaprono.',
+      sciFiHook:'Un segnale impossibile. Una stazione isolata. Qualcosa è già salito a bordo.',
+      realLifeHook:'Stesse promesse. Nuovi problemi. Tu decidi cosa fare.',
+      noResultsTitle:'Nessun titolo trovato',noResultsText:"Prova un'altra parola oppure torna a Tutti.",
       howKicker:'Il formato',howTitle:'Leggi. Scegli. Affronta le conseguenze.',h1:'Leggi la situazione',h1p:'Ogni scena ti mette davanti a informazioni, persone e rischi concreti.',h2:'Prendi una decisione',h2p:'Nessun tiro di dado decide per te. La scelta è tua.',h3:'Vivi il risultato',h3p:'La storia cambia in base a ciò che fai, ciò che ignori e ciò che rischi.',
       note:'I titoli Gamebooks mostrati qui sono in sviluppo. I pulsanti di acquisto compariranno solo quando un libro sarà realmente disponibile.',footer:'Fablemarq Gamebooks — A Fablemarq publishing division',language:'Lingua'
     },
     en:{
-      pageTitle:'Fablemarq Gamebooks — Your choices change the story',description:'Fablemarq Gamebooks: crime, survive, mystery and real life. Interactive books for adults driven only by your decisions.',skip:'Skip to content',
-      navKids:'Kids',navGamebooks:'Gamebooks',brand:'Fablemarq Gamebooks',heroA:"You don't just read the story.",heroB:'You decide what happens.',heroLead:'Interactive thrillers for adults. No dice, no character sheets: just decisions, consequences and paths that change.',
-      p1:'No dice',p2:'No character sheets',p3:'Just decisions and consequences',catalogKicker:'Catalog',catalogTitle:'Choose the tension',catalogIntro:'Each line has its own atmosphere, with the same rule: you decide.',development:'In development',coming:'Coming soon',
-      crime:'Crime',crimeTitle:"L'ACCUSATO",crimeHook:'You have 48 hours to prove you did not do it.',crimeNote:'First title in the Crime line',survive:'Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveHook:'Seven people. A collapsed tunnel. There will not be enough air for everyone.',surviveNote:'First title in the Survive line',
-      mystery:'Mystery',mysteryTitle:'MYSTERY',mysteryHook:'The truth is hidden. Your choices determine how close you get.',mysteryNote:'Line in development',real:'Real Life',realTitle:'REAL LIFE',realHook:'Everyday roles, unpredictable consequences and decisions that look simple until you make them.',realNote:'Line in development',
+      pageTitle:'Fablemarq Gamebooks — Your choices change the story',
+      description:'Fablemarq Gamebooks: Crime, Survive, Thriller, Mystery, Horror, Sci-Fi and Real Life. Interactive books for adults driven by your decisions.',
+      ogDescription:"You don't just read the story. You decide what happens.",
+      skip:'Skip to content',navKids:'Kids',navGamebooks:'Gamebooks',brand:'Fablemarq Gamebooks',
+      heroA:"You don't just read the story.",heroB:'You decide what happens.',heroLead:'Interactive thrillers for adults. No dice, no character sheets: just decisions, consequences and paths that change.',
+      p1:'No dice',p2:'No character sheets',p3:'Just decisions and consequences',browseCta:'Explore the catalog',howCta:'How it works',
+      catalogKicker:'Catalog',catalogTitle:'Choose the tension',catalogIntro:'Choose a series or search for a title: the catalog updates instantly.',
+      searchLabel:'Search the Gamebooks catalog',searchPlaceholder:'Search title, series or mood',filtersLabel:'Filter Gamebooks by series',
+      filterAll:'All',filterCrime:'Crime',filterSurvive:'Survive',filterThriller:'Thriller',filterMystery:'Mystery',filterHorror:'Horror',filterSciFi:'Sci-Fi',filterRealLife:'Real Life',
+      development:'In development',coming:'Coming soon',
+      crimeHook:'You have 48 hours to prove you did not do it.',
+      surviveHook:'Seven people. A collapsed tunnel. There will not be enough air for everyone.',
+      thrillerHook:'The voice was hers. So was the message.',
+      mysteryBookHook:'A missing woman. A sealed room. Every clue lies.',
+      horrorHook:'Every door closes by itself. Not all of them open again.',
+      sciFiHook:'An impossible signal. An isolated station. Something is already on board.',
+      realLifeHook:'Same promises. New problems. You decide what to do.',
+      noResultsTitle:'No titles found',noResultsText:'Try another word or return to All.',
       howKicker:'The format',howTitle:'Read. Choose. Face the consequences.',h1:'Read the situation',h1p:'Every scene gives you information, people and concrete risks to judge.',h2:'Make a decision',h2p:'No dice roll decides for you. The choice is yours.',h3:'Live with the result',h3p:'The story changes according to what you do, ignore and risk.',
       note:'The Gamebooks shown here are in development. Buy buttons will appear only when a title is actually available.',footer:'Fablemarq Gamebooks — A Fablemarq publishing division',language:'Language'
     },
     es:{
-      pageTitle:'Fablemarq Gamebooks — Tus decisiones cambian la historia',description:'Fablemarq Gamebooks: crime, survive, mystery y real life. Libros interactivos para adultos guiados por tus decisiones.',skip:'Saltar al contenido',
-      navKids:'Kids',navGamebooks:'Gamebooks',brand:'Fablemarq Gamebooks',heroA:'No solo lees la historia.',heroB:'Decides lo que sucede.',heroLead:'Thrillers interactivos para adultos. Sin dados ni fichas de personaje: solo decisiones, consecuencias y caminos que cambian.',
-      p1:'Sin dados',p2:'Sin fichas',p3:'Solo decisiones y consecuencias',catalogKicker:'Catálogo',catalogTitle:'Elige la tensión',catalogIntro:'Cada línea tiene su propia atmósfera, con la misma regla: tú decides.',development:'En desarrollo',coming:'Próximamente',
-      crime:'Crime',crimeTitle:"L'ACCUSATO",crimeHook:'Tienes 48 horas para demostrar que no fuiste tú.',crimeNote:'Primer título de la línea Crime',survive:'Survive',surviveTitle:'72 ORE SOTTOTERRA',surviveHook:'Siete personas. Un túnel derrumbado. El aire no alcanzará para todos.',surviveNote:'Primer título de la línea Survive',
-      mystery:'Mystery',mysteryTitle:'MYSTERY',mysteryHook:'La verdad está oculta. Tus decisiones determinan cuánto te acercas.',mysteryNote:'Línea en preparación',real:'Real Life',realTitle:'REAL LIFE',realHook:'Roles cotidianos, consecuencias imprevisibles y decisiones que parecen simples hasta que las tomas.',realNote:'Línea en preparación',
+      pageTitle:'Fablemarq Gamebooks — Tus decisiones cambian la historia',
+      description:'Fablemarq Gamebooks: Crime, Survive, Thriller, Mystery, Horror, Sci-Fi y Real Life. Libros interactivos para adultos guiados por tus decisiones.',
+      ogDescription:'No solo lees la historia. Decides lo que sucede.',
+      skip:'Saltar al contenido',navKids:'Kids',navGamebooks:'Gamebooks',brand:'Fablemarq Gamebooks',
+      heroA:'No solo lees la historia.',heroB:'Decides lo que sucede.',heroLead:'Thrillers interactivos para adultos. Sin dados ni fichas de personaje: solo decisiones, consecuencias y caminos que cambian.',
+      p1:'Sin dados',p2:'Sin fichas',p3:'Solo decisiones y consecuencias',browseCta:'Explora el catálogo',howCta:'Cómo funciona',
+      catalogKicker:'Catálogo',catalogTitle:'Elige la tensión',catalogIntro:'Elige una serie o busca un título: el catálogo se actualiza al instante.',
+      searchLabel:'Buscar en el catálogo Gamebooks',searchPlaceholder:'Busca título, serie o atmósfera',filtersLabel:'Filtrar Gamebooks por serie',
+      filterAll:'Todos',filterCrime:'Crime',filterSurvive:'Survive',filterThriller:'Thriller',filterMystery:'Mystery',filterHorror:'Horror',filterSciFi:'Sci-Fi',filterRealLife:'Real Life',
+      development:'En desarrollo',coming:'Próximamente',
+      crimeHook:'Tienes 48 horas para demostrar que no fuiste tú.',
+      surviveHook:'Siete personas. Un túnel derrumbado. El aire no alcanzará para todos.',
+      thrillerHook:'La voz era la suya. El mensaje también.',
+      mysteryBookHook:'Una mujer desaparecida. Una habitación sellada. Cada pista miente.',
+      horrorHook:'Cada puerta se cierra sola. No todas vuelven a abrirse.',
+      sciFiHook:'Una señal imposible. Una estación aislada. Algo ya está a bordo.',
+      realLifeHook:'Las mismas promesas. Nuevos problemas. Tú decides qué hacer.',
+      noResultsTitle:'No se encontraron títulos',noResultsText:'Prueba otra palabra o vuelve a Todos.',
       howKicker:'El formato',howTitle:'Lee. Elige. Afronta las consecuencias.',h1:'Lee la situación',h1p:'Cada escena te da información, personas y riesgos concretos que valorar.',h2:'Toma una decisión',h2p:'Ningún dado decide por ti. La elección es tuya.',h3:'Vive el resultado',h3p:'La historia cambia según lo que haces, ignoras y arriesgas.',
       note:'Los Gamebooks mostrados aquí están en desarrollo. Los botones de compra aparecerán solo cuando un título esté realmente disponible.',footer:'Fablemarq Gamebooks — A Fablemarq publishing division',language:'Idioma'
     }
@@ -66,12 +105,22 @@
     document.title = t.pageTitle;
     const desc = document.querySelector('meta[name="description"]');
     if (desc) desc.content = t.description;
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.content = t.ogDescription;
     const skip = document.querySelector('.skip-link');
     if (skip) skip.textContent = t.skip;
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.dataset.i18n;
       if (Object.prototype.hasOwnProperty.call(t,key)) el.textContent = t[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (Object.prototype.hasOwnProperty.call(t,key)) el.setAttribute('placeholder',t[key]);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+      const key = el.dataset.i18nAriaLabel;
+      if (Object.prototype.hasOwnProperty.call(t,key)) el.setAttribute('aria-label',t[key]);
     });
 
     const source = trafficSource();
