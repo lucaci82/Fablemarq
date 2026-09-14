@@ -1,0 +1,14 @@
+{
+  "name": "fablemarq-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate-gamebooks.mjs",
+    "check:generated": "node scripts/generate-gamebooks.mjs --check",
+    "validate": "node scripts/validate-site.mjs",
+    "check": "npm run validate && npm run check:generated"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
