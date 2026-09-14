@@ -14,14 +14,7 @@
       catalogKicker:'Catalogo',catalogTitle:'Scegli la tensione',catalogIntro:'Seleziona una serie oppure cerca un titolo: il catalogo si aggiorna immediatamente.',
       searchLabel:'Cerca nel catalogo Gamebooks',searchPlaceholder:'Cerca titolo, serie o atmosfera',filtersLabel:'Filtra Gamebooks per serie',
       filterAll:'Tutti',filterCrime:'Crime',filterSurvive:'Survive',filterThriller:'Thriller',filterMystery:'Mystery',filterHorror:'Horror',filterSciFi:'Sci-Fi',filterRealLife:'Real Life',
-      development:'In sviluppo',coming:'Prossimamente',
-      crimeHook:'Hai 48 ore per dimostrare che non sei stato tu.',
-      surviveHook:"Sette persone. Una galleria crollata. L'aria non basterà per tutti.",
-      thrillerHook:'La voce era sua. Anche il messaggio.',
-      mysteryBookHook:'Una donna scomparsa. Una camera sigillata. Ogni indizio mente.',
-      horrorHook:'Ogni porta si chiude da sola. Non tutte si riaprono.',
-      sciFiHook:'Un segnale impossibile. Una stazione isolata. Qualcosa è già salito a bordo.',
-      realLifeHook:'Stesse promesse. Nuovi problemi. Tu decidi cosa fare.',
+      development:'In sviluppo',coming:'Prossimamente',details:'Scopri il progetto',
       noResultsTitle:'Nessun titolo trovato',noResultsText:"Prova un'altra parola oppure torna a Tutti.",
       howKicker:'Il formato',howTitle:'Leggi. Scegli. Affronta le conseguenze.',h1:'Leggi la situazione',h1p:'Ogni scena ti mette davanti a informazioni, persone e rischi concreti.',h2:'Prendi una decisione',h2p:'Nessun tiro di dado decide per te. La scelta è tua.',h3:'Vivi il risultato',h3p:'La storia cambia in base a ciò che fai, ciò che ignori e ciò che rischi.',
       note:'I titoli Gamebooks mostrati qui sono in sviluppo. I pulsanti di acquisto compariranno solo quando un libro sarà realmente disponibile.',footer:'Fablemarq Gamebooks — A Fablemarq publishing division',language:'Lingua'
@@ -36,14 +29,7 @@
       catalogKicker:'Catalog',catalogTitle:'Choose the tension',catalogIntro:'Choose a series or search for a title: the catalog updates instantly.',
       searchLabel:'Search the Gamebooks catalog',searchPlaceholder:'Search title, series or mood',filtersLabel:'Filter Gamebooks by series',
       filterAll:'All',filterCrime:'Crime',filterSurvive:'Survive',filterThriller:'Thriller',filterMystery:'Mystery',filterHorror:'Horror',filterSciFi:'Sci-Fi',filterRealLife:'Real Life',
-      development:'In development',coming:'Coming soon',
-      crimeHook:'You have 48 hours to prove you did not do it.',
-      surviveHook:'Seven people. A collapsed tunnel. There will not be enough air for everyone.',
-      thrillerHook:'The voice was hers. So was the message.',
-      mysteryBookHook:'A missing woman. A sealed room. Every clue lies.',
-      horrorHook:'Every door closes by itself. Not all of them open again.',
-      sciFiHook:'An impossible signal. An isolated station. Something is already on board.',
-      realLifeHook:'Same promises. New problems. You decide what to do.',
+      development:'In development',coming:'Coming soon',details:'Explore the project',
       noResultsTitle:'No titles found',noResultsText:'Try another word or return to All.',
       howKicker:'The format',howTitle:'Read. Choose. Face the consequences.',h1:'Read the situation',h1p:'Every scene gives you information, people and concrete risks to judge.',h2:'Make a decision',h2p:'No dice roll decides for you. The choice is yours.',h3:'Live with the result',h3p:'The story changes according to what you do, ignore and risk.',
       note:'The Gamebooks shown here are in development. Buy buttons will appear only when a title is actually available.',footer:'Fablemarq Gamebooks — A Fablemarq publishing division',language:'Language'
@@ -58,14 +44,7 @@
       catalogKicker:'Catálogo',catalogTitle:'Elige la tensión',catalogIntro:'Elige una serie o busca un título: el catálogo se actualiza al instante.',
       searchLabel:'Buscar en el catálogo Gamebooks',searchPlaceholder:'Busca título, serie o atmósfera',filtersLabel:'Filtrar Gamebooks por serie',
       filterAll:'Todos',filterCrime:'Crime',filterSurvive:'Survive',filterThriller:'Thriller',filterMystery:'Mystery',filterHorror:'Horror',filterSciFi:'Sci-Fi',filterRealLife:'Real Life',
-      development:'En desarrollo',coming:'Próximamente',
-      crimeHook:'Tienes 48 horas para demostrar que no fuiste tú.',
-      surviveHook:'Siete personas. Un túnel derrumbado. El aire no alcanzará para todos.',
-      thrillerHook:'La voz era la suya. El mensaje también.',
-      mysteryBookHook:'Una mujer desaparecida. Una habitación sellada. Cada pista miente.',
-      horrorHook:'Cada puerta se cierra sola. No todas vuelven a abrirse.',
-      sciFiHook:'Una señal imposible. Una estación aislada. Algo ya está a bordo.',
-      realLifeHook:'Las mismas promesas. Nuevos problemas. Tú decides qué hacer.',
+      development:'En desarrollo',coming:'Próximamente',details:'Descubre el proyecto',
       noResultsTitle:'No se encontraron títulos',noResultsText:'Prueba otra palabra o vuelve a Todos.',
       howKicker:'El formato',howTitle:'Lee. Elige. Afronta las consecuencias.',h1:'Lee la situación',h1p:'Cada escena te da información, personas y riesgos concretos que valorar.',h2:'Toma una decisión',h2p:'Ningún dado decide por ti. La elección es tuya.',h3:'Vive el resultado',h3p:'La historia cambia según lo que haces, ignoras y arriesgas.',
       note:'Los Gamebooks mostrados aquí están en desarrollo. Los botones de compra aparecerán solo cuando un título esté realmente disponible.',footer:'Fablemarq Gamebooks — A Fablemarq publishing division',language:'Idioma'
@@ -79,7 +58,8 @@
     return 'en';
   };
   const params = () => new URLSearchParams(location.search);
-  let lang = normLang(params().get('lang') || localStorage.getItem('lang') || navigator.language || 'en');
+  let lang = normLang(window.PREFERRED_LANG || params().get('lang') || localStorage.getItem('fm_lang') || localStorage.getItem('lang') || navigator.language || 'en');
+  let catalog = [];
 
   function initAttribution(){
     const q = params();
@@ -96,6 +76,16 @@
     const ctx = {page_path:location.pathname,lang,division:'gamebooks',src:trafficSource()};
     UTM_KEYS.forEach(key => { const value = params().get(key) || sessionStorage.getItem(key); if (value) ctx[key] = value; });
     try { window.gtag && window.gtag('event',name,Object.assign(ctx,extra || {})); } catch (_) {}
+  }
+
+  function renderBooks(){
+    if (!catalog.length) return;
+    document.querySelectorAll('[data-book-slug]').forEach(card => {
+      const item = catalog.find(book => book.slug === card.dataset.bookSlug);
+      if (!item) return;
+      const hook = card.querySelector('[data-book-hook]');
+      if (hook) hook.textContent = item.hook[lang] || item.hook.en || item.hook.it;
+    });
   }
 
   function render(){
@@ -122,6 +112,7 @@
       const key = el.dataset.i18nAriaLabel;
       if (Object.prototype.hasOwnProperty.call(t,key)) el.setAttribute('aria-label',t[key]);
     });
+    renderBooks();
 
     const source = trafficSource();
     document.querySelectorAll('[data-internal]').forEach(el => {
@@ -141,11 +132,26 @@
     document.querySelectorAll('.site-lang-switch').forEach(el => el.setAttribute('aria-label',t.language));
   }
 
+  async function loadCatalog(){
+    try {
+      const response = await fetch('../data/gamebooks.json',{cache:'no-cache'});
+      if (!response.ok) throw new Error('catalog');
+      const data = await response.json();
+      catalog = Array.isArray(data.books) ? data.books : [];
+      renderBooks();
+    } catch (_) {}
+  }
+
   document.addEventListener('click',event => {
     const button = event.target.closest('.site-lang-switch button[data-lang]');
     if (button) {
       const next = normLang(button.dataset.lang);
-      if (next !== lang) { lang = next; render(); track('select_language',{language:lang}); }
+      if (next !== lang) {
+        lang = next;
+        localStorage.setItem('fm_lang',lang);
+        render();
+        track('select_language',{language:lang});
+      }
       return;
     }
     const nav = event.target.closest('[data-nav]');
@@ -157,6 +163,7 @@
   document.addEventListener('DOMContentLoaded',() => {
     initAttribution();
     render();
+    loadCatalog();
     track('view_collection',{collection:'fablemarq-gamebooks'});
   });
 })();
