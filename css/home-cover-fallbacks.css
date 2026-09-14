@@ -1,25 +1,4 @@
-@import url("cover-crime-inline.css");
-@import url("cover-survive-inline.css");
-
-/* The two Gamebooks covers are currently supplied by the verified inline AVIF
-   fallbacks. Keep all sizing here so the homepage does not depend on the
-   malformed legacy WebP files in assets/gamebooks/. */
-.home-page .poster-mini--crime,
-.home-page .poster-mini--survive{
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
-}
-
-.home-page .world-cover.poster-mini--crime,
-.home-page .world-cover.poster-mini--survive{
-  display:block;
-  aspect-ratio:900/1439;
-}
-
-.home-page .book-card__cover.poster-mini--crime,
-.home-page .book-card__cover.poster-mini--survive{
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
-}
+/* Gamebooks covers shown on the homepage use the same verified artwork as the Gamebooks catalog. */
+.home-page .poster-mini--crime{background-image:url("../assets/gamebooks/crime-laccusato.avif")!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;filter:none!important;opacity:1!important}
+.home-page .poster-mini--survive{background-image:url("../assets/gamebooks/survive-72-ore-sottoterra.avif")!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;filter:none!important;opacity:1!important}
+.home-page .poster-mini--crime::before,.home-page .poster-mini--survive::before,.home-page .poster-mini--crime::after,.home-page .poster-mini--survive::after{display:none!important}

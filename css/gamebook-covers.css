@@ -1,43 +1,9 @@
-@import url("cover-crime-inline.css");
-@import url("cover-survive-inline.css");
-
-/* Layout for the verified Gamebooks cover artwork. The old WebP files under
-   assets/gamebooks are intentionally not referenced because they are malformed. */
-:root{--gb-cover-ratio:900 / 1439}
-
-.gamebooks-page .gb-cover{
-  aspect-ratio:var(--gb-cover-ratio);padding:0;background-size:cover;background-position:center;background-repeat:no-repeat;overflow:hidden;
-}
-.gamebooks-page .gb-cover::before{display:none}
-.gamebooks-page .gb-cover small,.gamebooks-page .gb-cover strong{display:none}
-
-.gamebooks-page .series-card--crime::after,
-.gamebooks-page .series-card--survive::after{
-  content:"";position:absolute;z-index:0;top:58px;right:28px;width:clamp(132px,15vw,184px);
-  aspect-ratio:var(--gb-cover-ratio);border-radius:11px;background-size:cover;background-position:center;background-repeat:no-repeat;
-  border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 46px rgba(0,0,0,.42);pointer-events:none;
-}
-.gamebooks-page .series-card--crime::after{transform:rotate(2deg)}
-.gamebooks-page .series-card--survive::after{transform:rotate(-2deg)}
-.gamebooks-page .series-card--crime .series-card__content,
-.gamebooks-page .series-card--survive .series-card__content{max-width:calc(100% - 210px)}
-.gamebooks-page .series-card--crime h3,
-.gamebooks-page .series-card--survive h3{font-size:clamp(1.8rem,3.4vw,3rem)}
-
-@media(max-width:900px) and (min-width:621px){
-  .gamebooks-page .series-card--crime::after,.gamebooks-page .series-card--survive::after{width:170px}
-  .gamebooks-page .series-card--crime .series-card__content,.gamebooks-page .series-card--survive .series-card__content{max-width:calc(100% - 220px)}
-}
-
-@media(max-width:620px){
-  .gamebooks-page .series-card--crime,.gamebooks-page .series-card--survive{min-height:470px}
-  .gamebooks-page .series-card--crime::after,.gamebooks-page .series-card--survive::after{
-    top:58px;left:50%;right:auto;width:132px;transform:translateX(-50%);
-  }
-  .gamebooks-page .series-card--crime .series-card__content,.gamebooks-page .series-card--survive .series-card__content{max-width:none;margin-top:278px}
-  .gamebooks-page .series-card--crime h3,.gamebooks-page .series-card--survive h3{font-size:clamp(1.8rem,10vw,2.45rem)}
-}
-
-@media(prefers-reduced-motion:reduce){
-  .gamebooks-page .gb-cover,.gamebooks-page .series-card--crime::after,.gamebooks-page .series-card--survive::after{transform:none!important}
-}
+/* Real cover artwork. No darkening, blur or visual filters are applied. */
+:root{--gb-cover-ratio:2 / 3}
+.gamebooks-page .gb-cover{position:absolute;width:190px;aspect-ratio:var(--gb-cover-ratio);padding:0;border-radius:12px;background-color:#020304;background-repeat:no-repeat;background-position:center;background-size:contain;overflow:hidden;border:1px solid rgba(255,255,255,.13);box-shadow:0 26px 52px rgba(0,0,0,.46)}
+.gamebooks-page .gb-cover::before{display:none!important}.gamebooks-page .gb-cover>*{display:none!important}
+.gamebooks-page .gb-cover--crime{right:45px;top:6px;transform:rotate(7deg);background-image:url("../assets/gamebooks/crime-laccusato.avif");border-color:rgba(220,52,61,.42)}
+.gamebooks-page .gb-cover--survive{left:24px;bottom:0;transform:rotate(-8deg);background-image:url("../assets/gamebooks/survive-72-ore-sottoterra.avif");border-color:rgba(255,103,31,.42)}
+@media(max-width:620px){.gamebooks-page .gb-cover{width:145px}.gamebooks-page .gb-cover--crime{right:32px}.gamebooks-page .gb-cover--survive{left:32px}}
+@media(max-width:360px){.gamebooks-page .gb-cover--crime{right:14px}.gamebooks-page .gb-cover--survive{left:14px}}
+@media(prefers-reduced-motion:reduce){.gamebooks-page .gb-cover{transform:none!important}}
