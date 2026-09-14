@@ -1,0 +1,118 @@
+:root{
+  --home-max:1280px;
+  --home-soft:rgba(255,255,255,.07);
+  --home-soft-2:rgba(255,255,255,.11);
+}
+
+/* Editorial homepage refresh: fewer sections, stronger hierarchy, less dashboard-like UI. */
+.home-hero--editorial{min-height:clamp(520px,72svh,720px)}
+.home-hero--editorial .home-hero__inner{max-width:1040px}
+.home-hero--editorial .hero-kicker{color:#c8cdd5}
+.home-hero--editorial h1{max-width:10.5ch;font-size:clamp(3.8rem,8.2vw,7.4rem);line-height:.86;text-wrap:balance}
+.home-hero--editorial .home-hero__sub{max-width:760px;font-size:clamp(1rem,1.8vw,1.2rem)}
+.home-hero__signature{margin:18px 0 0;color:#7f8897;font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+
+/* Two publishing worlds remain the primary navigation after the hero. */
+.home-world-stack{display:block;position:relative;min-height:100%}
+.home-world-cover{position:absolute;display:block;width:min(58%,176px);aspect-ratio:2/3;object-fit:contain;border-radius:11px;background:#040507;border:1px solid rgba(255,255,255,.13);box-shadow:0 26px 52px rgba(0,0,0,.48);filter:none!important;opacity:1!important}
+.home-world-cover--survive{left:4px;bottom:32px;transform:rotate(-5deg)}
+.home-world-cover--crime{right:8px;top:42px;transform:rotate(4deg);z-index:2}
+
+/* Curated titles instead of a full duplicate catalog on the homepage. */
+.home-featured{padding-top:34px}
+.featured-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:28px}
+.featured-book{--feature:#d4b65d;min-width:0;overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:22px;background:linear-gradient(160deg,color-mix(in srgb,var(--feature) 6%,#10131a),#090b10 68%);box-shadow:0 22px 58px rgba(0,0,0,.25)}
+.featured-book--kids{--feature:#77a7ff}.featured-book--crime{--feature:#dc343d}.featured-book--survive{--feature:#ff671f}
+.featured-book__cover{display:block;position:relative;aspect-ratio:2/3;padding:10px;background:#05070b;border-bottom:2px solid var(--feature);overflow:hidden}
+.featured-book__cover img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;filter:none!important;opacity:1!important;transform:none!important;background:#05070b}
+.featured-book__body{padding:18px 19px 20px}
+.featured-book__meta{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--feature);font-size:.67rem;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+.featured-book__meta b{padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.055);color:#aeb5c1;font-size:.58rem;letter-spacing:.04em}
+.featured-book h3{margin:10px 0 0;color:#f6f7f8;font-size:clamp(1.3rem,2vw,1.7rem);line-height:.98;letter-spacing:-.035em;text-transform:uppercase}
+.featured-book p{margin:10px 0 0;color:#a7afbc;font-size:.88rem;line-height:1.5}
+.featured-book__link{display:inline-flex;margin-top:16px;color:#f1f3f6;text-decoration:none;font-size:.8rem;font-weight:900}
+.featured-book__link::after{content:'→';margin-left:7px;transition:transform .18s ease}
+@media(hover:hover){.featured-book__link:hover::after{transform:translateX(3px)}}
+
+/* A short experiential proof of what makes Gamebooks different. */
+.home-choice{padding:clamp(56px,7vw,92px) 0;border-block:1px solid rgba(255,255,255,.055);background:radial-gradient(760px 430px at 82% 35%,rgba(188,46,52,.14),transparent 70%),#07090e}
+.home-choice__grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(270px,.92fr);gap:clamp(28px,5vw,70px);align-items:center}
+.home-choice__copy{max-width:720px}
+.home-choice__scenario{margin:18px 0 0;color:#d8dce2;font-size:clamp(1.25rem,2.4vw,2rem);line-height:1.25;letter-spacing:-.025em}
+.home-choice__options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:22px}
+.home-choice__option{display:flex;align-items:center;min-height:64px;padding:13px 15px;border:1px solid rgba(255,255,255,.10);border-radius:15px;background:rgba(255,255,255,.035);color:#cbd0d8;font-size:.84rem;font-weight:850}
+.home-choice__explain{margin:20px 0 0;max-width:650px;color:#969fac;font-size:.92rem;line-height:1.55}
+.home-choice__cta{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:18px;padding:10px 16px;border-radius:999px;background:#f2f4f7;color:#0a0d12;text-decoration:none;font-size:.82rem;font-weight:900}
+.home-choice__visual{display:flex;align-items:center;justify-content:center;min-height:390px}
+.home-choice__visual img{display:block;width:min(78%,250px);aspect-ratio:2/3;object-fit:contain;border-radius:13px;background:#050607;border:1px solid rgba(220,52,61,.35);box-shadow:0 34px 70px rgba(0,0,0,.50);transform:rotate(3deg);filter:none!important;opacity:1!important}
+
+/* Genre discovery is a compact rail, not another card catalog. */
+.home-genres{padding:clamp(50px,6vw,78px) 0}
+.genre-rail{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+.genre-link{--genre:#cfd3da;display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:9px 13px;border:1px solid color-mix(in srgb,var(--genre) 40%,rgba(255,255,255,.11));border-radius:999px;background:rgba(255,255,255,.028);color:#dfe2e7;text-decoration:none;font-size:.75rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.genre-link::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--genre);box-shadow:0 0 14px color-mix(in srgb,var(--genre) 58%,transparent)}
+.genre-link--crime{--genre:#dc343d}.genre-link--survive{--genre:#ff671f}.genre-link--thriller{--genre:#57aef7}.genre-link--mystery{--genre:#9255ff}.genre-link--horror{--genre:#b7ca39}.genre-link--scifi{--genre:#12c9e8}.genre-link--real{--genre:#f2b72f}
+@media(hover:hover){.genre-link:hover{transform:translateY(-2px);border-color:var(--genre);background:color-mix(in srgb,var(--genre) 9%,#0a0d12)}}
+
+/* Short publisher statement: enough context, no manifesto wall. */
+.home-about{padding:clamp(48px,6vw,76px) 0 88px}
+.home-about__panel{display:grid;grid-template-columns:minmax(170px,.35fr) minmax(0,1fr);gap:clamp(24px,5vw,80px);padding:clamp(24px,4vw,42px);border:1px solid rgba(255,255,255,.085);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012))}
+.home-about__brand{align-self:start;color:#d9dde3;font-size:.78rem;font-weight:950;letter-spacing:.18em;text-transform:uppercase}
+.home-about__copy h2{margin:0;max-width:18ch;color:#f5f6f8;font-size:clamp(1.8rem,3.5vw,3rem);line-height:1.02;letter-spacing:-.045em}
+.home-about__copy p{max-width:760px;margin:15px 0 0;color:#9fa7b3;font-size:.97rem;line-height:1.65}
+
+/* Footer now behaves like a publisher footer rather than a status strip. */
+.home-footer--editorial{padding:28px 0 36px}
+.footer-editorial{display:grid;grid-template-columns:minmax(150px,1fr) auto auto;align-items:center;gap:20px}
+.footer-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.footer-links a{display:inline-flex;min-height:40px;align-items:center;padding:7px 10px;border-radius:9px;color:#abb3bf;text-decoration:none;font-size:.78rem;font-weight:800}
+@media(hover:hover){.footer-links a:hover{background:rgba(255,255,255,.05);color:#fff}}
+.footer-editorial__note{grid-column:1/-1;margin:0;color:#717b89;font-size:.72rem}
+
+@media(max-width:900px){
+  .featured-grid{grid-template-columns:repeat(3,minmax(210px,1fr));overflow-x:auto;scroll-snap-type:x mandatory;padding:0 12px 10px 0;margin-right:-12px;scrollbar-width:none}
+  .featured-grid::-webkit-scrollbar{display:none}
+  .featured-book{scroll-snap-align:start}
+  .home-choice__grid{grid-template-columns:1fr minmax(220px,.55fr)}
+  .home-choice__visual{min-height:330px}
+  .footer-editorial{grid-template-columns:1fr auto}
+  .footer-links{grid-column:1/-1;grid-row:2}
+}
+
+@media(max-width:760px){
+  .home-hero--editorial{min-height:500px}
+  .home-hero--editorial h1{font-size:clamp(3.15rem,14vw,5rem);max-width:9.5ch}
+  .home-hero__signature{font-size:.66rem}
+  .home-world-cover{width:min(58%,145px)}
+  .home-world-cover--crime{top:28px}.home-world-cover--survive{bottom:26px}
+  .home-featured{padding-top:18px}
+  .featured-grid{grid-template-columns:repeat(3,minmax(76vw,1fr));gap:12px}
+  .featured-book__body{padding:15px 16px 18px}
+  .home-choice{padding:50px 0}
+  .home-choice__grid{grid-template-columns:1fr}
+  .home-choice__visual{order:-1;min-height:245px}
+  .home-choice__visual img{width:min(56%,180px);transform:rotate(2deg)}
+  .home-choice__scenario{font-size:1.3rem}
+  .home-choice__options{grid-template-columns:1fr;gap:8px}
+  .home-choice__option{min-height:52px}
+  .genre-rail{flex-wrap:nowrap;overflow-x:auto;margin-right:-13px;padding:0 13px 8px 0;scrollbar-width:none}
+  .genre-rail::-webkit-scrollbar{display:none}
+  .genre-link{flex:0 0 auto}
+  .home-about{padding-bottom:58px}
+  .home-about__panel{grid-template-columns:1fr;gap:14px}
+  .footer-editorial{grid-template-columns:1fr auto;gap:14px}
+}
+
+@media(max-width:420px){
+  .home-hero--editorial .home-hero__actions{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  .home-hero--editorial .hero-btn{padding-inline:12px;font-size:.78rem}
+  .featured-grid{grid-template-columns:repeat(3,minmax(82vw,1fr))}
+  .home-world-cover{width:118px}
+  .footer-editorial{grid-template-columns:1fr}
+  .footer-links{grid-column:1;grid-row:auto}
+  .footer-editorial .lang-switch-home{justify-self:start}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .home-world-cover,.home-choice__visual img{transform:none}
+}
