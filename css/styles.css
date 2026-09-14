@@ -1,20 +1,46 @@
 :root{
-  --bg:#0B1222;
-  --surface:#0F1730;
-  --ink:#E7EAF6;
-  --muted:#BFC6D8;
-  --accent:#E7C25F;
-  --link:#8AB4FF;
+  /* FABLEMARQ core design tokens. Division files may override accents, not grammar. */
+  --fm-bg:#0B1222;
+  --fm-surface-1:#0F1730;
+  --fm-surface-2:#111a2f;
+  --fm-text:#E7EAF6;
+  --fm-text-muted:#BFC6D8;
+  --fm-accent:#E7C25F;
+  --fm-link:#8AB4FF;
+  --fm-focus:#FACC15;
+  --fm-line:rgba(255,255,255,.08);
+  --fm-space-1:.375rem;
+  --fm-space-2:.625rem;
+  --fm-space-3:1rem;
+  --fm-space-4:1.5rem;
+  --fm-space-5:2.25rem;
+  --fm-space-6:3.5rem;
+  --fm-radius-sm:9px;
+  --fm-radius-md:14px;
+  --fm-radius-lg:22px;
+  --fm-shadow-cover:0 30px 70px rgba(0,0,0,.46);
+  --fm-shadow-panel:0 20px 52px rgba(0,0,0,.24);
+  --fm-motion-fast:180ms;
+  --fm-motion-normal:220ms;
+  --fm-ease-editorial:cubic-bezier(.2,.7,.2,1);
+
+  /* Backward-compatible aliases while the legacy CSS is consolidated. */
+  --bg:var(--fm-bg);
+  --surface:var(--fm-surface-1);
+  --ink:var(--fm-text);
+  --muted:var(--fm-text-muted);
+  --accent:var(--fm-accent);
+  --link:var(--fm-link);
   --cta:#FFB020;
   --cta-text:#1B1200;
   --cta-hover:#E69A00;
   --cta-press:#C47F00;
-  --focus:#FACC15;
+  --focus:var(--fm-focus);
   --header-h:64px;
 }
 
 *{box-sizing:border-box}
-html{margin:0;padding:0;background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{margin:0;padding:0;background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
 body{
   margin:0;padding:0;min-width:320px;min-height:100vh;min-height:100dvh;overflow-x:hidden;
   font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Arial,sans-serif;
@@ -30,9 +56,15 @@ a:focus-visible,.btn:focus-visible,.cta-buy:focus-visible,button:focus-visible{
 
 .container{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:20px 0}
 
+/* Signature primitive: a restrained editorial index used across FABLEMARQ worlds. */
+.fm-index{display:inline-flex;align-items:center;gap:9px;color:#9ca5b3;font-size:.68rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+.fm-index::before{content:"";width:32px;height:1px;background:var(--fm-signature-accent,var(--fm-accent));opacity:.92}
+.fm-marq-line{position:relative;padding-left:18px}
+.fm-marq-line::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:2px;border-radius:99px;background:var(--fm-signature-accent,var(--fm-accent))}
+
 header{
   position:sticky;top:0;z-index:50;min-height:var(--header-h);
-  background:rgba(7,10,17,.88);border-bottom:1px solid rgba(255,255,255,.07);
+  background:rgba(7,10,17,.88);border-bottom:1px solid var(--fm-line);
   -webkit-backdrop-filter:saturate(140%) blur(14px);backdrop-filter:saturate(140%) blur(14px);
 }
 .nav{min-height:var(--header-h);display:flex;align-items:center;gap:16px;padding:8px 0}
@@ -52,21 +84,21 @@ nav{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-lef
 nav a{
   display:inline-flex;align-items:center;justify-content:center;min-height:44px;
   color:rgba(231,234,246,.94);text-decoration:none;padding:9px 12px;border-radius:10px;white-space:nowrap;
-  transition:background .15s ease,color .15s ease,transform .15s ease;
+  transition:background var(--fm-motion-fast) var(--fm-ease-editorial),color var(--fm-motion-fast) var(--fm-ease-editorial),transform var(--fm-motion-fast) var(--fm-ease-editorial);
 }
 @media(hover:hover){nav a:hover{background:rgba(255,255,255,.07);color:#fff}}
 
 .cta-buy{
   margin-left:2px;padding:10px 17px;border:0;border-radius:999px;background:var(--cta);color:var(--cta-text);
   font-weight:800;text-decoration:none;box-shadow:0 8px 22px rgba(255,176,32,.22);
-  transition:transform .12s ease,background .12s ease,box-shadow .12s ease;
+  transition:transform var(--fm-motion-fast) var(--fm-ease-editorial),background var(--fm-motion-fast) var(--fm-ease-editorial),box-shadow var(--fm-motion-fast) var(--fm-ease-editorial);
 }
 @media(hover:hover){.cta-buy:hover{background:var(--cta-hover);transform:translateY(-1px);box-shadow:0 10px 28px rgba(255,176,32,.3)}}
 .cta-buy:active{background:var(--cta-press);transform:translateY(0)}
 
 .skip-link{
   position:fixed;left:12px;top:-80px;z-index:1000;background:#111;color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;
-  transition:top .15s ease;
+  transition:top var(--fm-motion-fast) var(--fm-ease-editorial);
 }
 .skip-link:focus{top:12px}
 
@@ -111,16 +143,16 @@ nav a{
 /* At the smallest phone widths, division/home headers become two rows instead of
    squeezing the logo, navigation and three language controls into one line. */
 @media(max-width:360px){
-  .home-page header .nav,.division-page header .nav{
+  .home-page header .nav,.division-page header .nav,.gamebook-detail-page header .nav{
     display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand lang" "nav nav";
     row-gap:2px;column-gap:8px;padding:6px 0 5px;
   }
-  .home-page header .brand,.division-page header .brand{grid-area:brand}
-  .home-page header nav,.division-page header nav{grid-area:nav;margin:0;justify-content:flex-start}
-  .home-page header .header-lang,.division-page header .header-lang{grid-area:lang;justify-self:end}
-  .home-page header .brand--reuse-title,.division-page header .brand--reuse-title{width:116px;height:26px;min-height:26px}
-  .home-page header .brand--reuse-title img,.division-page header .brand--reuse-title img{width:116px}
-  .home-page header nav a,.division-page header nav a{min-height:34px;padding:4px 9px;font-size:.75rem}
+  .home-page header .brand,.division-page header .brand,.gamebook-detail-page header .brand{grid-area:brand}
+  .home-page header nav,.division-page header nav,.gamebook-detail-page header nav{grid-area:nav;margin:0;justify-content:flex-start}
+  .home-page header .header-lang,.division-page header .header-lang,.gamebook-detail-page header .header-lang{grid-area:lang;justify-self:end}
+  .home-page header .brand--reuse-title,.division-page header .brand--reuse-title,.gamebook-detail-page header .brand--reuse-title{width:116px;height:26px;min-height:26px}
+  .home-page header .brand--reuse-title img,.division-page header .brand--reuse-title img,.gamebook-detail-page header .brand--reuse-title img{width:116px}
+  .home-page header nav a,.division-page header nav a,.gamebook-detail-page header nav a{min-height:34px;padding:4px 9px;font-size:.75rem}
 }
 
 @media(max-height:520px) and (orientation:landscape){
@@ -130,5 +162,6 @@ nav a{
 }
 
 @media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
