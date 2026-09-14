@@ -64,7 +64,7 @@
 /* Footer now behaves like a publisher footer rather than a status strip. */
 .home-footer--editorial{padding:28px 0 36px}
 .footer-editorial{display:grid;grid-template-columns:minmax(150px,1fr) auto auto;align-items:center;gap:20px}
-.footer-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.footer-links{display:flex;align-items:center;justify-content:flex-start;gap:6px;flex-wrap:wrap;margin-left:0;min-width:0}
 .footer-links a{display:inline-flex;min-height:40px;align-items:center;padding:7px 10px;border-radius:9px;color:#abb3bf;text-decoration:none;font-size:.78rem;font-weight:800}
 @media(hover:hover){.footer-links a:hover{background:rgba(255,255,255,.05);color:#fff}}
 .footer-editorial__note{grid-column:1/-1;margin:0;color:#717b89;font-size:.72rem}
