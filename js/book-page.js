@@ -5,7 +5,7 @@
   if (!cfg) return;
 
   const ASSET_ROOT = '../../assets';
-  const INTERNAL_SRC = new Set(['b1','b2','b3','hero','grid','preview','collection','site','book','libro','home']);
+  const INTERNAL_SRC = new Set(['b1','b2','b3','hero','grid','preview','collection','site','book','libro','home','kids']);
   const AMZ_TLD = { IT:'it', ES:'es', FR:'fr', DE:'de', GB:'co.uk', US:'com', CA:'ca', MX:'com.mx', CO:'com.co' };
   const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
 
@@ -21,13 +21,11 @@
     const browser = (navigator.languages && navigator.languages[0]) || navigator.language || 'en';
     return normLang(params().get('lang') || localStorage.getItem('lang') || browser);
   }
-
   function guessCountry(){
     const locale = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toUpperCase();
     const match = locale.match(/-([A-Z]{2})$/);
     return match && AMZ_TLD[match[1]] ? match[1] : null;
   }
-
   function storeCountry(){
     const fromUrl = (params().get('cc') || '').trim().toUpperCase();
     if (AMZ_TLD[fromUrl]) return fromUrl;
@@ -35,48 +33,32 @@
     if (AMZ_TLD[saved]) return saved;
     return guessCountry() || 'US';
   }
-
   function initAttribution(){
     const q = params();
     const raw = (q.get('src') || '').trim().toLowerCase();
     if (raw && !INTERNAL_SRC.has(raw)) localStorage.setItem('fm_src', raw);
-    UTM_KEYS.forEach(key => {
-      const value = q.get(key);
-      if (value) sessionStorage.setItem(key, value);
-    });
+    UTM_KEYS.forEach(key => { const value = q.get(key); if (value) sessionStorage.setItem(key, value); });
   }
-
   function trafficSource(){
     const raw = (params().get('src') || '').trim().toLowerCase();
     if (raw && !INTERNAL_SRC.has(raw)) return raw;
     return localStorage.getItem('fm_src') || 'site';
   }
-
   function withParams(href, values){
     const url = new URL(href, location.href);
     Object.entries(values).forEach(([key,value]) => {
       if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, String(value));
     });
-    return url.pathname + (url.search ? `?${url.searchParams.toString()}` : '');
+    return url.pathname + (url.search ? `?${url.searchParams.toString()}` : '') + url.hash;
   }
-
   function amazonUrl(lang, placement){
     const asin = cfg.asins && (cfg.asins[lang] || cfg.asins.en);
     if (!asin) return null;
     const cc = storeCountry();
     localStorage.setItem('amz_cc', cc);
     const src = trafficSource();
-    const query = new URLSearchParams({
-      utm_source:src,
-      utm_medium:`book${cfg.number}_${lang}`,
-      utm_campaign:'readthrough',
-      utm_content:placement,
-      src
-    });
-    UTM_KEYS.forEach(key => {
-      const value = params().get(key) || sessionStorage.getItem(key);
-      if (value && !query.has(key)) query.set(key, value);
-    });
+    const query = new URLSearchParams({utm_source:src,utm_medium:`book${cfg.number}_${lang}`,utm_campaign:'readthrough',utm_content:placement,src});
+    UTM_KEYS.forEach(key => { const value = params().get(key) || sessionStorage.getItem(key); if (value && !query.has(key)) query.set(key, value); });
     return `https://www.amazon.${AMZ_TLD[cc] || 'com'}/dp/${asin}?${query.toString()}`;
   }
 
@@ -84,18 +66,8 @@
   let trackingBound = false;
 
   function track(name, extra){
-    const ctx = {
-      page_path:location.pathname,
-      page_location:location.href,
-      lang,
-      cc:storeCountry(),
-      src:trafficSource(),
-      book_id:cfg.id
-    };
-    UTM_KEYS.forEach(key => {
-      const value = params().get(key) || sessionStorage.getItem(key);
-      if (value) ctx[key] = value;
-    });
+    const ctx={page_path:location.pathname,page_location:location.href,lang,cc:storeCountry(),src:trafficSource(),book_id:cfg.id};
+    UTM_KEYS.forEach(key => { const value = params().get(key) || sessionStorage.getItem(key); if (value) ctx[key] = value; });
     try { window.gtag && window.gtag('event', name, Object.assign(ctx, extra || {})); } catch (_) {}
   }
 
@@ -127,9 +99,9 @@
 
     const src = trafficSource();
     const home = document.querySelector('.nav-home');
-    const collection = document.querySelector('.nav-collection');
-    if (home) home.href = withParams('../../index.html', { lang, src });
-    if (collection) collection.href = withParams('../index.html', { lang, src });
+    if (home) home.href = withParams('../../index.html', {lang,src});
+    document.querySelectorAll('.nav-kids').forEach(el => { el.href = withParams('../../kids/', {lang,src}); });
+    document.querySelectorAll('.nav-collection').forEach(el => { el.href = withParams('../index.html', {lang,src}); });
 
     const mainBuy = document.getElementById('buyBtn');
     const stickyBuy = document.getElementById('buyBtnSticky');
@@ -142,20 +114,16 @@
   function bindTracking(){
     if (trackingBound) return;
     trackingBound = true;
-    track('view_book', { page:`book${cfg.number}` });
+    track('view_book', {page:`book${cfg.number}`});
     [['buyBtn','hero'],['buyBtnSticky','sticky']].forEach(([id,placement]) => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.addEventListener('click', () => track('click_buy', {
-        placement,
-        destination:'amazon',
-        href:el.href
-      }), { passive:true });
+      el.addEventListener('click', () => track('click_buy', {placement,destination:'amazon',href:el.href}), {passive:true});
     });
     const home = document.querySelector('.nav-home');
-    const collection = document.querySelector('.nav-collection');
-    if (home) home.addEventListener('click', () => track('click_nav', { item:'home' }), { passive:true });
-    if (collection) collection.addEventListener('click', () => track('click_nav', { item:'collection' }), { passive:true });
+    if (home) home.addEventListener('click', () => track('click_nav', {item:'home'}), {passive:true});
+    document.querySelectorAll('.nav-kids').forEach(el => el.addEventListener('click', () => track('click_nav',{item:'kids'}), {passive:true}));
+    document.querySelectorAll('.nav-collection').forEach(el => el.addEventListener('click', () => track('click_nav',{item:'collection'}), {passive:true}));
   }
 
   document.addEventListener('click', event => {
@@ -165,7 +133,7 @@
     if (next === lang) return;
     lang = next;
     render();
-    track('select_language', { language:lang });
+    track('select_language', {language:lang});
   });
 
   document.addEventListener('DOMContentLoaded', () => {
