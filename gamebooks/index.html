@@ -12,9 +12,9 @@
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/divisions.css">
-  <link rel="stylesheet" href="../css/gamebooks.css">
+  <link rel="stylesheet" href="../css/gamebooks.css?v=2">
   <link rel="stylesheet" href="../css/gamebook-covers.css?v=3">
-  <link rel="stylesheet" href="../css/gamebook-catalog.css?v=1">
+  <link rel="stylesheet" href="../css/gamebook-catalog.css?v=2">
   <meta property="og:title" content="Fablemarq Gamebooks">
   <meta property="og:description" content="You don't just read the story. You decide what happens.">
   <meta property="og:type" content="website">
@@ -22,6 +22,29 @@
   <meta property="og:image" content="https://fablemarq.com/assets/title-card.png">
   <meta property="og:site_name" content="Fablemarq">
   <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name":"Fablemarq Gamebooks",
+    "url":"https://fablemarq.com/gamebooks/",
+    "description":"Libri-game interattivi per adulti basati su decisioni e conseguenze.",
+    "isPartOf":{"@type":"WebSite","name":"Fablemarq","url":"https://fablemarq.com/"},
+    "mainEntity":{
+      "@type":"ItemList",
+      "numberOfItems":7,
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"L'ACCUSATO","url":"https://fablemarq.com/gamebooks/#crime"},
+        {"@type":"ListItem","position":2,"name":"72 ORE SOTTOTERRA","url":"https://fablemarq.com/gamebooks/#survive"},
+        {"@type":"ListItem","position":3,"name":"NON TORNARE A CASA","url":"https://fablemarq.com/gamebooks/#thriller"},
+        {"@type":"ListItem","position":4,"name":"LA STANZA CHIUSA","url":"https://fablemarq.com/gamebooks/#mystery"},
+        {"@type":"ListItem","position":5,"name":"LA CASA DEI SUSSURRI","url":"https://fablemarq.com/gamebooks/#horror"},
+        {"@type":"ListItem","position":6,"name":"PROTOCOLLO OMEGA","url":"https://fablemarq.com/gamebooks/#sci-fi"},
+        {"@type":"ListItem","position":7,"name":"SINDACO PER UN ANNO","url":"https://fablemarq.com/gamebooks/#real-life"}
+      ]
+    }
+  }
+  </script>
   <script src="../js/language.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5N15LT4Y34"></script>
   <script>
@@ -45,6 +68,10 @@
         <h1 id="gamebooksTitle"><span data-i18n="heroA">Non leggi soltanto la storia.</span><span data-i18n="heroB">Decidi cosa succede.</span></h1>
         <p class="gamebooks-hero__lead" data-i18n="heroLead">Thriller interattivi per adulti. Niente dadi, niente schede personaggio: solo decisioni, conseguenze e strade che cambiano.</p>
         <ul class="gamebooks-principles"><li data-i18n="p1">Niente dadi</li><li data-i18n="p2">Niente schede</li><li data-i18n="p3">Solo decisioni e conseguenze</li></ul>
+        <div class="gamebooks-hero__actions">
+          <a class="gamebooks-hero__cta gamebooks-hero__cta--primary" href="#catalogo" data-i18n="browseCta">Esplora il catalogo</a>
+          <a class="gamebooks-hero__cta" href="#come-funziona" data-i18n="howCta">Come funziona</a>
+        </div>
       </div>
       <div class="gamebooks-hero__art" aria-hidden="true"><div class="gb-cover gb-cover--crime"></div><div class="gb-cover gb-cover--survive"></div></div>
     </div>
@@ -52,36 +79,50 @@
 
   <section class="gamebook-section" id="catalogo" aria-labelledby="catalogTitle">
     <div class="container">
-      <div class="gamebook-section__head"><div class="gamebook-section__copy"><p class="gamebook-kicker" data-i18n="catalogKicker">Catalogo</p><h2 class="gamebook-heading" id="catalogTitle" data-i18n="catalogTitle">Scegli la tensione</h2><p class="gamebook-intro">Seleziona una serie: con un clic vedrai soltanto i titoli di quella collana.</p></div></div>
+      <div class="gamebook-section__head"><div class="gamebook-section__copy"><p class="gamebook-kicker" data-i18n="catalogKicker">Catalogo</p><h2 class="gamebook-heading" id="catalogTitle" data-i18n="catalogTitle">Scegli la tensione</h2><p class="gamebook-intro" data-i18n="catalogIntro">Seleziona una serie oppure cerca un titolo: il catalogo si aggiorna immediatamente.</p></div></div>
 
-      <div class="gamebook-filters" role="toolbar" aria-label="Filtra Gamebooks per serie">
-        <button class="gamebook-filter gamebook-filter--all is-active" type="button" data-filter="all" aria-pressed="true" aria-controls="gamebookCatalog"><span data-filter-all>Tutti</span></button>
-        <button class="gamebook-filter gamebook-filter--crime" type="button" data-filter="crime" aria-pressed="false" aria-controls="gamebookCatalog">Crime</button>
-        <button class="gamebook-filter gamebook-filter--survive" type="button" data-filter="survive" aria-pressed="false" aria-controls="gamebookCatalog">Survive</button>
-        <button class="gamebook-filter gamebook-filter--thriller" type="button" data-filter="thriller" aria-pressed="false" aria-controls="gamebookCatalog">Thriller</button>
-        <button class="gamebook-filter gamebook-filter--mystery" type="button" data-filter="mystery" aria-pressed="false" aria-controls="gamebookCatalog">Mystery</button>
-        <button class="gamebook-filter gamebook-filter--horror" type="button" data-filter="horror" aria-pressed="false" aria-controls="gamebookCatalog">Horror</button>
-        <button class="gamebook-filter gamebook-filter--sci-fi" type="button" data-filter="sci-fi" aria-pressed="false" aria-controls="gamebookCatalog">Sci-Fi</button>
-        <button class="gamebook-filter gamebook-filter--real-life" type="button" data-filter="real-life" aria-pressed="false" aria-controls="gamebookCatalog">Real Life</button>
+      <div class="gamebook-catalog-tools">
+        <label class="gamebook-search" for="gamebookSearch">
+          <span class="visually-hidden" data-i18n="searchLabel">Cerca nel catalogo Gamebooks</span>
+          <span class="gamebook-search__icon" aria-hidden="true">⌕</span>
+          <input id="gamebookSearch" type="search" autocomplete="off" spellcheck="false" data-i18n-placeholder="searchPlaceholder" data-i18n-aria-label="searchLabel" placeholder="Cerca titolo, serie o atmosfera">
+        </label>
+        <p class="gamebook-result-count" id="gamebookResultCount" aria-live="polite">7 titoli</p>
+      </div>
+
+      <div class="gamebook-filters" role="toolbar" aria-label="Filtra Gamebooks per serie" data-i18n-aria-label="filtersLabel">
+        <button class="gamebook-filter gamebook-filter--all is-active" type="button" data-filter="all" aria-pressed="true" aria-controls="gamebookCatalog"><span data-filter-all data-i18n="filterAll">Tutti</span></button>
+        <button class="gamebook-filter gamebook-filter--crime" type="button" data-filter="crime" aria-pressed="false" aria-controls="gamebookCatalog" data-i18n="filterCrime">Crime</button>
+        <button class="gamebook-filter gamebook-filter--survive" type="button" data-filter="survive" aria-pressed="false" aria-controls="gamebookCatalog" data-i18n="filterSurvive">Survive</button>
+        <button class="gamebook-filter gamebook-filter--thriller" type="button" data-filter="thriller" aria-pressed="false" aria-controls="gamebookCatalog" data-i18n="filterThriller">Thriller</button>
+        <button class="gamebook-filter gamebook-filter--mystery" type="button" data-filter="mystery" aria-pressed="false" aria-controls="gamebookCatalog" data-i18n="filterMystery">Mystery</button>
+        <button class="gamebook-filter gamebook-filter--horror" type="button" data-filter="horror" aria-pressed="false" aria-controls="gamebookCatalog" data-i18n="filterHorror">Horror</button>
+        <button class="gamebook-filter gamebook-filter--sci-fi" type="button" data-filter="sci-fi" aria-pressed="false" aria-controls="gamebookCatalog" data-i18n="filterSciFi">Sci-Fi</button>
+        <button class="gamebook-filter gamebook-filter--real-life" type="button" data-filter="real-life" aria-pressed="false" aria-controls="gamebookCatalog" data-i18n="filterRealLife">Real Life</button>
       </div>
 
       <div class="gamebook-catalog-grid" id="gamebookCatalog" aria-live="polite">
-        <article class="gamebook-card gamebook-card--crime" data-book data-series="crime" id="crime"><div class="gamebook-card__cover"><img src="../assets/gamebooks/crime-laccusato.avif" alt="Copertina L'Accusato — Fablemarq Gamebooks Crime" width="360" height="575" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series">Crime</span><h3>L'ACCUSATO</h3><p>Hai 48 ore per dimostrare che non sei stato tu.</p><span class="gamebook-card__status">In sviluppo</span></div></article>
-        <article class="gamebook-card gamebook-card--survive" data-book data-series="survive" id="survive"><div class="gamebook-card__cover"><img src="../assets/gamebooks/survive-72-ore-sottoterra.avif" alt="Copertina 72 Ore Sottoterra — Fablemarq Gamebooks Survive" width="320" height="480" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series">Survive</span><h3>72 ORE SOTTOTERRA</h3><p>Sette persone. Una galleria crollata. L'aria non basterà per tutti.</p><span class="gamebook-card__status">In sviluppo</span></div></article>
-        <article class="gamebook-card gamebook-card--thriller" data-book data-series="thriller" id="thriller"><div class="gamebook-card__cover"><img src="../assets/gamebooks/thriller-non-tornare-a-casa.avif" alt="Copertina Non Tornare a Casa — Fablemarq Gamebooks Thriller" width="320" height="480" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series">Thriller</span><h3>NON TORNARE A CASA</h3><p>La voce era sua. Anche il messaggio.</p><span class="gamebook-card__status">In sviluppo</span></div></article>
-        <article class="gamebook-card gamebook-card--mystery" data-book data-series="mystery" id="mystery"><div class="gamebook-card__cover"><img src="../assets/gamebooks/mystery-la-stanza-chiusa.avif" alt="Copertina La Stanza Chiusa — Fablemarq Gamebooks Mystery" width="360" height="540" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series">Mystery</span><h3>LA STANZA CHIUSA</h3><p>Una donna scomparsa. Una camera sigillata. Ogni indizio mente.</p><span class="gamebook-card__status">In sviluppo</span></div></article>
-        <article class="gamebook-card gamebook-card--horror" data-book data-series="horror" id="horror"><div class="gamebook-card__cover"><img src="../assets/gamebooks/horror-la-casa-dei-sussurri.avif" alt="Copertina La Casa dei Sussurri — Fablemarq Gamebooks Horror" width="360" height="540" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series">Horror</span><h3>LA CASA DEI SUSSURRI</h3><p>Ogni porta si chiude da sola. Non tutte si riaprono.</p><span class="gamebook-card__status">In sviluppo</span></div></article>
-        <article class="gamebook-card gamebook-card--sci-fi" data-book data-series="sci-fi" id="sci-fi"><div class="gamebook-card__cover"><img src="../assets/gamebooks/sci-fi-protocollo-omega.avif" alt="Copertina Protocollo Omega — Fablemarq Gamebooks Sci-Fi" width="320" height="480" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series">Sci-Fi</span><h3>PROTOCOLLO OMEGA</h3><p>Un segnale impossibile. Una stazione isolata. Qualcosa è già salito a bordo.</p><span class="gamebook-card__status">In sviluppo</span></div></article>
-        <article class="gamebook-card gamebook-card--real-life" data-book data-series="real-life" id="real-life"><div class="gamebook-card__cover"><img src="../assets/gamebooks/real-life-sindaco-per-un-anno.avif" alt="Copertina Sindaco per un Anno — Fablemarq Gamebooks Real Life" width="360" height="540" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series">Real Life</span><h3>SINDACO PER UN ANNO</h3><p>Stesse promesse. Nuovi problemi. Tu decidi cosa fare.</p><span class="gamebook-card__status">In sviluppo</span></div></article>
+        <article class="gamebook-card gamebook-card--crime" data-book data-series="crime" id="crime"><div class="gamebook-card__cover"><img src="../assets/gamebooks/crime-laccusato.avif" alt="Copertina L'Accusato — Fablemarq Gamebooks Crime" width="360" height="575" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series" data-i18n="filterCrime">Crime</span><h3>L'ACCUSATO</h3><p data-i18n="crimeHook">Hai 48 ore per dimostrare che non sei stato tu.</p><span class="gamebook-card__status" data-i18n="development">In sviluppo</span></div></article>
+        <article class="gamebook-card gamebook-card--survive" data-book data-series="survive" id="survive"><div class="gamebook-card__cover"><img src="../assets/gamebooks/survive-72-ore-sottoterra.avif" alt="Copertina 72 Ore Sottoterra — Fablemarq Gamebooks Survive" width="320" height="480" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series" data-i18n="filterSurvive">Survive</span><h3>72 ORE SOTTOTERRA</h3><p data-i18n="surviveHook">Sette persone. Una galleria crollata. L'aria non basterà per tutti.</p><span class="gamebook-card__status" data-i18n="development">In sviluppo</span></div></article>
+        <article class="gamebook-card gamebook-card--thriller" data-book data-series="thriller" id="thriller"><div class="gamebook-card__cover"><img src="../assets/gamebooks/thriller-non-tornare-a-casa.avif" alt="Copertina Non Tornare a Casa — Fablemarq Gamebooks Thriller" width="320" height="480" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series" data-i18n="filterThriller">Thriller</span><h3>NON TORNARE A CASA</h3><p data-i18n="thrillerHook">La voce era sua. Anche il messaggio.</p><span class="gamebook-card__status" data-i18n="development">In sviluppo</span></div></article>
+        <article class="gamebook-card gamebook-card--mystery" data-book data-series="mystery" id="mystery"><div class="gamebook-card__cover"><img src="../assets/gamebooks/mystery-la-stanza-chiusa.avif" alt="Copertina La Stanza Chiusa — Fablemarq Gamebooks Mystery" width="360" height="540" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series" data-i18n="filterMystery">Mystery</span><h3>LA STANZA CHIUSA</h3><p data-i18n="mysteryBookHook">Una donna scomparsa. Una camera sigillata. Ogni indizio mente.</p><span class="gamebook-card__status" data-i18n="development">In sviluppo</span></div></article>
+        <article class="gamebook-card gamebook-card--horror" data-book data-series="horror" id="horror"><div class="gamebook-card__cover"><img src="../assets/gamebooks/horror-la-casa-dei-sussurri.avif" alt="Copertina La Casa dei Sussurri — Fablemarq Gamebooks Horror" width="360" height="540" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series" data-i18n="filterHorror">Horror</span><h3>LA CASA DEI SUSSURRI</h3><p data-i18n="horrorHook">Ogni porta si chiude da sola. Non tutte si riaprono.</p><span class="gamebook-card__status" data-i18n="development">In sviluppo</span></div></article>
+        <article class="gamebook-card gamebook-card--sci-fi" data-book data-series="sci-fi" id="sci-fi"><div class="gamebook-card__cover"><img src="../assets/gamebooks/sci-fi-protocollo-omega.avif" alt="Copertina Protocollo Omega — Fablemarq Gamebooks Sci-Fi" width="320" height="480" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series" data-i18n="filterSciFi">Sci-Fi</span><h3>PROTOCOLLO OMEGA</h3><p data-i18n="sciFiHook">Un segnale impossibile. Una stazione isolata. Qualcosa è già salito a bordo.</p><span class="gamebook-card__status" data-i18n="development">In sviluppo</span></div></article>
+        <article class="gamebook-card gamebook-card--real-life" data-book data-series="real-life" id="real-life"><div class="gamebook-card__cover"><img src="../assets/gamebooks/real-life-sindaco-per-un-anno.avif" alt="Copertina Sindaco per un Anno — Fablemarq Gamebooks Real Life" width="360" height="540" loading="lazy" decoding="async"></div><div class="gamebook-card__body"><span class="gamebook-card__series" data-i18n="filterRealLife">Real Life</span><h3>SINDACO PER UN ANNO</h3><p data-i18n="realLifeHook">Stesse promesse. Nuovi problemi. Tu decidi cosa fare.</p><span class="gamebook-card__status" data-i18n="development">In sviluppo</span></div></article>
       </div>
-      <p class="gamebooks-footnote">I titoli mostrati sono in sviluppo. I pulsanti di acquisto compariranno soltanto quando un libro sarà realmente disponibile.</p>
+
+      <div class="gamebook-empty" id="gamebookEmpty" hidden>
+        <h3 data-i18n="noResultsTitle">Nessun titolo trovato</h3>
+        <p data-i18n="noResultsText">Prova un'altra parola oppure torna a Tutti.</p>
+      </div>
+      <p class="gamebooks-footnote" data-i18n="note">I titoli mostrati sono in sviluppo. I pulsanti di acquisto compariranno soltanto quando un libro sarà realmente disponibile.</p>
     </div>
   </section>
 
-  <section class="gamebook-section gamebook-section--muted" aria-labelledby="formatTitle"><div class="container"><div class="gamebook-section__copy"><p class="gamebook-kicker" data-i18n="howKicker">Il formato</p><h2 class="gamebook-heading" id="formatTitle" data-i18n="howTitle">Leggi. Scegli. Affronta le conseguenze.</h2></div><div class="how-grid"><article class="how-card"><span class="how-card__num">01</span><h3 data-i18n="h1">Leggi la situazione</h3><p data-i18n="h1p">Ogni scena ti mette davanti a informazioni, persone e rischi concreti.</p></article><article class="how-card"><span class="how-card__num">02</span><h3 data-i18n="h2">Prendi una decisione</h3><p data-i18n="h2p">Nessun tiro di dado decide per te. La scelta è tua.</p></article><article class="how-card"><span class="how-card__num">03</span><h3 data-i18n="h3">Vivi il risultato</h3><p data-i18n="h3p">La storia cambia in base a ciò che fai, ciò che ignori e ciò che rischi.</p></article></div></div></section>
+  <section class="gamebook-section gamebook-section--muted" id="come-funziona" aria-labelledby="formatTitle"><div class="container"><div class="gamebook-section__copy"><p class="gamebook-kicker" data-i18n="howKicker">Il formato</p><h2 class="gamebook-heading" id="formatTitle" data-i18n="howTitle">Leggi. Scegli. Affronta le conseguenze.</h2></div><div class="how-grid"><article class="how-card"><span class="how-card__num">01</span><h3 data-i18n="h1">Leggi la situazione</h3><p data-i18n="h1p">Ogni scena ti mette davanti a informazioni, persone e rischi concreti.</p></article><article class="how-card"><span class="how-card__num">02</span><h3 data-i18n="h2">Prendi una decisione</h3><p data-i18n="h2p">Nessun tiro di dado decide per te. La scelta è tua.</p></article><article class="how-card"><span class="how-card__num">03</span><h3 data-i18n="h3">Vivi il risultato</h3><p data-i18n="h3p">La storia cambia in base a ciò che fai, ciò che ignori e ciò che rischi.</p></article></div></div></section>
 </main>
 <footer class="site-footer"><div class="container site-footer__row"><span class="site-footer__brand">FABLEMARQ GAMEBOOKS</span><span data-i18n="footer">Fablemarq Gamebooks — A Fablemarq publishing division</span><div class="site-lang-switch" aria-label="Lingua"><button type="button" data-lang="it" aria-pressed="true">IT</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="es" aria-pressed="false">ES</button></div></div></footer>
-<script defer src="../js/gamebooks.js"></script>
-<script defer src="../js/gamebook-filter.js?v=1"></script>
+<script defer src="../js/gamebooks.js?v=2"></script>
+<script defer src="../js/gamebook-filter.js?v=2"></script>
 </body>
 </html>
