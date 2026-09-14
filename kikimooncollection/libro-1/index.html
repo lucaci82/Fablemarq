@@ -6,14 +6,14 @@
   <title>Libro I — La Stella Perduta | Kiki Moon</title>
   <meta name="description" content="Una stella si spegne e Kiki scopre che il coraggio nasce da una piccola luce testarda.">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <meta name="theme-color" content="#0b1222">
+  <meta name="theme-color" content="#10172a">
   <meta name="color-scheme" content="dark">
 
   <link rel="canonical" href="https://fablemarq.com/kikimooncollection/libro-1/">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="../../assets/it/cover1.webp" fetchpriority="high">
   <link rel="stylesheet" href="../../css/styles.css">
-  <link rel="stylesheet" href="../../css/book.css">
+  <link rel="stylesheet" href="../../css/book.css?v=2">
 
   <meta property="og:title" content="Kiki Moon — La Stella Perduta">
   <meta property="og:description" content="Una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon.">
@@ -36,6 +36,7 @@
     "datePublished":"2025-11-26",
     "genre":["Avventura","Magia"],
     "inLanguage":["it","en","es"],
+    "isPartOf":{"@type":"BookSeries","name":"Kiki Moon","url":"https://fablemarq.com/kikimooncollection/"},
     "publisher":{"@type":"Organization","name":"Fablemarq","url":"https://fablemarq.com/"}
   }
   </script>
@@ -49,7 +50,7 @@
     gtag('config', 'G-5N15LT4Y34', { send_page_view:true });
   </script>
 </head>
-<body class="book-page">
+<body class="book-page kiki-book-page">
   <a href="#main" class="skip-link">Salta al contenuto</a>
 
   <header>
@@ -58,7 +59,8 @@
         <img src="../../assets/title-card.png" alt="" aria-hidden="true" width="1183" height="513" decoding="async">
       </a>
       <nav aria-label="Navigazione libro">
-        <a href="../index.html" class="nav-collection" data-i18n="nav_collection">Collection</a>
+        <a href="../../kids/" class="nav-kids">Kids</a>
+        <a href="../index.html" class="nav-collection" data-i18n="nav_collection">Kiki Moon</a>
         <div class="lang-switch" aria-label="Language">
           <button data-lang="en" type="button" aria-pressed="false">EN</button>
           <button data-lang="it" type="button" aria-pressed="true">IT</button>
@@ -69,10 +71,18 @@
   </header>
 
   <main id="main" class="container">
+    <nav class="book-breadcrumb" aria-label="Breadcrumb">
+      <a href="../../kids/" class="nav-kids">Fablemarq Kids</a><span>›</span><a href="../" class="nav-collection">Kiki Moon</a><span>›</span><span data-i18n="title">Libro I — La Stella Perduta</span>
+    </nav>
+
     <section class="book-sheet" id="anteprima" aria-labelledby="bookTitle">
-      <img id="bookCover" class="cover-lg" src="../../assets/it/cover1.webp" alt="Kiki Moon — Libro I — La Stella Perduta" width="1000" height="1500" loading="eager" decoding="async" fetchpriority="high">
+      <div class="book-cover-stage">
+        <div class="book-moon" aria-hidden="true"></div>
+        <img id="bookCover" class="cover-lg" src="../../assets/it/cover1.webp" alt="Kiki Moon — Libro I — La Stella Perduta" width="1000" height="1500" loading="eager" decoding="async" fetchpriority="high">
+      </div>
 
       <div class="sheet-text">
+        <span class="book-universe">KIKI MOON · FABLEMARQ KIDS</span>
         <h1 id="bookTitle" data-i18n="title">Libro I — La Stella Perduta</h1>
 
         <ul class="meta">
@@ -84,15 +94,10 @@
         <p class="plot" data-i18n="plot">Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.</p>
         <p class="hook" data-i18n="hook">«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»</p>
 
-        <div class="awards" aria-label="Riconoscimenti">
-          <span class="award-item">Readers’ Choice</span>
-          <span class="award-item">Storytelling Award 2025</span>
-          <span class="award-item">Best Illustrated Tale</span>
-        </div>
-
-        <div class="review">
-          <div class="stars" aria-label="5 stelle su 5">★★★★★</div>
-          <p data-i18n="review">Letto con mia figlia: una storia dolce, piena di magia e illustrazioni stupende. Kiki è adorabile e il messaggio finale resta nel cuore.</p>
+        <div class="book-facts" aria-label="Informazioni sul libro">
+          <span>6–10</span><small data-i18n="age_fact">Età consigliata</small>
+          <span>80</span><small data-i18n="pages_fact">Pagine a colori</small>
+          <span>IT · EN · ES</span><small data-i18n="languages_fact">Edizioni</small>
         </div>
 
         <div class="cta-row">
@@ -100,6 +105,11 @@
         </div>
         <p class="trust" data-i18n="trust">Acquisto e resi gestiti da Amazon.</p>
       </div>
+    </section>
+
+    <section class="book-back">
+      <div><span>KIKI MOON</span><strong data-i18n="back_series">Continua a esplorare il mondo di Kiki.</strong></div>
+      <a class="nav-collection book-back__link" href="../" data-i18n="back_series_cta">Vai alla saga</a>
     </section>
 
     <div class="sticky-buy" aria-label="Acquisto rapido">
@@ -115,38 +125,29 @@
     asins:{it:'B0G2MC6Z2X',en:'B0G2JLYKWY',es:'B0G2J42FDD'},
     i18n:{
       it:{
-        page_title:'Libro I — La Stella Perduta | Kiki Moon',
-        meta_desc:'Una stella si spegne e Kiki scopre che il coraggio nasce da una piccola luce testarda.',
-        cover_alt:'Kiki Moon — Libro I — La Stella Perduta',
-        nav_collection:'Collection',title:'Libro I — La Stella Perduta',release_label:'Data di uscita:',release_date:'26 novembre 2025',genre_label:'Genere:',genre:'Avventura, magia',langs_label:'Lingue:',
-        plot:'Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.',
-        hook:'«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»',
-        review:'Letto con mia figlia: una storia dolce, piena di magia e illustrazioni stupende. Kiki è adorabile e il messaggio finale resta nel cuore.',
+        page_title:'Libro I — La Stella Perduta | Kiki Moon',meta_desc:'Una stella si spegne e Kiki scopre che il coraggio nasce da una piccola luce testarda.',cover_alt:'Kiki Moon — Libro I — La Stella Perduta',
+        nav_collection:'Kiki Moon',title:'Libro I — La Stella Perduta',release_label:'Data di uscita:',release_date:'26 novembre 2025',genre_label:'Genere:',genre:'Avventura, magia',langs_label:'Lingue:',
+        plot:'Nel cielo di Moon una stella si spegne. Per riaccenderla, Kiki dovrà trovare il Respiro di Moon e scoprire che il coraggio inizia da una piccola luce testarda.',hook:'«Ci sono segreti che non urlano: brillano. Kiki lo troverà prima che il mondo si addormenti.»',
+        age_fact:'Età consigliata',pages_fact:'Pagine a colori',languages_fact:'Edizioni',back_series:'Continua a esplorare il mondo di Kiki.',back_series_cta:'Vai alla saga',
         buy:'Acquista su Amazon',buy_now:'Acquista ora',trust:'Acquisto e resi gestiti da Amazon.',fast_checkout:'Checkout rapido sullo store del tuo paese.'
       },
       en:{
-        page_title:'Book I — The Lost Star | Kiki Moon',
-        meta_desc:'A star goes dark, and Kiki learns that courage begins with a stubborn little light.',
-        cover_alt:'Kiki Moon — Book I — The Lost Star',
-        nav_collection:'Collection',title:'Book I — The Lost Star',release_label:'Release date:',release_date:'November 26, 2025',genre_label:'Genre:',genre:'Adventure, magic',langs_label:'Languages:',
-        plot:'In Moon’s sky, a star goes out. To relight it, Kiki must find Moon’s Breath and discover that courage starts with a stubborn little light.',
-        hook:'“Some secrets don’t shout: they shine. Kiki will find it before the world falls asleep.”',
-        review:'Read with my daughter: a sweet story full of magic and stunning illustrations. Kiki is adorable and the final message stays with you.',
+        page_title:'Book I — The Lost Star | Kiki Moon',meta_desc:'A star goes dark, and Kiki learns that courage begins with a stubborn little light.',cover_alt:'Kiki Moon — Book I — The Lost Star',
+        nav_collection:'Kiki Moon',title:'Book I — The Lost Star',release_label:'Release date:',release_date:'November 26, 2025',genre_label:'Genre:',genre:'Adventure, magic',langs_label:'Languages:',
+        plot:'In Moon’s sky, a star goes out. To relight it, Kiki must find Moon’s Breath and discover that courage starts with a stubborn little light.',hook:'“Some secrets don’t shout: they shine. Kiki will find it before the world falls asleep.”',
+        age_fact:'Recommended age',pages_fact:'Full-color pages',languages_fact:'Editions',back_series:'Keep exploring Kiki’s world.',back_series_cta:'Explore the series',
         buy:'Buy on Amazon',buy_now:'Buy now',trust:'Purchase and returns handled by Amazon.',fast_checkout:'Fast checkout on your country store.'
       },
       es:{
-        page_title:'Libro I — La Estrella Perdida | Kiki Moon',
-        meta_desc:'Una estrella se apaga y Kiki descubre que el valor nace de una pequeña luz terca.',
-        cover_alt:'Kiki Moon — Libro I — La Estrella Perdida',
-        nav_collection:'Colección',title:'Libro I — La Estrella Perdida',release_label:'Fecha de lanzamiento:',release_date:'26 de noviembre de 2025',genre_label:'Género:',genre:'Aventura, magia',langs_label:'Idiomas:',
-        plot:'En el cielo de Moon, una estrella se apaga. Para encenderla de nuevo, Kiki debe encontrar el Aliento de Moon y descubrir que el valor empieza con una pequeña luz terca.',
-        hook:'«Hay secretos que no gritan: brillan. Kiki lo encontrará antes de que el mundo se duerma.»',
-        review:'Leído con mi hija: una historia dulce, llena de magia e ilustraciones preciosas. Kiki es adorable y el mensaje final se queda contigo.',
+        page_title:'Libro I — La Estrella Perdida | Kiki Moon',meta_desc:'Una estrella se apaga y Kiki descubre que el valor nace de una pequeña luz terca.',cover_alt:'Kiki Moon — Libro I — La Estrella Perdida',
+        nav_collection:'Kiki Moon',title:'Libro I — La Estrella Perdida',release_label:'Fecha de lanzamiento:',release_date:'26 de noviembre de 2025',genre_label:'Género:',genre:'Aventura, magia',langs_label:'Idiomas:',
+        plot:'En el cielo de Moon, una estrella se apaga. Para encenderla de nuevo, Kiki debe encontrar el Aliento de Moon y descubrir que el valor empieza con una pequeña luz terca.',hook:'«Hay secretos que no gritan: brillan. Kiki lo encontrará antes de que el mundo se duerma.»',
+        age_fact:'Edad recomendada',pages_fact:'Páginas a color',languages_fact:'Ediciones',back_series:'Sigue explorando el mundo de Kiki.',back_series_cta:'Explora la saga',
         buy:'Comprar en Amazon',buy_now:'Comprar ahora',trust:'Compra y devoluciones gestionadas por Amazon.',fast_checkout:'Pago rápido en la tienda de tu país.'
       }
     }
   };
   </script>
-  <script defer src="../../js/book-page.js"></script>
+  <script defer src="../../js/book-page.js?v=2"></script>
 </body>
 </html>
