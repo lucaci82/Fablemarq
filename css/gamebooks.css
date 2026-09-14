@@ -66,22 +66,26 @@
   .gamebooks-hero__copy{text-align:center}
   .gamebooks-hero__lead{margin-inline:auto}
   .gamebooks-principles,.gamebooks-hero__actions{justify-content:center}
-  .gamebooks-hero__art{height:330px;max-width:480px;width:100%;margin:0 auto}
+  .gamebooks-hero__art{height:300px;max-width:440px;width:100%;margin:0 auto}
   .series-grid{grid-template-columns:1fr}
 }
 
 @media(max-width:620px){
-  .gamebooks-hero{padding-top:30px}
-  .gamebooks-hero h1{font-size:clamp(2.55rem,15vw,4.4rem)}
-  .gamebooks-hero__lead{font-size:.94rem}
-  .gamebooks-hero__actions{margin-top:20px}
-  .gamebooks-hero__cta{min-height:42px;font-size:.78rem}
-  .gamebooks-hero__art{height:285px}
-  .gb-cover{width:145px;padding:14px}
-  .gb-cover--crime{right:32px}
-  .gb-cover--survive{left:32px}
-  .gb-cover strong{font-size:1.12rem}
-  .gamebook-section{padding:46px 0}
+  .gamebooks-hero{padding:28px 0 24px}
+  .gamebooks-hero__grid{gap:18px}
+  .gamebooks-hero h1{font-size:clamp(2.45rem,14vw,4.1rem)}
+  .gamebooks-hero__lead{margin-top:16px;font-size:.92rem;line-height:1.5}
+  .gamebooks-principles{justify-content:center;gap:0;margin-top:14px}
+  .gamebooks-principles li{position:relative;padding:3px 7px;border:0;border-radius:0;background:transparent;color:#aeb5c1;font-size:.68rem;font-weight:850;white-space:nowrap}
+  .gamebooks-principles li+li::before{content:'·';margin-right:8px;color:#606875}
+  .gamebooks-hero__actions{justify-content:center;gap:8px;margin-top:16px}
+  .gamebooks-hero__cta{min-height:38px;padding:8px 12px;font-size:.74rem}
+  .gamebooks-hero__art{height:218px;max-width:330px;margin-top:0}
+  .gb-cover{width:116px;padding:10px;border-radius:9px;box-shadow:0 18px 38px rgba(0,0,0,.42)}
+  .gb-cover--crime{right:26px;top:5px;transform:rotate(5deg)}
+  .gb-cover--survive{left:26px;bottom:3px;transform:rotate(-5deg)}
+  .gb-cover strong{font-size:.92rem}
+  .gamebook-section{padding:42px 0}
   .gamebook-section__head{align-items:flex-start;flex-direction:column}
   .series-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:0 12px 8px 0;margin-right:-12px;scrollbar-width:none}
   .series-grid::-webkit-scrollbar{display:none}
@@ -92,8 +96,12 @@
 }
 
 @media(max-width:360px){
-  .gb-cover--crime{right:14px}
-  .gb-cover--survive{left:14px}
+  .gamebooks-principles{justify-content:flex-start;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}
+  .gamebooks-principles::-webkit-scrollbar{display:none}
+  .gamebooks-hero__art{height:200px;max-width:300px}
+  .gb-cover{width:106px}
+  .gb-cover--crime{right:16px}
+  .gb-cover--survive{left:16px}
 }
 
 @media(prefers-reduced-motion:reduce){.gb-cover{transform:none}}
