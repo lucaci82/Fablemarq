@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://fablemarq.com/</loc>
-    <lastmod>2026-09-13</lastmod>
-  </url>
-  <url>
-    <loc>https://fablemarq.com/kids/</loc>
-    <lastmod>2026-09-13</lastmod>
-  </url>
-  <url>
-    <loc>https://fablemarq.com/gamebooks/</loc>
-    <lastmod>2026-09-13</lastmod>
-  </url>
-  <url>
-    <loc>https://fablemarq.com/kikimooncollection/</loc>
-    <lastmod>2026-09-13</lastmod>
-  </url>
-  <url>
-    <loc>https://fablemarq.com/kikimooncollection/libro-1/</loc>
-    <lastmod>2026-09-13</lastmod>
-  </url>
+  <url><loc>https://fablemarq.com/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/kids/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/kikimooncollection/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/kikimooncollection/libro-1/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/l-accusato/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/72-ore-sottoterra/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/non-tornare-a-casa/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/la-stanza-chiusa/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/la-casa-dei-sussurri/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/protocollo-omega/</loc><lastmod>2026-09-15</lastmod></url>
+  <url><loc>https://fablemarq.com/gamebooks/sindaco-per-un-anno/</loc><lastmod>2026-09-15</lastmod></url>
 </urlset>
