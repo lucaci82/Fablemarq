@@ -3,42 +3,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Kiki Moon Collection — Fablemarq</title>
-  <meta name="description" content="Continua l'avventura: acquista il primo libro della saga Kiki Moon e scopri il prossimo capitolo in lavorazione.">
+  <title>Kiki Moon — Universo Fablemarq Kids</title>
+  <meta name="description" content="Entra nel mondo di Kiki Moon, il primo universo narrativo di Fablemarq Kids. Scopri La Stella Perduta e i prossimi capitoli della saga.">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <meta name="theme-color" content="#0b1222">
+  <meta name="theme-color" content="#10172a">
   <meta name="color-scheme" content="dark">
 
   <link rel="canonical" href="https://fablemarq.com/kikimooncollection/">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" as="image" href="../assets/it/cover1.webp" fetchpriority="high">
   <link rel="stylesheet" href="../css/styles.css">
-  <link rel="stylesheet" href="../css/collection.css">
+  <link rel="stylesheet" href="../css/collection.css?v=2">
 
-  <meta property="og:title" content="Kiki Moon Collection — Fablemarq">
-  <meta property="og:description" content="Scopri La Stella Perduta e il prossimo capitolo della saga Kiki Moon.">
+  <meta property="og:title" content="Kiki Moon — Fablemarq Kids">
+  <meta property="og:description" content="Un cielo pieno di misteri, magia, amicizia e storie illustrate da vivere insieme.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://fablemarq.com/kikimooncollection/">
   <meta property="og:image" content="https://fablemarq.com/assets/it/cover1.webp">
   <meta property="og:site_name" content="Fablemarq">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kiki Moon Collection — Fablemarq">
-  <meta name="twitter:description" content="La Stella Perduta e il prossimo capitolo della saga Kiki Moon.">
+  <meta name="twitter:title" content="Kiki Moon — Fablemarq Kids">
+  <meta name="twitter:description" content="Entra nel primo universo narrativo di Fablemarq Kids.">
   <meta name="twitter:image" content="https://fablemarq.com/assets/it/cover1.webp">
 
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"CollectionPage",
-    "name":"Kiki Moon Collection",
+    "name":"Kiki Moon",
     "url":"https://fablemarq.com/kikimooncollection/",
-    "description":"Libri illustrati della saga Kiki Moon.",
+    "description":"Illustrated book series from Fablemarq Kids.",
+    "isPartOf":{"@type":"CollectionPage","name":"Fablemarq Kids","url":"https://fablemarq.com/kids/"},
     "mainEntity":{
-      "@type":"Book",
-      "name":"Kiki Moon — La Stella Perduta",
-      "url":"https://fablemarq.com/kikimooncollection/libro-1/",
-      "image":"https://fablemarq.com/assets/it/cover1.webp",
-      "inLanguage":["it","en","es"]
+      "@type":"BookSeries",
+      "name":"Kiki Moon",
+      "url":"https://fablemarq.com/kikimooncollection/"
     }
   }
   </script>
@@ -52,7 +51,7 @@
     gtag('config', 'G-5N15LT4Y34', { send_page_view:true });
   </script>
 </head>
-<body class="collection-page">
+<body class="collection-page kiki-page">
   <a href="#main" class="skip-link">Salta al contenuto</a>
 
   <header>
@@ -60,7 +59,8 @@
       <a class="brand brand--reuse-title" href="../index.html" aria-label="Fablemarq home">
         <img src="../assets/title-card.png" alt="" aria-hidden="true" width="1183" height="513" decoding="async">
       </a>
-      <nav aria-label="Language selector">
+      <nav aria-label="Kiki Moon navigation">
+        <a class="nav-kids" href="../kids/" data-i18n="navKids">Kids</a>
         <div class="lang-switch" aria-label="Lingua">
           <button data-lang="en" type="button" aria-pressed="false">EN</button>
           <button data-lang="it" type="button" aria-pressed="true">IT</button>
@@ -70,48 +70,107 @@
     </div>
   </header>
 
-  <main id="main" class="container">
-    <section class="collection-hero" id="hero" aria-labelledby="collectionTitle">
-      <a id="coverLink" class="cover-link" href="libro-1/index.html#anteprima" aria-label="Scopri il Libro I">
-        <img id="heroCover" class="collection-cover" src="../assets/it/cover1.webp" alt="Kiki Moon — Libro I — La Stella Perduta" width="1000" height="1500" loading="eager" decoding="async" fetchpriority="high">
-      </a>
+  <main id="main">
+    <section class="kiki-hero" aria-labelledby="kikiUniverseTitle">
+      <div class="kiki-stars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div class="container kiki-hero__grid">
+        <div class="kiki-hero__copy">
+          <a class="kiki-breadcrumb nav-kids" href="../kids/" data-i18n="breadcrumb">Fablemarq Kids · Primo universo</a>
+          <p class="kiki-kicker" data-i18n="universeLabel">Universo narrativo</p>
+          <h1 id="kikiUniverseTitle">KIKI MOON</h1>
+          <p class="kiki-hero__lead" data-i18n="universeLead">Un cielo pieno di misteri, una luce che non vuole spegnersi e avventure in cui magia, coraggio e amicizia crescono insieme.</p>
+          <div class="kiki-hero__meta">
+            <span data-i18n="ageMeta">6–10 anni</span>
+            <span data-i18n="formatMeta">Libri illustrati a colori</span>
+            <span data-i18n="sharedMeta">Lettura condivisa</span>
+          </div>
+          <a class="kiki-scroll-link" href="#books" data-i18n="seeBooks">Scopri i libri</a>
+        </div>
 
-      <div class="collection-copy">
-        <h1 class="collection-title" id="collectionTitle">
-          <span class="line1" id="titleLine1">Kiki Moon — Libro I</span>
-          <span class="line2" id="titleLine2">La Stella Perduta</span>
-        </h1>
-        <p class="collection-hook" id="heroHook">Una stella si spegne. Ma la luce di Kiki è appena iniziata.</p>
-
-        <ul class="collection-benefits" id="benefits">
-          <li>Età 6–10 anni</li>
-          <li>80 pagine illustrate a colori</li>
-          <li>Ideale da leggere insieme</li>
-        </ul>
-
-        <a id="buyNow" class="amazon-btn" href="#" target="_blank" rel="noopener nofollow sponsored">
-          <span data-i18n="buy">Acquista su Amazon</span>
-        </a>
-        <p class="mini-trust"><span aria-hidden="true">🔒</span> <span id="buyMetaText">Acquisto e resi gestiti da Amazon.</span></p>
+        <div class="kiki-hero__art" aria-hidden="true">
+          <div class="kiki-moon-orb"></div>
+          <img id="heroCover" class="kiki-hero-cover kiki-hero-cover--one" src="../assets/it/cover1.webp" alt="" width="1000" height="1500" loading="eager" decoding="async" fetchpriority="high">
+          <img id="heroCover2" class="kiki-hero-cover kiki-hero-cover--two" src="../assets/it/cover2.webp" alt="" width="1000" height="1500" loading="lazy" decoding="async">
+        </div>
       </div>
     </section>
 
-    <h2 class="section-title" id="sectionTitle">Prossimo libro della saga</h2>
-    <ul class="collection-grid" id="gridBooks">
-      <li class="collection-card" data-book="b2" data-status="In lavorazione">
-        <img id="book2Cover" src="../assets/it/cover2.webp" alt="Libro II — Il Segreto di Snarfel" width="1000" height="1500" loading="lazy" decoding="async" fetchpriority="low">
-        <p class="caption" id="book2Caption">Libro II — Il Segreto di Snarfel</p>
-        <p class="meta" id="book2Meta">In lavorazione</p>
-      </li>
-    </ul>
+    <section class="kiki-world-intro" aria-labelledby="worldIntroTitle">
+      <div class="container kiki-world-intro__grid">
+        <p class="kiki-world-intro__label">KIKI MOON</p>
+        <div>
+          <h2 id="worldIntroTitle" data-i18n="worldTitle">Benvenuti a Moon.</h2>
+          <p data-i18n="worldText">Kiki Moon è una saga illustrata costruita come un mondo da ritrovare libro dopo libro: luoghi, personaggi e nuove avventure legati dalla stessa atmosfera luminosa e misteriosa.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="kiki-books" id="books" aria-labelledby="booksTitle">
+      <div class="container">
+        <p class="kiki-kicker" data-i18n="booksKicker">La saga</p>
+        <h2 id="booksTitle" class="kiki-section-title" data-i18n="booksTitle">I libri di Kiki Moon</h2>
+        <p class="kiki-section-intro" data-i18n="booksIntro">Il primo capitolo è disponibile. Il mondo continua a crescere.</p>
+
+        <div class="kiki-books-grid">
+          <article class="kiki-book kiki-book--available">
+            <a id="coverLink" class="kiki-book__cover" href="libro-1/index.html#anteprima" aria-label="Scopri il Libro I">
+              <img id="book1Cover" src="../assets/it/cover1.webp" alt="Kiki Moon — Libro I — La Stella Perduta" width="1000" height="1500" loading="lazy" decoding="async">
+            </a>
+            <div class="kiki-book__body">
+              <span class="kiki-book__eyebrow" data-i18n="book1Label">Libro I · Disponibile</span>
+              <h3><span id="titleLine2">La Stella Perduta</span></h3>
+              <p id="heroHook">Una stella si spegne. Ma la luce di Kiki è appena iniziata.</p>
+              <ul class="collection-benefits" id="benefits">
+                <li>Età 6–10 anni</li>
+                <li>80 pagine illustrate a colori</li>
+                <li>Ideale da leggere insieme</li>
+              </ul>
+              <div class="kiki-book__actions">
+                <a class="kiki-secondary-btn" href="libro-1/" id="book1Details" data-i18n="details">Scopri il libro</a>
+                <a id="buyNow" class="amazon-btn" href="#" target="_blank" rel="noopener nofollow sponsored"><span data-i18n="buy">Acquista su Amazon</span></a>
+              </div>
+              <p class="mini-trust"><span id="buyMetaText">Acquisto e resi gestiti da Amazon.</span></p>
+            </div>
+          </article>
+
+          <article class="kiki-book kiki-book--coming collection-card" data-book="b2" data-status="In lavorazione">
+            <div class="kiki-book__cover" aria-hidden="true">
+              <img id="book2Cover" src="../assets/it/cover2.webp" alt="Libro II — Il Segreto di Snarfel" width="1000" height="1500" loading="lazy" decoding="async" fetchpriority="low">
+            </div>
+            <div class="kiki-book__body">
+              <span class="kiki-book__eyebrow" data-i18n="book2Label">Libro II</span>
+              <h3 id="book2Caption">Il Segreto di Snarfel</h3>
+              <p data-i18n="book2Text">Il prossimo capitolo della saga è in lavorazione.</p>
+              <span class="kiki-status" id="book2Meta">In lavorazione</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="kiki-back-to-kids">
+      <div class="container kiki-back-to-kids__inner">
+        <div>
+          <span>FABLEMARQ KIDS</span>
+          <h2 data-i18n="backTitle">Kiki Moon è solo il primo mondo.</h2>
+          <p data-i18n="backText">Fablemarq Kids è pensato per ospitare nuove serie e nuovi universi, mantenendo una sola identità editoriale.</p>
+        </div>
+        <a class="kiki-secondary-btn nav-kids" href="../kids/" data-i18n="backCta">Torna a Fablemarq Kids</a>
+      </div>
+    </section>
   </main>
 
+  <footer class="kiki-footer">
+    <div class="container kiki-footer__row">
+      <span>FABLEMARQ KIDS · KIKI MOON</span>
+      <span data-i18n="footer">Kiki Moon — A Fablemarq Kids universe</span>
+    </div>
+  </footer>
+
   <div class="sticky-cta" id="stickyCta">
-    <a id="buyNowSticky" class="amazon-btn" href="#" target="_blank" rel="noopener nofollow sponsored">
-      <span data-i18n="buy">Acquista su Amazon</span>
-    </a>
+    <a id="buyNowSticky" class="amazon-btn" href="#" target="_blank" rel="noopener nofollow sponsored"><span data-i18n="buy">Acquista su Amazon</span></a>
   </div>
 
-  <script defer src="../js/collection.js"></script>
+  <script defer src="../js/collection.js?v=2"></script>
 </body>
 </html>
