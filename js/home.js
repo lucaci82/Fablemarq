@@ -1,8 +1,7 @@
 (() => {
   'use strict';
 
-  const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
-  const INTERNAL_SRC = new Set(['site','home','kids','gamebooks','collection','book','preview','hero','grid','b1','b2','b3']);
+  const core = window.FMCore;
   const I18N = {
     it:{
       pageTitle:'Fablemarq — Mondi narrativi, libri illustrati e Gamebooks',description:'Fablemarq è un marchio editoriale indipendente che crea mondi narrativi: libri illustrati per bambini e Gamebooks interattivi per adulti.',skip:'Salta al contenuto',navKids:'Kids',navGamebooks:'Gamebooks',
@@ -30,14 +29,9 @@
     }
   };
 
-  const normLang = value => { const s=String(value||'').toLowerCase(); if(s.startsWith('it')) return 'it'; if(s.startsWith('es')) return 'es'; return 'en'; };
-  const params = () => new URLSearchParams(location.search);
-  let lang = normLang(window.PREFERRED_LANG || params().get('lang') || localStorage.getItem('fm_lang') || localStorage.getItem('lang') || navigator.language || 'en');
+  let lang = core ? core.selectedLanguage() : (window.PREFERRED_LANG || 'en');
   let catalog = [];
-
-  function initAttribution(){const q=params();const raw=(q.get('src')||'').trim().toLowerCase();if(raw&&!INTERNAL_SRC.has(raw))localStorage.setItem('fm_src',raw);UTM_KEYS.forEach(key=>{const value=q.get(key);if(value)sessionStorage.setItem(key,value);});}
-  function trafficSource(){const raw=(params().get('src')||'').trim().toLowerCase();if(raw&&!INTERNAL_SRC.has(raw))return raw;return localStorage.getItem('fm_src')||'site';}
-  function track(name,extra){const ctx={page_path:location.pathname,lang,src:trafficSource()};UTM_KEYS.forEach(key=>{const value=params().get(key)||sessionStorage.getItem(key);if(value)ctx[key]=value;});try{window.gtag&&window.gtag('event',name,Object.assign(ctx,extra||{}));}catch(_){}}
+  const track = (name,extra={}) => core?.track(name,extra);
 
   function renderBookData(){
     if(!catalog.length)return;
@@ -48,17 +42,28 @@
   }
 
   function render(){
-    const t=I18N[lang]||I18N.en;document.documentElement.lang=lang;localStorage.setItem('lang',lang);document.title=t.pageTitle;
-    const desc=document.querySelector('meta[name="description"]');if(desc)desc.content=t.description;const skip=document.querySelector('.skip-link');if(skip)skip.textContent=t.skip;
+    const t=I18N[lang]||I18N.en;
+    core?.setLanguage(lang);
+    document.title=t.pageTitle;
+    const desc=document.querySelector('meta[name="description"]');if(desc)desc.content=t.description;
+    const skip=document.querySelector('.skip-link');if(skip)skip.textContent=t.skip;
     document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(Object.prototype.hasOwnProperty.call(t,key))el.textContent=t[key];});
     document.querySelectorAll('[data-kiki-cover]').forEach(img=>{const number=img.dataset.kikiCover==='2'?2:1;img.src=`assets/${lang}/cover${number}.webp`;if(img.getAttribute('alt'))img.alt=number===2?t.kiki2FullTitle:t.kikiFullTitle;});
     renderBookData();
-    const source=trafficSource();document.querySelectorAll('[data-internal]').forEach(el=>{const raw=el.dataset.baseHref||el.getAttribute('href');if(!el.dataset.baseHref)el.dataset.baseHref=raw;const url=new URL(raw,location.href);url.searchParams.set('lang',lang);if(source!=='site')url.searchParams.set('src',source);el.href=url.pathname+'?'+url.searchParams.toString()+url.hash;});
-    document.querySelectorAll('.lang-switch-home button[data-lang]').forEach(btn=>{const active=btn.dataset.lang===lang;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',String(active));});document.querySelectorAll('.lang-switch-home').forEach(el=>el.setAttribute('aria-label',t.language));
+    core?.applyInternalLinks(lang);
+    core?.syncLanguageSwitch(lang,'.lang-switch-home',t.language);
   }
 
-  async function loadCatalog(){try{const response=await fetch('data/gamebooks.json',{cache:'no-cache'});if(!response.ok)throw new Error('catalog');const data=await response.json();catalog=Array.isArray(data.books)?data.books:[];renderBookData();}catch(_) {}}
+  async function loadCatalog(){
+    try{const response=await fetch('data/gamebooks.json',{cache:'no-cache'});if(!response.ok)throw new Error('catalog');const data=await response.json();catalog=Array.isArray(data.books)?data.books:[];renderBookData();}
+    catch(_){}
+  }
 
-  document.addEventListener('click',event=>{const langButton=event.target.closest('.lang-switch-home button[data-lang]');if(langButton){const next=normLang(langButton.dataset.lang);if(next!==lang){lang=next;localStorage.setItem('fm_lang',lang);render();track('select_language',{language:lang});}return;}const world=event.target.closest('[data-world]');if(world)track('select_world',{world:world.dataset.world});const nav=event.target.closest('[data-nav]');if(nav)track('click_nav',{item:nav.dataset.nav});});
-  document.addEventListener('DOMContentLoaded',()=>{initAttribution();render();loadCatalog();track('view_home');});
+  document.addEventListener('click',event=>{
+    const langButton=event.target.closest('.lang-switch-home button[data-lang]');
+    if(langButton){const next=core?core.normLang(langButton.dataset.lang):langButton.dataset.lang;if(next!==lang){lang=next;render();track('select_language',{language:lang});}return;}
+    const world=event.target.closest('[data-world]');if(world)track('select_world',{world:world.dataset.world});
+    const nav=event.target.closest('[data-nav]');if(nav)track('click_nav',{item:nav.dataset.nav});
+  });
+  document.addEventListener('DOMContentLoaded',()=>{core?.initAttribution();render();loadCatalog();track('view_home');});
 })();
