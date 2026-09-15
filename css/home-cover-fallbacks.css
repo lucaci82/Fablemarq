@@ -1,5 +1,3 @@
-@import url("home-mobile-approved.css?v=1");
-
 /* Gamebooks covers shown on the homepage use the same verified artwork as the Gamebooks catalog. */
 .home-page .poster-mini--crime{background-image:url("../assets/gamebooks/crime-laccusato.avif")!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;filter:none!important;opacity:1!important}
 .home-page .poster-mini--survive{background-image:url("../assets/gamebooks/survive-72-ore-sottoterra.avif")!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;filter:none!important;opacity:1!important}
