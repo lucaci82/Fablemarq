@@ -2,9 +2,14 @@
   'use strict';
 
   const chunks = [
-    'assets/home/books-pair-med-01.b64',
-    'assets/home/books-pair-med-02.b64',
-    'assets/home/books-pair-med-03.b64'
+    'assets/home/collections-final-01.b64',
+    'assets/home/collections-final-02.b64',
+    'assets/home/collections-final-03.b64',
+    'assets/home/collections-final-04.b64',
+    'assets/home/collections-final-05.b64',
+    'assets/home/collections-final-06.b64',
+    'assets/home/collections-final-07.b64',
+    'assets/home/collections-final-08.b64'
   ];
 
   async function loadBooks() {
@@ -22,7 +27,7 @@
       img.onload = () => img.classList.add('is-ready');
       img.src = `data:image/webp;base64,${parts.join('')}`;
     } catch (error) {
-      console.error('Fablemarq book showcase failed to load', error);
+      console.error('Fablemarq collection artwork failed to load', error);
     }
   }
 
