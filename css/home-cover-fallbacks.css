@@ -4,3 +4,84 @@
 .home-page .poster-mini--crime::before,.home-page .poster-mini--survive::before,.home-page .poster-mini--crime::after,.home-page .poster-mini--survive::after{display:none!important}
 .ref-copy-note{display:none!important}
 @media(max-width:760px){html[lang="it"] .home-header-actions::before{content:"IT"!important}html[lang="en"] .home-header-actions::before{content:"EN"!important}html[lang="es"] .home-header-actions::before{content:"ES"!important}}
+
+/* Mobile-only refinement after real-device review. Desktop intentionally untouched. */
+@media (max-width:760px){
+  .home-page--cinematic .site-header{background:linear-gradient(180deg,rgba(2,5,8,.94),rgba(2,5,8,.68) 70%,rgba(2,5,8,0))!important}
+  .home-page--cinematic .site-header .nav{min-height:72px!important}
+  .home-page--cinematic .brand--reuse-title{width:172px!important;height:45px!important}
+  .home-page--cinematic .brand--reuse-title img{width:172px!important;filter:grayscale(1) brightness(2.15) contrast(1.06)!important;opacity:.98!important}
+  .home-header-actions::before{color:#f4efe6!important;font-size:.73rem!important}
+  .home-menu-toggle{color:#f4efe6!important}
+  .home-reference-hero .ref-copy-note{display:none!important}
+  .home-reference-hero{min-height:700px!important;padding-top:72px!important;background-size:auto 84%!important;background-position:57% 0!important;background-repeat:no-repeat!important;background-color:#02070b!important}
+  .home-reference-hero::before{background:linear-gradient(90deg,rgba(2,4,6,.78) 0%,rgba(2,4,6,.52) 42%,rgba(2,4,6,.08) 74%,rgba(2,4,6,.05) 100%)!important}
+  .home-reference-hero::after{background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.04) 43%,rgba(2,4,6,.48) 66%,rgba(2,5,8,.88) 83%,#02070b 100%)!important}
+  .home-reference-hero__inner{padding:252px 0 42px!important;align-items:flex-end!important}
+  .home-reference-hero__copy{max-width:440px!important}
+  .home-reference-hero .hero-kicker{margin-bottom:14px!important;font-size:.62rem!important;letter-spacing:.26em!important}
+  .home-reference-hero h1{max-width:11ch!important;font-size:clamp(2.72rem,10.9vw,3.58rem)!important;line-height:.97!important;letter-spacing:-.04em!important}
+  .home-reference-hero__lead{max-width:29ch!important;margin-top:17px!important;font-size:.95rem!important;line-height:1.5!important;color:#f3efe8!important}
+  .home-reference-hero__actions{width:min(100%,330px)!important;gap:10px!important;margin-top:24px!important}
+  .home-reference-hero .hero-btn{min-height:50px!important;padding:11px 16px!important;font-size:.72rem!important;letter-spacing:.045em!important}
+  .home-reference-hero .hero-btn--brand{background:#f0d39d!important;border-color:#f0d39d!important;color:#18120b!important;box-shadow:0 12px 30px rgba(205,166,96,.14)!important}
+  .home-reference-hero .hero-btn--brand-ghost{background:rgba(2,5,8,.34)!important;border:1.25px solid rgba(248,245,239,.82)!important;color:#fff!important}
+  .home-reference-worlds{padding:36px 0 42px!important}
+  .home-reference-worlds .section-heading{font-size:clamp(2rem,8.2vw,2.7rem)!important;line-height:1!important}
+  .home-reference-worlds .world-stage-grid{gap:14px!important;margin-top:23px!important}
+  .home-reference-worlds .world-stage{min-height:338px!important;border-radius:6px!important;border-color:rgba(255,255,255,.14)!important}
+  .home-reference-worlds .world-stage::after{background:linear-gradient(90deg,rgba(3,6,10,.89) 0%,rgba(3,6,10,.68) 46%,rgba(3,6,10,.16) 72%,rgba(3,6,10,.26) 100%),linear-gradient(180deg,rgba(3,6,10,.02),rgba(3,6,10,.38) 74%,#03070a 100%)!important}
+  .home-reference-worlds .world-stage__art::before{width:210px!important;right:-12px!important;top:10px!important}
+  .home-reference-worlds .world-stage--kids .world-stage__art::after{width:170px!important;right:8px!important;top:32px!important}
+  .home-reference-worlds .world-stage--kids .world-stage__cover{width:142px!important;right:9px!important;top:37px!important;opacity:1!important}
+  .home-reference-worlds .world-stage--gamebooks .world-stage__cover--crime{width:132px!important;right:8px!important;top:34px!important;opacity:1!important}
+  .home-reference-worlds .world-stage--gamebooks .world-stage__cover--survive{width:116px!important;right:87px!important;top:67px!important;opacity:1!important}
+  .home-reference-worlds .world-stage__copy{width:63%!important;padding:21px!important}
+  .home-reference-worlds .world-stage__eyebrow{font-size:.61rem!important;letter-spacing:.14em!important}
+  .home-reference-worlds .world-stage__copy h3{font-size:clamp(1.78rem,7.6vw,2.35rem)!important;line-height:.98!important;max-width:11.5ch!important}
+  .home-reference-worlds .world-stage__copy>p:not(.world-stage__series){margin:10px 0 13px!important;font-size:.78rem!important;line-height:1.48!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important;overflow:hidden!important}
+  .world-stage__series{font-size:.59rem!important;line-height:1.35!important;margin-top:11px!important}
+  .home-reference-worlds .world-stage__cta{min-height:42px!important;padding:9px 13px!important;font-size:.66rem!important}
+  .home-page--cinematic .home-reference-worlds .world-stage__cover{filter:none!important;opacity:1!important}
+  .home-reference-featured{padding:40px 0 44px!important}
+  .home-reference-featured .section-heading{font-size:clamp(2.08rem,8.5vw,2.65rem)!important;line-height:1!important}
+  .home-reference-featured .featured-grid{gap:11px!important;margin-top:22px!important;padding-bottom:12px!important}
+  .home-reference-featured .featured-book{flex:0 0 min(88vw,330px)!important;grid-template-columns:118px minmax(0,1fr)!important;min-height:220px!important;border-color:rgba(255,255,255,.11)!important;background:#050a0e!important}
+  .home-reference-featured .featured-book__cover{padding:10px!important}
+  .home-reference-featured .featured-book__cover img{max-height:200px!important}
+  .home-reference-featured .featured-book__body{padding:15px 14px!important}
+  .home-reference-featured .featured-book__meta span,.home-reference-featured .featured-book__meta b{font-size:.54rem!important}
+  .home-reference-featured .featured-book h3{font-size:1.2rem!important;line-height:1.08!important}
+  .home-reference-featured .featured-book__body>p{font-size:.72rem!important;line-height:1.42!important;display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;overflow:hidden!important}
+  .home-reference-featured .featured-book__link{font-size:.64rem!important;min-height:38px!important;display:inline-flex!important;align-items:center!important}
+  .brand-manifesto{padding:46px 0 42px!important;background-image:linear-gradient(90deg,rgba(4,5,5,.76) 0%,rgba(4,5,5,.59) 50%,rgba(4,5,5,.31) 100%),url("../assets/home/home-hero.avif")!important;background-position:61% center!important}
+  .brand-manifesto .manifesto-heading{max-width:12.5ch!important;font-size:clamp(1.95rem,7.5vw,2.55rem)!important;line-height:.98!important;letter-spacing:-.03em!important;color:#ecd09a!important}
+  .brand-manifesto__intro{max-width:34ch!important;margin-top:14px!important;font-size:.79rem!important;line-height:1.5!important;color:#f0ece4!important}
+  .brand-values{gap:16px 18px!important;margin-top:28px!important}
+  .brand-value{padding-top:12px!important;border-top-color:rgba(218,182,116,.46)!important}
+  .brand-value::before{margin-bottom:10px!important;font-size:1.3rem!important}
+  .brand-value__num{font-size:.65rem!important}
+  .brand-value h3{font-size:.86rem!important;line-height:1.2!important}
+  .brand-value p{font-size:.71rem!important;line-height:1.42!important;color:#ddd9d2!important}
+}
+@media (max-width:430px){
+  .home-page--cinematic .brand--reuse-title{width:160px!important;height:43px!important}
+  .home-page--cinematic .brand--reuse-title img{width:160px!important}
+  .home-reference-hero{min-height:680px!important;background-size:auto 82%!important;background-position:57% 0!important}
+  .home-reference-hero__inner{padding:236px 0 38px!important}
+  .home-reference-hero h1{font-size:clamp(2.58rem,10.8vw,3.25rem)!important;max-width:11.2ch!important}
+  .home-reference-worlds .world-stage{min-height:326px!important}
+  .home-reference-worlds .world-stage__copy{width:64%!important;padding:19px!important}
+  .home-reference-featured .featured-book{flex-basis:86vw!important}
+}
+@media (max-width:350px){
+  .home-reference-hero{min-height:660px!important;background-size:auto 80%!important;background-position:58% 0!important}
+  .home-reference-hero__inner{padding:222px 0 34px!important}
+  .home-reference-hero h1{font-size:2.42rem!important;max-width:11.4ch!important}
+  .home-reference-hero__lead{font-size:.9rem!important}
+  .home-reference-worlds .world-stage{min-height:316px!important}
+  .home-reference-worlds .world-stage__copy{width:66%!important;padding:17px!important}
+  .home-reference-worlds .world-stage__copy h3{font-size:1.72rem!important}
+  .home-reference-featured .featured-book{grid-template-columns:108px minmax(0,1fr)!important;flex-basis:90vw!important}
+  .brand-values{grid-template-columns:1fr 1fr!important}
+}
