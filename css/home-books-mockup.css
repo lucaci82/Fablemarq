@@ -1,4 +1,6 @@
-/* FABLEMARQ home — final collection artwork with invisible clickable book hotspots. */
+/* FABLEMARQ home — final collection artwork with invisible clickable book hotspots.
+   Italian uses the artwork as supplied. EN/ES keep the same artwork and replace
+   the embedded Italian copy with localized HTML/CSS overlays. */
 .simple-worlds--mockup{
   position:relative;
   overflow:hidden;
@@ -35,6 +37,7 @@
   margin:0 auto;
   overflow:hidden;
   background:#031018;
+  isolation:isolate;
 }
 .home-books-stage::after{content:none!important}
 .home-books-image{
@@ -49,7 +52,7 @@
 .home-books-image.is-ready{opacity:1}
 .home-book-hotspot{
   position:absolute;
-  z-index:3;
+  z-index:4;
   top:10.2%;
   bottom:5.4%;
   display:block;
@@ -68,11 +71,145 @@
 .home-book-hotspot:focus-visible{
   box-shadow:inset 0 0 0 2px #e5be76;
 }
+
+/* -------------------- LOCALIZED ARTWORK COPY --------------------
+   The brand names KIDS / GAMEBOOKS remain unchanged in every language.
+   Only copy that is actually linguistic is replaced. */
+.home-books-stage.lang-en::before,
+.home-books-stage.lang-es::before{
+  position:absolute;
+  z-index:3;
+  top:2.15%;
+  left:25.5%;
+  right:25.5%;
+  height:7.2%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 2%;
+  background:linear-gradient(90deg,rgba(3,16,24,0),#031018 10%,#031018 90%,rgba(3,16,24,0));
+  color:#d8a75a;
+  font-family:ui-serif,Georgia,"Times New Roman",serif;
+  font-size:clamp(.72rem,2.15vw,1.65rem);
+  font-weight:700;
+  line-height:1;
+  letter-spacing:.13em;
+  text-align:center;
+  white-space:nowrap;
+  text-transform:uppercase;
+  text-shadow:0 2px 10px rgba(0,0,0,.7);
+  pointer-events:none;
+}
+.home-books-stage.lang-en::before{content:"CHOOSE YOUR COLLECTION"}
+.home-books-stage.lang-es::before{content:"ELIGE TU COLECCIÓN"}
+
+.home-books-stage.lang-en .home-book-hotspot::before,
+.home-books-stage.lang-es .home-book-hotspot::before{
+  position:absolute;
+  z-index:1;
+  left:11%;
+  right:8%;
+  top:20.2%;
+  min-height:14.5%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1.3% 3%;
+  color:#f7f3ec;
+  background:radial-gradient(ellipse at center,rgba(4,8,12,.94) 0%,rgba(4,8,12,.82) 58%,rgba(4,8,12,0) 100%);
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:clamp(.58rem,1.75vw,1.28rem);
+  font-weight:500;
+  line-height:1.24;
+  text-align:center;
+  white-space:pre-line;
+  text-shadow:0 2px 8px rgba(0,0,0,.95);
+  pointer-events:none;
+}
+.home-books-stage.lang-en .home-book-hotspot--kids::before{content:"Stories to dream of\A a bigger future."}
+.home-books-stage.lang-en .home-book-hotspot--gamebooks::before{content:"Stories that put you\A at the center."}
+.home-books-stage.lang-es .home-book-hotspot--kids::before{content:"Historias para soñar\A un futuro más grande."}
+.home-books-stage.lang-es .home-book-hotspot--gamebooks::before{content:"Historias que te ponen\A en el centro."}
+
+.home-books-stage.lang-en .home-book-hotspot::after,
+.home-books-stage.lang-es .home-book-hotspot::after{
+  position:absolute;
+  z-index:2;
+  left:13.5%;
+  right:8.5%;
+  bottom:4.9%;
+  min-height:8.8%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 5%;
+  border:1.5px solid #d3a04d;
+  border-radius:999px;
+  background:rgba(3,8,12,.97);
+  color:#e0b05d;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:clamp(.48rem,1.28vw,.96rem);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.025em;
+  text-align:center;
+  white-space:nowrap;
+  text-transform:uppercase;
+  box-shadow:0 2px 10px rgba(0,0,0,.32),inset 0 0 0 1px rgba(255,255,255,.02);
+  pointer-events:none;
+}
+.home-books-stage.lang-en .home-book-hotspot--kids::after{content:"DISCOVER KIDS   →"}
+.home-books-stage.lang-en .home-book-hotspot--gamebooks::after{content:"DISCOVER GAMEBOOKS   →"}
+.home-books-stage.lang-es .home-book-hotspot--kids::after{content:"DESCUBRE KIDS   →"}
+.home-books-stage.lang-es .home-book-hotspot--gamebooks::after{content:"DESCUBRE GAMEBOOKS   →"}
+
 @media(max-width:760px){
   .simple-worlds--mockup>.container{max-width:none}
   .home-books-stage{width:100%}
   .home-book-hotspot{top:10%;bottom:5%}
   .home-book-hotspot--kids{left:3.8%;width:45.4%}
   .home-book-hotspot--gamebooks{right:2.7%;width:44.8%}
+  .home-books-stage.lang-en::before,
+  .home-books-stage.lang-es::before{
+    top:2.1%;
+    left:23%;
+    right:23%;
+    font-size:clamp(.62rem,3.45vw,1.2rem);
+    letter-spacing:.08em;
+  }
+  .home-books-stage.lang-en .home-book-hotspot::before,
+  .home-books-stage.lang-es .home-book-hotspot::before{
+    left:8%;
+    right:5%;
+    top:19.8%;
+    font-size:clamp(.50rem,2.85vw,.94rem);
+    line-height:1.18;
+  }
+  .home-books-stage.lang-en .home-book-hotspot::after,
+  .home-books-stage.lang-es .home-book-hotspot::after{
+    left:10%;
+    right:5%;
+    bottom:4.5%;
+    min-height:9.2%;
+    padding-inline:3%;
+    font-size:clamp(.38rem,2.05vw,.70rem);
+  }
+}
+@media(max-width:359px){
+  .home-books-stage.lang-en::before,
+  .home-books-stage.lang-es::before{
+    left:21%;
+    right:21%;
+    font-size:.58rem;
+    letter-spacing:.055em;
+  }
+  .home-books-stage.lang-en .home-book-hotspot::before,
+  .home-books-stage.lang-es .home-book-hotspot::before{
+    font-size:.47rem;
+  }
+  .home-books-stage.lang-en .home-book-hotspot::after,
+  .home-books-stage.lang-es .home-book-hotspot::after{
+    font-size:.35rem;
+  }
 }
 @media(prefers-reduced-motion:reduce){.home-books-image{transition:none}}
