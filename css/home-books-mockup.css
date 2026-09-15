@@ -1,95 +1,74 @@
-/* FABLEMARQ home — real book mockup showcase. */
+/* FABLEMARQ home — final collection artwork with invisible clickable book hotspots. */
 .simple-worlds--mockup{
   position:relative;
   overflow:hidden;
-  padding:54px 0 52px;
-  background:
-    radial-gradient(ellipse at 50% 94%,rgba(165,110,49,.20),transparent 38%),
-    linear-gradient(180deg,#031018 0%,#041018 62%,#02080d 100%);
+  padding:0;
+  background:#031018;
 }
-.simple-worlds--mockup .container{position:relative;z-index:1}
-.simple-section-title--mockup{
-  display:flex!important;
-  width:100%!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:20px!important;
-  margin:0 0 24px!important;
+.simple-worlds--mockup>.container{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  padding:0!important;
 }
-.simple-section-title--mockup h2{
-  flex:0 0 auto!important;
-  margin:0!important;
-  color:#d6a24a!important;
-  font-family:ui-serif,Georgia,"Times New Roman",serif!important;
-  font-size:clamp(1.45rem,2.3vw,2rem)!important;
-  font-weight:700!important;
-  line-height:1!important;
-  letter-spacing:.16em!important;
-  white-space:nowrap!important;
-  text-transform:uppercase!important;
-  text-shadow:0 2px 14px rgba(0,0,0,.55)!important;
-}
-.simple-section-title--mockup>span{
-  display:block!important;
-  flex:1 1 0!important;
-  max-width:110px!important;
-  min-width:28px!important;
+.home-books-sr-title{
+  position:absolute!important;
+  width:1px!important;
   height:1px!important;
-  background:linear-gradient(90deg,transparent,rgba(214,162,74,.95))!important;
-}
-.simple-section-title--mockup>span:last-child{
-  background:linear-gradient(90deg,rgba(214,162,74,.95),transparent)!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
 }
 .home-books-stage{
   position:relative;
-  width:min(100%,760px);
-  aspect-ratio:600/380;
+  width:100%;
+  aspect-ratio:1000/811;
   margin:0 auto;
+  overflow:hidden;
+  background:#031018;
 }
-.home-books-stage::after{
-  content:"";
-  position:absolute;
-  left:4%;right:4%;bottom:1.5%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(214,162,74,.22),transparent);
-  pointer-events:none;
-}
+.home-books-stage::after{content:none!important}
 .home-books-image{
   display:block;
   width:100%;
   height:100%;
-  object-fit:contain;
+  object-fit:cover;
   opacity:0;
-  filter:drop-shadow(0 22px 26px rgba(0,0,0,.52));
-  transition:opacity .22s ease;
+  filter:none;
+  transition:opacity .2s ease;
 }
 .home-books-image.is-ready{opacity:1}
 .home-book-hotspot{
   position:absolute;
-  top:0;
-  bottom:0;
   z-index:3;
-  border-radius:4px;
+  top:10.2%;
+  bottom:5.4%;
+  display:block;
+  border-radius:8px;
   outline:none;
+  background:transparent;
 }
-.home-book-hotspot--kids{left:0;width:50%}
-.home-book-hotspot--gamebooks{right:0;width:50%}
-.home-book-hotspot:focus-visible{box-shadow:inset 0 0 0 2px #e5be76}
+.home-book-hotspot--kids{
+  left:4.2%;
+  width:45.0%;
+}
+.home-book-hotspot--gamebooks{
+  right:3.0%;
+  width:44.8%;
+}
+.home-book-hotspot:focus-visible{
+  box-shadow:inset 0 0 0 2px #e5be76;
+}
 @media(max-width:760px){
-  .simple-worlds--mockup{padding:44px 0 34px}
-  .simple-worlds--mockup>.container{padding-inline:14px!important}
-  .simple-section-title--mockup{gap:10px!important;margin-bottom:14px!important}
-  .simple-section-title--mockup h2{
-    font-size:clamp(1.16rem,5.25vw,1.43rem)!important;
-    letter-spacing:.105em!important;
-  }
-  .simple-section-title--mockup>span{min-width:18px!important;max-width:none!important}
-  .home-books-stage{width:100%;max-width:620px}
-  .home-books-image{filter:drop-shadow(0 16px 20px rgba(0,0,0,.48))}
-}
-@media(max-width:359px){
-  .simple-worlds--mockup>.container{padding-inline:10px!important}
-  .simple-section-title--mockup{gap:7px!important}
-  .simple-section-title--mockup h2{font-size:1.02rem!important;letter-spacing:.075em!important}
-  .simple-section-title--mockup>span{min-width:12px!important}
+  .simple-worlds--mockup>.container{max-width:none}
+  .home-books-stage{width:100%}
+  .home-book-hotspot{top:10%;bottom:5%}
+  .home-book-hotspot--kids{left:3.8%;width:45.4%}
+  .home-book-hotspot--gamebooks{right:2.7%;width:44.8%}
 }
 @media(prefers-reduced-motion:reduce){.home-books-image{transition:none}}
