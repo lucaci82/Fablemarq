@@ -2,4 +2,5 @@
 .home-page .poster-mini--crime{background-image:url("../assets/gamebooks/crime-laccusato.avif")!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;filter:none!important;opacity:1!important}
 .home-page .poster-mini--survive{background-image:url("../assets/gamebooks/survive-72-ore-sottoterra.avif")!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;filter:none!important;opacity:1!important}
 .home-page .poster-mini--crime::before,.home-page .poster-mini--survive::before,.home-page .poster-mini--crime::after,.home-page .poster-mini--survive::after{display:none!important}
+.ref-copy-note{display:none!important}
 @media(max-width:760px){html[lang="it"] .home-header-actions::before{content:"IT"!important}html[lang="en"] .home-header-actions::before{content:"EN"!important}html[lang="es"] .home-header-actions::before{content:"ES"!important}}
