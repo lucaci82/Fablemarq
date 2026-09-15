@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/home-cover-fallbacks.css">
   <link rel="stylesheet" href="css/home-refresh.css?v=1">
   <link rel="stylesheet" href="css/home-cinematic.css?v=1">
+  <link rel="stylesheet" href="css/home-reference.css?v=1">
   <meta property="og:title" content="Fablemarq — Storie che non restano sulla pagina">
   <meta property="og:description" content="Mondi da immaginare. Storie da scegliere. Esperienze da ricordare. Scopri Fablemarq Kids e Fablemarq Gamebooks.">
   <meta property="og:type" content="website">
@@ -37,34 +38,52 @@
 <header class="site-header">
   <div class="container nav">
     <a class="brand brand--reuse-title" href="./" aria-label="Fablemarq home"><img src="assets/title-card.png" alt="" aria-hidden="true" width="1183" height="513" decoding="async"></a>
-    <nav aria-label="Main navigation"><a href="kids/" data-internal data-nav="kids" data-i18n="navKids">Kids</a><a href="gamebooks/" data-internal data-nav="gamebooks" data-i18n="navGamebooks">Gamebooks</a></nav>
-    <div class="lang-switch-home header-lang" aria-label="Lingua"><button type="button" data-lang="it" aria-pressed="true">IT</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="es" aria-pressed="false">ES</button></div>
+    <nav class="home-desktop-nav" aria-label="Main navigation">
+      <a href="./" aria-current="page" data-i18n="navHome">Home</a>
+      <a href="gamebooks/" data-internal data-nav="gamebooks" data-i18n="navGamebooks">Gamebooks</a>
+      <a href="kids/" data-internal data-nav="kids" data-i18n="navKids">Kids</a>
+      <a href="#fablemarq" data-i18n="about">Chi siamo</a>
+    </nav>
+    <div class="home-header-actions">
+      <div class="lang-switch-home header-lang" aria-label="Lingua"><button type="button" data-lang="it" aria-pressed="true">IT</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="es" aria-pressed="false">ES</button></div>
+      <button class="home-menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="homeMenu"><span></span><span></span><span></span></button>
+    </div>
+    <div id="homeMenu" class="home-mobile-menu" aria-hidden="true">
+      <a href="./" aria-current="page" data-i18n="navHome">Home</a>
+      <a href="gamebooks/" data-internal data-nav="gamebooks" data-i18n="navGamebooks">Gamebooks</a>
+      <a href="kids/" data-internal data-nav="kids" data-i18n="navKids">Kids</a>
+      <a href="#fablemarq" data-i18n="about">Chi siamo</a>
+      <div class="lang-switch-home" aria-label="Lingua"><button type="button" data-lang="it" aria-pressed="true">IT</button><button type="button" data-lang="en" aria-pressed="false">EN</button><button type="button" data-lang="es" aria-pressed="false">ES</button></div>
+    </div>
   </div>
 </header>
 
 <main id="main">
-  <section class="home-cinematic-hero" aria-labelledby="homeTagline">
-    <div class="container home-cinematic-hero__grid">
-      <div class="home-cinematic-hero__copy">
+  <section class="home-cinematic-hero home-reference-hero" aria-labelledby="homeTagline">
+    <div class="home-reference-hero__scene" aria-hidden="true">
+      <span class="ref-room-wall"></span>
+      <span class="ref-door"></span>
+      <span class="ref-table"></span>
+      <span class="ref-book"></span>
+      <span class="ref-book ref-book--two"></span>
+      <span class="ref-compass"></span>
+      <span class="ref-copy-note" data-i18n="sceneNote">Storie. Mondi. Scelte.</span>
+    </div>
+    <div class="container home-reference-hero__inner">
+      <div class="home-reference-hero__copy">
         <span class="fm-index">FM / MASTER BRAND</span>
         <p class="hero-kicker" data-i18n="heroKicker">Fablemarq · Editore indipendente</p>
-        <h1 id="homeTagline" data-i18n="tagline">Storie che non restano sulla pagina.</h1>
-        <p class="home-cinematic-hero__lead" data-i18n="heroSub">Mondi da immaginare. Storie da scegliere. Esperienze da ricordare.</p>
-        <div class="home-cinematic-hero__actions">
-          <a class="hero-btn hero-btn--brand" href="#fablemarq" data-i18n="heroPrimary">Scopri Fablemarq</a>
-          <a class="hero-btn hero-btn--brand-ghost" href="#worlds" data-i18n="heroSecondary">Esplora i nostri mondi</a>
+        <h1 id="homeTagline"><span class="hero-title-main" data-i18n="heroTitleMain">Storie che non restano</span><em class="hero-title-accent" data-i18n="heroTitleAccent">sulla pagina.</em></h1>
+        <p class="home-reference-hero__lead" data-i18n="heroSub">Mondi da immaginare. Storie da scegliere. Esperienze da ricordare.</p>
+        <div class="home-reference-hero__actions">
+          <a class="hero-btn hero-btn--brand" href="#worlds" data-i18n="heroPrimary">Scopri i mondi</a>
+          <a class="hero-btn hero-btn--brand-ghost" href="#fablemarq" data-i18n="heroSecondary">Scopri Fablemarq</a>
         </div>
-      </div>
-      <div class="home-threshold" aria-hidden="true">
-        <span class="home-threshold__orbit"></span>
-        <span class="home-threshold__frame"></span>
-        <span class="home-threshold__light"></span>
-        <span class="home-threshold__book"></span>
       </div>
     </div>
   </section>
 
-  <section class="home-worlds-cinematic" id="worlds" aria-labelledby="worldsTitle">
+  <section class="home-worlds-cinematic home-reference-worlds" id="worlds" aria-labelledby="worldsTitle">
     <div class="container">
       <p class="section-kicker" data-i18n="chooseKicker">I mondi Fablemarq</p>
       <h2 class="section-heading" id="worldsTitle" data-i18n="chooseTitle">Un marchio. Due modi di entrare nella storia.</h2>
@@ -100,7 +119,7 @@
     </div>
   </section>
 
-  <section class="home-featured-cinematic" aria-labelledby="featuredTitle">
+  <section class="home-featured-cinematic home-reference-featured" aria-labelledby="featuredTitle">
     <div class="container">
       <p class="section-kicker" data-i18n="featuredKicker">Opere selezionate</p>
       <h2 class="section-heading" id="featuredTitle" data-i18n="featuredTitle">Tre storie. Tre modi di essere Fablemarq.</h2>
@@ -157,6 +176,6 @@
     <p class="footer-editorial__note" data-i18n="footer">Fablemarq — Independent publishing studio</p>
   </div>
 </footer>
-<script defer src="js/home.js?v=5"></script>
+<script defer src="js/home.js?v=6"></script>
 </body>
 </html>
