@@ -33,6 +33,55 @@
   let catalog = [];
   const track = (name,extra={}) => core?.track(name,extra);
 
+  function installEntryExperience(){
+    const heroCopy=document.querySelector('.home-reference-hero__copy');
+    if(heroCopy&&!heroCopy.querySelector('.home-reference-hero__audience')){
+      const audience=document.createElement('p');
+      audience.className='home-reference-hero__audience';
+      audience.innerHTML='<span data-audience-lang="it">Libri illustrati per bambini · Gamebooks interattivi per adulti</span><span data-audience-lang="en">Illustrated books for children · Interactive Gamebooks for adults</span><span data-audience-lang="es">Libros ilustrados para niños · Gamebooks interactivos para adultos</span>';
+      const lead=heroCopy.querySelector('.home-reference-hero__lead');
+      heroCopy.insertBefore(audience,lead||heroCopy.firstChild);
+    }
+
+    if(!document.querySelector('[data-fm-entry]')){
+      const entry=document.createElement('div');
+      entry.className='fm-entry';
+      entry.setAttribute('data-fm-entry','');
+      entry.setAttribute('aria-hidden','true');
+      entry.hidden=true;
+      entry.innerHTML='<div class="fm-entry__inner"><img class="fm-entry__logo" src="assets/title-card.png" alt="" width="1183" height="513" decoding="async"><span class="fm-entry__line"></span></div>';
+      document.body.prepend(entry);
+    }
+  }
+
+  function startEntryExperience(){
+    const entry=document.querySelector('[data-fm-entry]');
+    if(!entry)return;
+    const reduceMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    let seen=false;
+    try{seen=sessionStorage.getItem('fm_entry_seen_v1')==='1';}catch(_){}
+    if(reduceMotion||seen){entry.hidden=true;return;}
+
+    let closed=false;
+    let hideTimer;
+    const close=()=>{
+      if(closed)return;
+      closed=true;
+      clearTimeout(hideTimer);
+      entry.classList.remove('is-active');
+      document.body.classList.remove('fm-entry-lock');
+      window.setTimeout(()=>{entry.hidden=true;},340);
+    };
+
+    try{sessionStorage.setItem('fm_entry_seen_v1','1');}catch(_){}
+    document.body.classList.add('fm-entry-lock');
+    entry.hidden=false;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>entry.classList.add('is-active')));
+    hideTimer=window.setTimeout(close,1450);
+    entry.addEventListener('pointerdown',close,{once:true});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'||event.key==='Enter'||event.key===' ')close();},{once:true});
+  }
+
   function setMenu(open){
     const toggle=document.querySelector('.home-menu-toggle');
     const menu=document.getElementById('homeMenu');
@@ -67,6 +116,9 @@
     try{const response=await fetch('data/gamebooks.json',{cache:'no-cache'});if(!response.ok)throw new Error('catalog');const data=await response.json();catalog=Array.isArray(data.books)?data.books:[];renderBookData();}
     catch(_){}
   }
+
+  installEntryExperience();
+  startEntryExperience();
 
   document.addEventListener('click',event=>{
     const menuToggle=event.target.closest('.home-menu-toggle');
