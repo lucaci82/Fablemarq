@@ -25,8 +25,8 @@
 .simple-section-title h2{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.36em;text-transform:uppercase;white-space:nowrap}
 .simple-world-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .simple-world-card{position:relative;min-height:480px;overflow:hidden;border:1px solid rgba(229,190,118,.78);border-radius:12px;text-decoration:none;background-color:#081017;background-size:cover;background-position:center 18%;box-shadow:0 20px 50px rgba(0,0,0,.34);isolation:isolate}
-.simple-world-card--kids{background-image:linear-gradient(180deg,rgba(2,5,8,.02) 0%,rgba(2,7,12,.05) 48%,rgba(2,8,14,.9) 75%,#031018 100%),url('../assets/it/cover1.webp')}
-.simple-world-card--gamebooks{background-image:linear-gradient(180deg,rgba(2,5,8,.02) 0%,rgba(8,3,4,.07) 48%,rgba(4,5,8,.9) 75%,#05070b 100%),url('../assets/gamebooks/crime-laccusato.avif')}
+.simple-world-card--kids{background-image:linear-gradient(180deg,rgba(2,5,8,.02) 0%,rgba(2,7,12,.05) 48%,rgba(2,8,14,.9) 75%,#031018 100%),url('../assets/home/fablemarq-kids-world.avif')}
+.simple-world-card--gamebooks{background-image:linear-gradient(180deg,rgba(2,5,8,.02) 0%,rgba(8,3,4,.07) 48%,rgba(4,5,8,.9) 75%,#05070b 100%),url('../assets/home/fablemarq-gamebooks-world.avif')}
 .simple-world-card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,transparent 42%,rgba(2,5,8,.26) 58%,rgba(2,5,8,.95) 82%)}
 .simple-world-card__copy{position:absolute;left:0;right:0;bottom:0;padding:30px 28px 24px;text-align:center}
 .simple-world-card h3{margin:0;color:#f5ead8;font-family:ui-serif,Georgia,'Times New Roman',serif;font-size:clamp(2.2rem,4vw,4rem);line-height:.95;text-transform:uppercase}
@@ -53,48 +53,69 @@
 .simple-footer .lang-switch-home{display:flex;gap:4px}.simple-footer .lang-switch-home button{min-width:30px;min-height:30px;background:transparent;border:0;color:#8f969f}.simple-footer .lang-switch-home button[aria-pressed='true']{color:#e4c27e}
 
 @media(max-width:760px){
-  .home-page--simple .site-header .nav{min-height:76px;display:flex;justify-content:space-between}
+  .home-page--simple .site-header .nav{min-height:76px;display:flex;justify-content:space-between;padding-inline:18px}
   .home-page--simple .brand--reuse-title{width:205px!important;height:50px!important}
   .home-page--simple .brand--reuse-title img{width:205px!important}
   .home-page--simple .home-desktop-nav,.home-page--simple .header-lang{display:none!important}
   .home-page--simple .home-header-actions::before{display:none!important}
-  .home-page--simple .home-menu-toggle{display:block!important}
-  .simple-hero{min-height:690px;background-size:auto 100%;background-position:56% center}
-  .simple-hero::before{background:linear-gradient(90deg,rgba(1,3,5,.86) 0%,rgba(1,3,5,.63) 45%,rgba(1,3,5,.08) 76%),linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.02) 58%,rgba(1,5,8,.62) 100%)}
+  .home-page--simple .home-menu-toggle{display:block!important;margin-right:-4px}
+  .simple-hero__inner,.simple-worlds>.container,.simple-essence>.container,.simple-footer>.container{padding-inline:18px}
+  .simple-hero{min-height:650px;background-size:auto 100%;background-position:57% center}
+  .simple-hero::before{background:linear-gradient(90deg,rgba(1,3,5,.86) 0%,rgba(1,3,5,.62) 46%,rgba(1,3,5,.08) 77%),linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.02) 58%,rgba(1,5,8,.62) 100%)}
   .simple-hero__inner{align-items:flex-start;padding-top:76px}
-  .simple-hero__copy{width:100%;padding:150px 0 28px;max-width:330px}
-  .simple-hero h1{max-width:7.3ch;font-size:clamp(3.05rem,13vw,4.15rem);line-height:.93}
-  .simple-hero p{max-width:29ch;margin-top:17px;font-size:.93rem;line-height:1.48}
-  .simple-primary-cta{min-height:50px;margin-top:23px;padding:10px 18px;font-size:.71rem}
-  .simple-worlds{padding:20px 0 22px}
-  .simple-section-title{grid-template-columns:minmax(28px,1fr) auto minmax(28px,1fr);gap:10px;margin-bottom:13px}
-  .simple-section-title h2{font-size:.66rem;letter-spacing:.26em}
-  .simple-world-grid{gap:8px}
-  .simple-world-card{min-height:405px;border-radius:10px;background-position:center 15%}
-  .simple-world-card__copy{padding:18px 9px 17px}
-  .simple-world-card h3{font-size:clamp(1.6rem,7vw,2.05rem)}
-  .simple-world-card p{min-height:38px;margin:7px auto 12px;font-size:.72rem;line-height:1.3}
-  .simple-world-card__cta{width:100%;min-width:0;min-height:41px;padding:7px 8px;font-size:.59rem;letter-spacing:.035em}
-  .simple-essence{padding:58px 0 43px;background-position:57% 18%}
-  .simple-essence h2{font-size:clamp(2rem,8.8vw,2.85rem)}
+  .simple-hero__copy{width:100%;padding:136px 0 28px;max-width:300px}
+  .simple-hero h1{max-width:7.5ch;font-size:clamp(2.8rem,11.7vw,3.7rem);line-height:.94}
+  .simple-hero p{max-width:29ch;margin-top:16px;font-size:.93rem;line-height:1.48}
+  .simple-primary-cta{min-height:49px;margin-top:22px;padding:10px 18px;font-size:.71rem}
+  .simple-worlds{padding:22px 0 30px}
+  .simple-section-title{grid-template-columns:minmax(28px,1fr) auto minmax(28px,1fr);gap:10px;margin-bottom:16px}
+  .simple-section-title h2{font-size:.66rem;letter-spacing:.24em;white-space:normal}
+  .simple-world-grid{gap:12px}
+  .simple-world-card{min-height:390px;border-radius:10px;background-position:center 34%}
+  .simple-world-card__copy{padding:22px 16px 18px}
+  .simple-world-card h3{font-size:clamp(1.8rem,6.6vw,2.25rem)}
+  .simple-world-card p{min-height:auto;margin:8px auto 14px;font-size:.82rem;line-height:1.36}
+  .simple-world-card__cta{width:auto;min-width:180px;min-height:42px;padding:8px 15px;font-size:.64rem;letter-spacing:.04em}
+  .simple-essence{padding:58px 0 48px;background-position:57% 18%}
+  .simple-essence h2{font-size:clamp(2rem,8vw,2.75rem)}
   .simple-values{grid-template-columns:repeat(4,1fr);gap:0;margin:34px -4px 34px}
   .simple-value{padding:0 8px}
   .simple-value svg{width:35px;height:35px}
   .simple-value h3{margin-top:9px;font-size:.54rem;line-height:1.35;letter-spacing:.05em}
   .simple-footer-mark img{width:210px}
-  .simple-footer__inner{min-height:50px}
+  .simple-footer__inner{min-height:50px;padding-inline:18px}
 }
-@media(max-width:430px){
-  .home-page--simple .brand--reuse-title{width:186px!important;height:48px!important}.home-page--simple .brand--reuse-title img{width:186px!important}
-  .simple-hero{min-height:665px;background-size:auto 100%;background-position:55% center}
-  .simple-hero__copy{padding-top:145px;max-width:310px}
-  .simple-hero h1{font-size:clamp(2.9rem,12.9vw,3.75rem)}
-  .simple-world-card{min-height:380px}
+
+/* Phones: prioritize legibility over forcing the desktop two-column composition. */
+@media(max-width:479px){
+  .home-page--simple .site-header .nav{padding-inline:16px}
+  .home-page--simple .brand--reuse-title{width:178px!important;height:46px!important}
+  .home-page--simple .brand--reuse-title img{width:178px!important}
+  .simple-hero__inner,.simple-worlds>.container,.simple-essence>.container,.simple-footer>.container{padding-inline:16px}
+  .simple-hero{min-height:620px;background-position:58% center}
+  .simple-hero__copy{padding-top:128px;max-width:286px}
+  .simple-hero h1{font-size:clamp(2.55rem,11.3vw,3.25rem);line-height:.95;letter-spacing:-.045em}
+  .simple-hero p{font-size:.9rem}
+  .simple-world-grid{grid-template-columns:1fr;gap:14px}
+  .simple-world-card{min-height:305px;background-position:center 42%}
+  .simple-world-card::after{background:linear-gradient(180deg,transparent 34%,rgba(2,5,8,.18) 50%,rgba(2,5,8,.94) 78%)}
+  .simple-world-card__copy{padding:20px 18px 17px}
+  .simple-world-card h3{font-size:2rem}
+  .simple-world-card p{font-size:.83rem;margin:7px auto 13px}
+  .simple-world-card__cta{min-width:190px;min-height:43px;font-size:.65rem}
+  .simple-essence{padding:52px 0 42px}
+  .simple-essence h2{font-size:clamp(1.9rem,8.4vw,2.4rem)}
+  .simple-values{grid-template-columns:repeat(2,1fr);gap:0;margin:30px 0 28px}
+  .simple-value{padding:18px 12px;border-right:1px solid rgba(229,190,118,.28);border-bottom:1px solid rgba(229,190,118,.28)}
+  .simple-value:nth-child(2),.simple-value:nth-child(4){border-right:0}
+  .simple-value:nth-child(3),.simple-value:nth-child(4){border-bottom:0}
+  .simple-value svg{width:38px;height:38px}
+  .simple-value h3{font-size:.62rem;line-height:1.4}
+  .simple-footer-mark img{width:190px}
 }
 @media(max-width:350px){
-  .home-page--simple .brand--reuse-title{width:166px!important}.home-page--simple .brand--reuse-title img{width:166px!important}
-  .simple-hero{min-height:640px;background-position:57% center}.simple-hero__copy{padding-top:136px;max-width:285px}.simple-hero h1{font-size:2.7rem}.simple-hero p{font-size:.88rem}
-  .simple-world-grid{gap:6px}.simple-world-card{min-height:350px}.simple-world-card__copy{padding:15px 7px}.simple-world-card h3{font-size:1.45rem}.simple-world-card p{font-size:.66rem}.simple-world-card__cta{font-size:.54rem}
-  .simple-values{grid-template-columns:repeat(2,1fr);gap:22px 0;margin-inline:0}.simple-value:nth-child(2){border-right:0}.simple-value:nth-child(3),.simple-value:nth-child(4){border-top:1px solid rgba(229,190,118,.28);padding-top:20px}.simple-value h3{font-size:.6rem}
+  .home-page--simple .brand--reuse-title{width:160px!important}.home-page--simple .brand--reuse-title img{width:160px!important}
+  .simple-hero{min-height:600px;background-position:59% center}.simple-hero__copy{padding-top:122px;max-width:270px}.simple-hero h1{font-size:2.42rem}.simple-hero p{font-size:.86rem}
+  .simple-world-card{min-height:286px}.simple-world-card h3{font-size:1.82rem}.simple-world-card p{font-size:.79rem}.simple-world-card__cta{min-width:170px;font-size:.61rem}
 }
 @media(prefers-reduced-motion:reduce){.simple-world-card,.simple-primary-cta{transition:none!important}}
