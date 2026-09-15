@@ -61,7 +61,7 @@
       0 6px 0 -2px rgba(205,188,151,.72),
       0 9px 0 -3px rgba(105,89,64,.72),
       0 22px 30px rgba(0,0,0,.5);
-    isolation:visible;
+    isolation:isolate;
   }
   .simple-world-card--kids{transform:perspective(900px) rotateY(5deg) rotateZ(-.35deg)}
   .simple-world-card--gamebooks{transform:perspective(900px) rotateY(-5deg) rotateZ(.35deg)}
