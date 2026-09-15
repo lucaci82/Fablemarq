@@ -1,0 +1,232 @@
+:root{
+  --home-cinema-gold:#d7b16a;
+  --home-cinema-ivory:#f4efe5;
+  --home-cinema-night:#05070b;
+  --home-cinema-line:rgba(255,255,255,.10);
+}
+
+/* FABLEMARQ master-brand homepage: editorial, cinematic, restrained. */
+.home-page--cinematic{background:#05070b}
+.home-page--cinematic .section-heading,
+.home-page--cinematic .world-stage__copy h3,
+.home-page--cinematic .manifesto-heading{
+  font-family:ui-serif,Georgia,"Times New Roman",serif;
+  font-weight:700;
+}
+
+/* HERO — the visual is an abstract threshold, not a genre scene. */
+.home-cinematic-hero{
+  position:relative;
+  min-height:clamp(610px,82svh,820px);
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  isolation:isolate;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  background:
+    radial-gradient(720px 520px at 82% 46%,rgba(215,177,106,.12),transparent 70%),
+    radial-gradient(640px 500px at 10% 30%,rgba(94,126,181,.08),transparent 72%),
+    linear-gradient(120deg,#05070b 0%,#080b10 54%,#05070b 100%);
+}
+.home-cinematic-hero::before{
+  content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:linear-gradient(90deg,rgba(5,7,11,.96) 0%,rgba(5,7,11,.84) 43%,rgba(5,7,11,.18) 72%,rgba(5,7,11,.40) 100%);
+}
+.home-cinematic-hero::after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.55;
+  background:linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px);
+  background-size:86px 86px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.7),transparent 92%);
+}
+.home-cinematic-hero__grid{
+  position:relative;z-index:2;
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);
+  gap:clamp(34px,6vw,90px);
+  align-items:center;
+  width:100%;
+  padding-block:clamp(70px,9vw,118px);
+}
+.home-cinematic-hero__copy{max-width:820px}
+.home-cinematic-hero .fm-index{margin-bottom:15px;color:#8f98a6}
+.home-cinematic-hero .hero-kicker{margin-bottom:15px;color:#c7b68f;letter-spacing:.19em}
+.home-cinematic-hero h1{
+  margin:0;
+  max-width:10.5ch;
+  color:var(--home-cinema-ivory);
+  font-family:ui-serif,Georgia,"Times New Roman",serif;
+  font-size:clamp(4.5rem,8.5vw,8.2rem);
+  line-height:.82;
+  letter-spacing:-.055em;
+  text-transform:uppercase;
+  text-wrap:balance;
+}
+.home-cinematic-hero__lead{
+  max-width:650px;
+  margin:24px 0 0;
+  color:#c5c8cd;
+  font-size:clamp(1rem,1.7vw,1.18rem);
+  line-height:1.58;
+}
+.home-cinematic-hero__actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.home-cinematic-hero .hero-btn{border-radius:2px;min-height:50px;padding-inline:20px;letter-spacing:.035em;text-transform:uppercase}
+.home-cinematic-hero .hero-btn--brand{background:#e4c080!important;color:#15100a!important;border-color:#e4c080!important;box-shadow:0 15px 42px rgba(215,177,106,.14)}
+.home-cinematic-hero .hero-btn--brand-ghost{background:transparent!important;border-color:rgba(255,255,255,.27)!important;color:#f2f3f4!important}
+
+.home-threshold{position:relative;min-height:520px;display:grid;place-items:center;pointer-events:none}
+.home-threshold__frame{
+  position:absolute;
+  width:min(68%,320px);
+  height:min(84%,450px);
+  border:1px solid rgba(235,210,160,.26);
+  box-shadow:0 0 0 1px rgba(255,255,255,.025),0 34px 90px rgba(0,0,0,.55);
+  background:linear-gradient(90deg,#080a0e 0 47%,#0f0d0a 49%,#0b0907 52%,#080a0e 100%);
+}
+.home-threshold__frame::before{
+  content:"";position:absolute;inset:18px;border:1px solid rgba(255,255,255,.08);
+}
+.home-threshold__light{
+  position:absolute;
+  width:min(42%,180px);
+  height:min(72%,365px);
+  background:linear-gradient(180deg,#f3d69c 0%,#d7a45c 20%,#9e6a36 52%,rgba(68,40,22,.25) 100%);
+  box-shadow:0 0 70px rgba(219,166,88,.34),0 0 150px rgba(219,166,88,.16);
+  clip-path:polygon(11% 3%,100% 0,100% 93%,20% 100%,0 88%,0 9%);
+  opacity:.92;
+}
+.home-threshold__light::after{
+  content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.30),transparent 24%,transparent 76%,rgba(40,20,10,.22));
+}
+.home-threshold__book{
+  position:absolute;bottom:54px;left:50%;width:min(66%,300px);height:72px;transform:translateX(-50%) rotate(-3deg);
+  border:1px solid rgba(255,255,255,.08);border-radius:3px;
+  background:linear-gradient(180deg,#16130e,#090807 62%,#050505);
+  box-shadow:0 24px 45px rgba(0,0,0,.55);
+}
+.home-threshold__book::before{content:"FABLEMARQ";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#c8a369;font:700 .82rem/1 ui-serif,Georgia,serif;letter-spacing:.18em}
+.home-threshold__orbit{position:absolute;width:min(86%,410px);aspect-ratio:1;border:1px solid rgba(255,255,255,.05);border-radius:50%;transform:rotate(-13deg)}
+.home-threshold__orbit::before,.home-threshold__orbit::after{content:"";position:absolute;border-radius:50%;background:#d8b56e;box-shadow:0 0 18px rgba(215,177,106,.32)}
+.home-threshold__orbit::before{width:5px;height:5px;top:12%;right:17%}.home-threshold__orbit::after{width:3px;height:3px;left:8%;bottom:26%}
+
+/* TWO WORLDS — divisions, never categories. */
+.home-worlds-cinematic{padding:clamp(72px,9vw,118px) 0;border-bottom:1px solid rgba(255,255,255,.055);background:#07090d}
+.home-worlds-cinematic .section-heading{max-width:15ch;font-size:clamp(2.8rem,5.3vw,5rem);line-height:.91}
+.home-worlds-cinematic .section-intro{max-width:720px;margin-top:16px;line-height:1.65}
+.world-stage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:36px}
+.world-stage{
+  position:relative;overflow:hidden;min-height:610px;
+  border:1px solid rgba(255,255,255,.10);
+  background:#090c12;
+  box-shadow:0 30px 86px rgba(0,0,0,.30);
+  isolation:isolate;
+}
+.world-stage::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(4,6,10,.06) 14%,rgba(4,6,10,.48) 57%,rgba(4,6,10,.96) 100%)}
+.world-stage--kids{background:radial-gradient(520px 420px at 65% 20%,rgba(132,174,255,.28),transparent 70%),radial-gradient(420px 320px at 20% 40%,rgba(186,165,255,.12),transparent 72%),linear-gradient(155deg,#17233e,#0b101d 66%)}
+.world-stage--gamebooks{background:radial-gradient(520px 420px at 70% 20%,rgba(188,48,53,.21),transparent 70%),radial-gradient(360px 320px at 22% 35%,rgba(222,133,52,.10),transparent 70%),linear-gradient(155deg,#171114,#080a0e 68%)}
+.world-stage__art{position:absolute;inset:0;z-index:0;overflow:hidden}
+.world-stage__art::before{content:"";position:absolute;width:330px;aspect-ratio:1;border:1px solid rgba(255,255,255,.09);border-radius:50%;right:-20px;top:36px}
+.world-stage--kids .world-stage__art::after{content:"";position:absolute;width:250px;aspect-ratio:1;border-radius:50%;right:65px;top:85px;background:radial-gradient(circle at 38% 34%,#fffdf5,#efe5c8 42%,rgba(239,229,200,.12) 69%,transparent 71%);opacity:.82;filter:drop-shadow(0 0 28px rgba(245,239,217,.14))}
+.world-stage__cover{position:absolute;display:block;object-fit:contain;filter:none!important;opacity:1!important;box-shadow:0 32px 64px rgba(0,0,0,.48);border:1px solid rgba(255,255,255,.13);background:#07090d}
+.world-stage--kids .world-stage__cover{width:min(40%,225px);right:12%;top:72px;transform:rotate(3deg);z-index:2}
+.world-stage--gamebooks .world-stage__cover--crime{width:min(38%,214px);right:8%;top:72px;transform:rotate(4deg);z-index:2}
+.world-stage--gamebooks .world-stage__cover--survive{width:min(36%,200px);right:34%;top:122px;transform:rotate(-5deg);z-index:1}
+.world-stage__copy{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:clamp(26px,4vw,42px);background:linear-gradient(180deg,transparent,rgba(5,7,11,.92) 22%,#05070b 100%)}
+.world-stage__copy .fm-index{margin-bottom:12px}
+.world-stage__eyebrow{display:block;margin-bottom:9px;color:#c8ced8;font-size:.7rem;font-weight:900;letter-spacing:.17em;text-transform:uppercase}
+.world-stage__copy h3{margin:0;max-width:13ch;color:#f7f4ed;font-size:clamp(2.4rem,4vw,4rem);line-height:.91;letter-spacing:-.045em}
+.world-stage__copy p{max-width:42ch;margin:15px 0 20px;color:#bbc0c8;font-size:.93rem;line-height:1.58}
+.world-stage__cta{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border:1px solid rgba(255,255,255,.16);border-radius:2px;background:#f0e7d6;color:#14100b;text-decoration:none;font-size:.78rem;font-weight:900;letter-spacing:.055em;text-transform:uppercase}
+.world-stage--kids .world-stage__cta{background:#e6ecfa;color:#101827}
+.world-stage--gamebooks .world-stage__cta{background:#e4c080;color:#171007}
+@media(hover:hover){.world-stage{transition:transform var(--fm-motion-normal) var(--fm-ease-editorial),border-color var(--fm-motion-normal) var(--fm-ease-editorial)}.world-stage:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.19)}}
+
+/* SELECTED WORKS — proof of the brand, not a duplicated catalog. */
+.home-featured-cinematic{padding:clamp(70px,8vw,106px) 0;background:#05070b}
+.home-featured-cinematic .section-heading{max-width:16ch;font-size:clamp(2.6rem,4.8vw,4.5rem);line-height:.92}
+.home-featured-cinematic .featured-grid{margin-top:34px}
+.home-featured-cinematic .featured-book{border-radius:0;background:#080b10;box-shadow:none;border-color:rgba(255,255,255,.10)}
+.home-featured-cinematic .featured-book__cover{padding:12px;border-bottom-width:1px;background:#040507}
+.home-featured-cinematic .featured-book__body{padding:20px}
+.home-featured-cinematic .featured-book h3{font-family:ui-serif,Georgia,"Times New Roman",serif;font-size:clamp(1.45rem,2.3vw,2rem);text-transform:none;line-height:1.02}
+.home-featured-cinematic .featured-book__link{color:#d8b56e;letter-spacing:.04em;text-transform:uppercase;font-size:.72rem}
+
+/* BRAND MANIFESTO — one closing statement instead of another promo block. */
+.brand-manifesto{padding:clamp(74px,9vw,122px) 0 92px;border-top:1px solid rgba(255,255,255,.07);background:radial-gradient(700px 480px at 83% 22%,rgba(215,177,106,.06),transparent 72%),#07090d}
+.brand-manifesto__header{display:grid;grid-template-columns:minmax(150px,.28fr) minmax(0,1fr);gap:clamp(28px,6vw,92px);align-items:start}
+.brand-manifesto__label{padding-top:8px;color:#d8b56e;font-size:.72rem;font-weight:950;letter-spacing:.20em;text-transform:uppercase}
+.manifesto-heading{margin:0;max-width:15ch;color:#f5f0e7;font-size:clamp(2.8rem,5.5vw,5.3rem);line-height:.90;letter-spacing:-.045em;text-transform:uppercase}
+.brand-manifesto__intro{max-width:760px;margin:20px 0 0;color:#aeb5c0;font-size:clamp(.98rem,1.5vw,1.08rem);line-height:1.72}
+.brand-values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:48px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.09)}
+.brand-value{min-height:220px;padding:24px;background:#080b10}
+.brand-value__num{display:block;color:#6d7480;font-size:.65rem;font-weight:900;letter-spacing:.16em}
+.brand-value h3{margin:42px 0 0;color:#f2eee7;font-size:1rem;letter-spacing:.04em;text-transform:uppercase}
+.brand-value p{margin:10px 0 0;color:#929ba8;font-size:.84rem;line-height:1.58}
+
+/* FOOTER — only real destinations. */
+.home-page--cinematic .home-footer--editorial{padding:30px 0 38px;background:#040609;border-top:1px solid rgba(255,255,255,.08)}
+.home-page--cinematic .footer-brand{font-family:ui-serif,Georgia,"Times New Roman",serif;font-size:1.25rem;letter-spacing:.16em;color:#eee8dd}
+.home-page--cinematic .footer-links a{border-radius:0;letter-spacing:.025em}
+.home-page--cinematic .footer-editorial__note{color:#67707d}
+
+@media(max-width:980px){
+  .home-cinematic-hero__grid{grid-template-columns:minmax(0,1fr) minmax(260px,.72fr);gap:28px}
+  .home-threshold{min-height:430px}
+  .world-stage{min-height:560px}
+  .brand-values{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:760px){
+  .home-cinematic-hero{min-height:auto}
+  .home-cinematic-hero::before{background:linear-gradient(180deg,rgba(5,7,11,.94) 0%,rgba(5,7,11,.86) 52%,rgba(5,7,11,.20) 78%,rgba(5,7,11,.78) 100%)}
+  .home-cinematic-hero__grid{grid-template-columns:1fr;gap:22px;padding-block:48px 34px}
+  .home-cinematic-hero h1{font-size:clamp(3.3rem,14.8vw,5.4rem);max-width:9ch}
+  .home-cinematic-hero__lead{font-size:.97rem;max-width:36ch;margin-top:18px}
+  .home-cinematic-hero__actions{display:grid;grid-template-columns:1fr;margin-top:22px;max-width:410px;width:100%}
+  .home-threshold{min-height:245px;margin-top:-4px}
+  .home-threshold__frame{width:170px;height:230px}
+  .home-threshold__frame::before{inset:11px}
+  .home-threshold__light{width:92px;height:190px}
+  .home-threshold__book{bottom:20px;width:205px;height:52px}
+  .home-threshold__book::before{font-size:.62rem}
+  .home-threshold__orbit{width:250px}
+
+  .home-worlds-cinematic{padding:58px 0}
+  .home-worlds-cinematic .section-heading{font-size:clamp(2.5rem,11vw,3.8rem)}
+  .world-stage-grid{grid-template-columns:1fr;gap:14px;margin-top:26px}
+  .world-stage{min-height:500px}
+  .world-stage--kids .world-stage__cover{width:165px;right:10%;top:56px}
+  .world-stage--gamebooks .world-stage__cover--crime{width:158px;right:7%;top:52px}
+  .world-stage--gamebooks .world-stage__cover--survive{width:145px;right:35%;top:95px}
+  .world-stage__copy{padding:24px 20px 22px}
+  .world-stage__copy h3{font-size:clamp(2.3rem,10vw,3.3rem)}
+
+  .home-featured-cinematic{padding:56px 0}
+  .home-featured-cinematic .featured-grid{grid-template-columns:repeat(3,minmax(82vw,1fr));overflow-x:auto;scroll-snap-type:x mandatory;padding:0 13px 10px 0;margin-right:-13px;scrollbar-width:none;gap:12px}
+  .home-featured-cinematic .featured-grid::-webkit-scrollbar{display:none}
+  .home-featured-cinematic .featured-book{scroll-snap-align:start}
+
+  .brand-manifesto{padding:58px 0 64px}
+  .brand-manifesto__header{grid-template-columns:1fr;gap:16px}
+  .manifesto-heading{font-size:clamp(2.5rem,11.5vw,4rem)}
+  .brand-values{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:30px}
+  .brand-value{min-height:180px;padding:18px}
+  .brand-value h3{margin-top:28px;font-size:.88rem}
+  .brand-value p{font-size:.78rem}
+}
+
+@media(max-width:420px){
+  .home-cinematic-hero__grid{padding-top:38px}
+  .home-cinematic-hero .fm-index{font-size:.62rem}
+  .home-cinematic-hero .hero-kicker{font-size:.68rem}
+  .home-threshold{min-height:220px}
+  .world-stage{min-height:465px}
+  .world-stage__copy p{font-size:.86rem}
+  .world-stage--kids .world-stage__cover{width:148px}
+  .world-stage--gamebooks .world-stage__cover--crime{width:145px}.world-stage--gamebooks .world-stage__cover--survive{width:133px}
+  .brand-values{gap:1px}
+  .brand-value{min-height:168px;padding:15px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .world-stage{transition:none!important;transform:none!important}
+}
