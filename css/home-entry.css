@@ -1,0 +1,94 @@
+/* FABLEMARQ entry experience: fast brand intro + immediate product clarity. */
+.fm-entry{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:#020508;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .32s ease,visibility 0s linear .32s;
+}
+.fm-entry::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 48%,rgba(218,182,116,.10),transparent 30%),
+    linear-gradient(180deg,#020508,#03070b);
+}
+.fm-entry.is-active{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transition:opacity .28s ease;
+}
+.fm-entry__inner{
+  position:relative;
+  z-index:1;
+  width:min(78vw,430px);
+  display:grid;
+  justify-items:center;
+  gap:19px;
+  transform:translateY(6px);
+  opacity:0;
+  transition:opacity .42s ease .08s,transform .42s ease .08s;
+}
+.fm-entry.is-active .fm-entry__inner{opacity:1;transform:none}
+.fm-entry__logo{display:block;width:min(100%,390px);height:auto;filter:grayscale(1) brightness(2.08) contrast(1.04)}
+.fm-entry__line{width:72px;height:1px;background:#dab674;transform:scaleX(0);transform-origin:center;transition:transform .48s ease .22s}
+.fm-entry.is-active .fm-entry__line{transform:scaleX(1)}
+body.fm-entry-lock{overflow:hidden}
+
+/* The first screen must explain the offer without sacrificing the editorial tone. */
+.home-reference-hero__audience{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  max-width:620px;
+  margin:19px 0 0;
+  color:#f4efe6;
+  font-size:.78rem;
+  font-weight:820;
+  line-height:1.35;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  text-shadow:0 2px 14px rgba(0,0,0,.72);
+}
+.home-reference-hero__audience::before{
+  content:"";
+  flex:0 0 34px;
+  height:1px;
+  background:#dab674;
+}
+.home-reference-hero__audience [data-audience-lang]{display:none}
+html[lang="it"] .home-reference-hero__audience [data-audience-lang="it"],
+html[lang="en"] .home-reference-hero__audience [data-audience-lang="en"],
+html[lang="es"] .home-reference-hero__audience [data-audience-lang="es"]{display:inline}
+.home-reference-hero__lead{margin-top:12px!important}
+
+@media(max-width:760px){
+  .fm-entry__inner{width:min(76vw,320px);gap:15px}
+  .fm-entry__logo{width:min(100%,300px)}
+  .home-reference-hero__audience{
+    max-width:31ch;
+    margin-top:15px;
+    gap:8px;
+    font-size:.67rem;
+    letter-spacing:.045em;
+  }
+  .home-reference-hero__audience::before{flex-basis:25px}
+  .home-reference-hero__lead{margin-top:10px!important}
+}
+
+@media(max-width:350px){
+  .home-reference-hero__audience{font-size:.63rem;max-width:30ch}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fm-entry{display:none!important}
+  body.fm-entry-lock{overflow:auto}
+}
