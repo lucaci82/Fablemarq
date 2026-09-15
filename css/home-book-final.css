@@ -1,0 +1,157 @@
+/* Final mobile book treatment approved for the FABLEMARQ master-brand home. */
+
+/* Keep the official artwork, but crop it to the wordmark only; the brand tagline is real HTML. */
+.home-page--simple .simple-brand{
+  width:auto;height:auto;min-height:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px;overflow:visible;
+}
+.home-page--simple .simple-brand__mark{
+  display:block;width:230px;height:42px;overflow:hidden;line-height:0;
+}
+.home-page--simple .simple-brand__mark img{
+  display:block;width:230px!important;height:auto!important;max-width:none!important;transform:translateY(-1px);filter:grayscale(1) brightness(2.2) contrast(1.04);
+}
+.home-page--simple .simple-brand__tagline{
+  display:block;margin-top:-2px;color:rgba(244,239,230,.86);font-size:.52rem;font-weight:700;line-height:1;letter-spacing:.29em;white-space:nowrap;
+}
+
+.simple-footer-mark{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;margin-top:15px}
+.simple-footer-mark__crop{display:block;width:250px;height:46px;overflow:hidden;line-height:0}
+.simple-footer-mark__crop img{display:block;width:250px!important;height:auto!important;max-width:none!important;filter:grayscale(1) brightness(2.1);transform:translateY(-1px)}
+.simple-footer-mark__tagline{color:rgba(244,239,230,.82);font-size:.55rem;font-weight:700;letter-spacing:.3em;line-height:1;text-transform:uppercase}
+
+@media(max-width:760px){
+  .home-page--simple .simple-brand__mark{width:190px;height:35px}
+  .home-page--simple .simple-brand__mark img{width:190px!important}
+  .home-page--simple .simple-brand__tagline{font-size:.44rem;letter-spacing:.25em}
+
+  /* Pull back the hero artwork instead of zooming it: more book, compass, map and doorway stay visible. */
+  .simple-hero{
+    background-size:auto 86%;
+    background-position:74% 50%;
+    background-repeat:no-repeat;
+    background-color:#020609;
+  }
+  .simple-hero::before{
+    background:linear-gradient(90deg,rgba(1,3,5,.93) 0%,rgba(1,3,5,.77) 34%,rgba(1,3,5,.26) 64%,rgba(1,3,5,.02) 100%),linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,.01) 53%,rgba(1,5,8,.45) 100%);
+  }
+
+  /* Two physical volumes, not UI cards. */
+  .simple-worlds{overflow:hidden;background:radial-gradient(ellipse at 50% 88%,rgba(148,92,38,.24),transparent 38%),linear-gradient(180deg,#031018,#06131b 62%,#030b10)}
+  .simple-world-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+    align-items:end;
+    perspective:1200px;
+    padding:8px 9px 21px;
+    border-bottom:1px solid rgba(229,190,118,.28);
+    box-shadow:0 17px 20px -20px rgba(225,176,103,.52);
+  }
+  .simple-world-card{
+    width:100%;
+    min-height:0;
+    aspect-ratio:.62;
+    overflow:visible;
+    border-radius:2px;
+    border:1px solid rgba(229,190,118,.92);
+    background-position:center 39%;
+    transform-style:preserve-3d;
+    box-shadow:
+      inset 0 0 0 2px rgba(229,190,118,.12),
+      inset -4px 0 8px rgba(0,0,0,.24),
+      0 6px 0 -2px rgba(205,188,151,.72),
+      0 9px 0 -3px rgba(105,89,64,.72),
+      0 22px 30px rgba(0,0,0,.5);
+    isolation:visible;
+  }
+  .simple-world-card--kids{transform:perspective(900px) rotateY(5deg) rotateZ(-.35deg)}
+  .simple-world-card--gamebooks{transform:perspective(900px) rotateY(-5deg) rotateZ(.35deg)}
+
+  /* Spine. */
+  .simple-world-card::before{
+    content:"";
+    position:absolute;
+    z-index:4;
+    top:3px;bottom:2px;left:-10px;width:11px;
+    border:1px solid rgba(229,190,118,.48);
+    border-right-color:rgba(255,232,183,.36);
+    border-radius:2px 0 0 2px;
+    background:linear-gradient(90deg,#05080b 0%,#121722 26%,rgba(229,190,118,.32) 53%,#080b10 100%);
+    box-shadow:-5px 4px 10px rgba(0,0,0,.36),inset -2px 0 2px rgba(255,255,255,.05);
+    transform-origin:right center;
+    transform:rotateY(-12deg);
+    pointer-events:none;
+  }
+  .simple-world-card--gamebooks::before{background:linear-gradient(90deg,#070406 0%,#1a0b0d 28%,rgba(229,190,118,.3) 54%,#090608 100%)}
+
+  /* Visible paper block on the fore edge. */
+  .simple-world-card::after{
+    content:"";
+    position:absolute;
+    z-index:2;
+    top:6px;bottom:4px;right:-7px;width:7px;
+    border:1px solid rgba(110,92,64,.52);
+    border-left-color:rgba(235,218,182,.72);
+    border-radius:0 2px 2px 0;
+    background:repeating-linear-gradient(180deg,#dfd2b3 0 1px,#bdaa82 1px 2px,#eadfc4 2px 3px);
+    box-shadow:4px 3px 8px rgba(0,0,0,.35);
+    transform-origin:left center;
+    transform:rotateY(14deg);
+    pointer-events:none;
+  }
+
+  .simple-world-card__copy{z-index:5;padding:16px 9px 12px;text-align:center}
+  .simple-world-card h3{font-size:clamp(1.2rem,5.05vw,1.85rem);line-height:.96;color:#f0cf8b;text-shadow:0 2px 10px rgba(0,0,0,.88)}
+  .simple-world-card p{max-width:19ch;min-height:2.7em;margin:7px auto 9px;font-size:clamp(.59rem,2vw,.74rem);line-height:1.32;color:#f2ece2;text-shadow:0 2px 8px rgba(0,0,0,.82)}
+  .simple-world-card__cta{
+    width:auto;min-width:0;min-height:0;padding:0 0 3px;
+    border:0;border-bottom:1px solid rgba(229,190,118,.62);border-radius:0;background:transparent;
+    color:#eccb87;font-size:clamp(.5rem,1.7vw,.61rem);font-weight:850;letter-spacing:.055em;line-height:1.35;
+  }
+  .simple-world-card__cta::after{margin-left:7px}
+
+  .simple-footer-mark__crop{width:210px;height:39px}
+  .simple-footer-mark__crop img{width:210px!important}
+  .simple-footer-mark__tagline{font-size:.46rem;letter-spacing:.26em}
+}
+
+@media(max-width:479px){
+  .home-page--simple .site-header .nav{padding-inline:15px}
+  .home-page--simple .simple-brand__mark{width:166px;height:31px}
+  .home-page--simple .simple-brand__mark img{width:166px!important}
+  .home-page--simple .simple-brand__tagline{font-size:.39rem;letter-spacing:.22em}
+
+  .simple-hero{background-size:auto 83%;background-position:75% 50%}
+  .simple-worlds>.container{padding-inline:15px}
+  .simple-world-grid{gap:15px;padding-inline:8px}
+  .simple-world-card{aspect-ratio:.61;background-position:center 40%}
+  .simple-world-card::before{left:-8px;width:9px}
+  .simple-world-card::after{right:-6px;width:6px}
+  .simple-world-card__copy{padding:13px 6px 10px}
+  .simple-world-card h3{font-size:clamp(1rem,4.85vw,1.4rem)}
+  .simple-world-card p{font-size:clamp(.53rem,1.9vw,.65rem);margin:6px auto 8px}
+  .simple-world-card__cta{font-size:clamp(.43rem,1.55vw,.54rem)}
+
+  .simple-footer-mark__crop{width:190px;height:35px}
+  .simple-footer-mark__crop img{width:190px!important}
+  .simple-footer-mark__tagline{font-size:.41rem;letter-spacing:.22em}
+}
+
+@media(max-width:339px){
+  .home-page--simple .simple-brand__mark{width:150px;height:28px}
+  .home-page--simple .simple-brand__mark img{width:150px!important}
+  .home-page--simple .simple-brand__tagline{font-size:.35rem;letter-spacing:.18em}
+  .simple-hero{background-size:auto 80%;background-position:76% 50%}
+  .simple-world-grid{gap:12px;padding-inline:7px}
+  .simple-world-card h3{font-size:.96rem}
+  .simple-world-card p{font-size:.5rem}
+  .simple-world-card__cta{font-size:.39rem;letter-spacing:.025em}
+}
+
+@media(hover:hover){
+  .simple-world-card--kids:hover{transform:perspective(900px) rotateY(4deg) translateY(-2px)}
+  .simple-world-card--gamebooks:hover{transform:perspective(900px) rotateY(-4deg) translateY(-2px)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .simple-world-card--kids,.simple-world-card--gamebooks{transform:none!important}
+}
