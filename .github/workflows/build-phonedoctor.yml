@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
@@ -39,6 +39,46 @@ jobs:
           unzip -q /tmp/phonedoctor.zip -d /tmp/phonedoctor
           test -f /tmp/phonedoctor/PhoneDoctorAndroid/settings.gradle
 
+      - name: Apply v1.1 stability fixes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('/tmp/phonedoctor/PhoneDoctorAndroid')
+          b=root/'app/build.gradle'
+          s=b.read_text()
+          assert "targetSdk 36" in s and "versionName '1.0.0'" in s
+          s=s.replace('targetSdk 36','targetSdk 34').replace('versionCode 1','versionCode 2').replace("versionName '1.0.0'","versionName '1.1.0'")
+          b.write_text(s)
+
+          p=root/'app/src/main/java/com/phonedoctor/app/MainActivity.java'
+          s=p.read_text()
+          old='''    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(buildUi());\n    }'''
+          new='''    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        try {\n            setContentView(buildUi());\n            main.postDelayed(this::startScan, 450);\n        } catch (Throwable t) {\n            TextView v = new TextView(this);\n            v.setPadding(dp(24), dp(40), dp(24), dp(24));\n            v.setTextSize(16);\n            v.setTextColor(Color.rgb(153, 27, 27));\n            v.setBackgroundColor(Color.WHITE);\n            v.setText("Phone Doctor: errore di avvio\\n\\n" + t.getClass().getSimpleName() + ": " + (t.getMessage() == null ? "nessun dettaglio" : t.getMessage()));\n            setContentView(v);\n        }\n    }'''
+          assert old in s
+          s=s.replace(old,new)
+          s=s.replace('button("SCANSIONE COMPLETA", true)', 'button("RIPETI SCANSIONE", true)')
+          s=s.replace('text("Premi “Scansione completa” per iniziare.", 18', 'text("Avvio scansione automatica…", 18')
+          old='''        executor.execute(() -> {\n            ScannerEngine.ScanReport r = new ScannerEngine(this).scan();\n            main.post(() -> render(r));\n        });'''
+          new='''        executor.execute(() -> {\n            try {\n                ScannerEngine.ScanReport r = new ScannerEngine(this).scan();\n                main.post(() -> render(r));\n            } catch (Throwable t) {\n                main.post(() -> renderScanError(t));\n            }\n        });'''
+          assert old in s
+          s=s.replace(old,new)
+          marker='''    private void render(ScannerEngine.ScanReport r) {'''
+          error_method='''    private void renderScanError(Throwable t) {\n        progress.setVisibility(View.GONE);\n        scanButton.setEnabled(true);\n        summary.setTextColor(Color.rgb(153, 27, 27));\n        String message = t.getMessage() == null ? "nessun dettaglio" : t.getMessage();\n        summary.setText("Scansione interrotta\\n" + t.getClass().getSimpleName() + ": " + message);\n    }\n\n'''
+          assert marker in s
+          s=s.replace(marker,error_method+marker)
+          p.write_text(s)
+
+          p=root/'app/src/main/java/com/phonedoctor/app/ScannerEngine.java'
+          s=p.read_text()
+          old='''    public ScanReport scan() {\n        findings.clear();\n        tech.setLength(0);\n        addDeviceInfo();\n        checkSecurityPatch();\n        checkBattery();\n        checkMemory();\n        checkStorage();\n        checkThermals();\n        checkNetwork();\n        checkSecuritySettings();\n        checkBootAndRootHeuristics();\n        checkWebView();\n        sortFindings();\n        return new ScanReport(System.currentTimeMillis(), new ArrayList<>(findings), tech.toString());\n    }'''
+          new='''    public ScanReport scan() {\n        findings.clear();\n        tech.setLength(0);\n        safeCheck("Informazioni dispositivo", this::addDeviceInfo);\n        safeCheck("Patch sicurezza", this::checkSecurityPatch);\n        safeCheck("Batteria", this::checkBattery);\n        safeCheck("Memoria", this::checkMemory);\n        safeCheck("Archiviazione", this::checkStorage);\n        safeCheck("Termica", this::checkThermals);\n        safeCheck("Rete", this::checkNetwork);\n        safeCheck("Sicurezza", this::checkSecuritySettings);\n        // I comandi shell OEM-dipendenti sono esclusi dalla scansione locale v1.1:\n        // possono essere bloccati o restare sospesi su alcuni firmware Samsung.\n        safeCheck("WebView", this::checkWebView);\n        sortFindings();\n        return new ScanReport(System.currentTimeMillis(), new ArrayList<>(findings), tech.toString());\n    }\n\n    private interface Check { void run(); }\n    private void safeCheck(String name, Check check) {\n        try {\n            check.run();\n        } catch (Throwable t) {\n            add(Level.INFO, name, "Controllo non disponibile su questo dispositivo (" + t.getClass().getSimpleName() + ").");\n            addTech(name + " errore", t.getClass().getSimpleName());\n        }\n    }'''
+          assert old in s
+          s=s.replace(old,new)
+          p.write_text(s)
+          PY
+          grep -q "versionName '1.1.0'" /tmp/phonedoctor/PhoneDoctorAndroid/app/build.gradle
+          grep -q 'safeCheck("Batteria"' /tmp/phonedoctor/PhoneDoctorAndroid/app/src/main/java/com/phonedoctor/app/ScannerEngine.java
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -50,13 +90,14 @@ jobs:
 
       - name: Verify APK
         run: |
-          test -f /tmp/phonedoctor/PhoneDoctorAndroid/app/build/outputs/apk/debug/app-debug.apk
-          cp /tmp/phonedoctor/PhoneDoctorAndroid/app/build/outputs/apk/debug/app-debug.apk PhoneDoctor-debug.apk
-          sha256sum PhoneDoctor-debug.apk
+          APK=/tmp/phonedoctor/PhoneDoctorAndroid/app/build/outputs/apk/debug/app-debug.apk
+          test -f "$APK"
+          cp "$APK" PhoneDoctor-v1.1-debug.apk
+          sha256sum PhoneDoctor-v1.1-debug.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PhoneDoctor-APK
-          path: PhoneDoctor-debug.apk
+          name: PhoneDoctor-v1.1-APK
+          path: PhoneDoctor-v1.1-debug.apk
           if-no-files-found: error
