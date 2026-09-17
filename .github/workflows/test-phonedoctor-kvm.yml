@@ -73,9 +73,7 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            set -eu
-            APK=/tmp/pd/PhoneDoctorAndroid/app/build/outputs/apk/debug/app-debug.apk
-            adb install -r "$APK"
+            adb install -r /tmp/pd/PhoneDoctorAndroid/app/build/outputs/apk/debug/app-debug.apk
             adb logcat -c
             adb shell am start -W -n com.phonedoctor.app/.MainActivity | tee /tmp/start.txt
             sleep 12
