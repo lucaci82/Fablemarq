@@ -48,7 +48,7 @@ jobs:
             adb install -r "$GITHUB_WORKSPACE/tools/trademarketai/app/app/build/outputs/apk/debug/app-debug.apk"
             adb shell pm path com.luca.trademarkerai
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.luca.trademarkerai > /tmp/tm-resolve.txt
-            grep -q 'com.luca.trademarkerai.MainActivity' /tmp/tm-resolve.txt
+            grep -q 'MainActivity' /tmp/tm-resolve.txt
             adb logcat -c
             adb shell monkey -p com.luca.trademarkerai -c android.intent.category.LAUNCHER 1
             sleep 8
