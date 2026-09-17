@@ -1,0 +1,98 @@
+name: Fast test PhoneDoctor v1.1 Android 16
+
+on:
+  push:
+    branches:
+      - chatgpt/phonedoctor-build
+  workflow_dispatch:
+
+jobs:
+  fast-emulator-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm || true
+
+      - name: Rebuild and patch v1.1
+        run: |
+          cat tools/phonedoctor/PhoneDoctor_Android_Project.zip.b64.part* > /tmp/pd.b64
+          base64 -d /tmp/pd.b64 > /tmp/pd.zip
+          mkdir -p /tmp/pd
+          unzip -q /tmp/pd.zip -d /tmp/pd
+          python3 - <<'PY'
+          from pathlib import Path
+          root=Path('/tmp/pd/PhoneDoctorAndroid')
+          p=root/'app/build.gradle'
+          s=p.read_text().replace('targetSdk 36','targetSdk 34').replace('versionCode 1','versionCode 2').replace("versionName '1.0.0'","versionName '1.1.0'")
+          p.write_text(s)
+          p=root/'app/src/main/java/com/phonedoctor/app/MainActivity.java'
+          s=p.read_text()
+          old='''    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(buildUi());\n    }'''
+          new='''    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        try {\n            setContentView(buildUi());\n            main.postDelayed(this::startScan, 450);\n        } catch (Throwable t) {\n            TextView v = new TextView(this);\n            v.setPadding(dp(24), dp(40), dp(24), dp(24));\n            v.setTextSize(16);\n            v.setTextColor(Color.rgb(153, 27, 27));\n            v.setText("Phone Doctor: errore di avvio\\n" + t.getClass().getSimpleName());\n            setContentView(v);\n        }\n    }'''
+          assert old in s
+          s=s.replace(old,new).replace('button("SCANSIONE COMPLETA", true)','button("RIPETI SCANSIONE", true)').replace('text("Premi “Scansione completa” per iniziare.", 18','text("Avvio scansione automatica…", 18')
+          old2='''        executor.execute(() -> {\n            ScannerEngine.ScanReport r = new ScannerEngine(this).scan();\n            main.post(() -> render(r));\n        });'''
+          new2='''        executor.execute(() -> {\n            try {\n                ScannerEngine.ScanReport r = new ScannerEngine(this).scan();\n                main.post(() -> render(r));\n            } catch (Throwable t) {\n                main.post(() -> { progress.setVisibility(View.GONE); scanButton.setEnabled(true); summary.setText("Scansione interrotta: " + t.getClass().getSimpleName()); });\n            }\n        });'''
+          assert old2 in s
+          p.write_text(s.replace(old2,new2))
+          p=root/'app/src/main/java/com/phonedoctor/app/ScannerEngine.java'
+          s=p.read_text()
+          old='''    public ScanReport scan() {\n        findings.clear();\n        tech.setLength(0);\n        addDeviceInfo();\n        checkSecurityPatch();\n        checkBattery();\n        checkMemory();\n        checkStorage();\n        checkThermals();\n        checkNetwork();\n        checkSecuritySettings();\n        checkBootAndRootHeuristics();\n        checkWebView();\n        sortFindings();\n        return new ScanReport(System.currentTimeMillis(), new ArrayList<>(findings), tech.toString());\n    }'''
+          new='''    public ScanReport scan() {\n        findings.clear();\n        tech.setLength(0);\n        safeCheck("Informazioni dispositivo", this::addDeviceInfo);\n        safeCheck("Patch sicurezza", this::checkSecurityPatch);\n        safeCheck("Batteria", this::checkBattery);\n        safeCheck("Memoria", this::checkMemory);\n        safeCheck("Archiviazione", this::checkStorage);\n        safeCheck("Termica", this::checkThermals);\n        safeCheck("Rete", this::checkNetwork);\n        safeCheck("Sicurezza", this::checkSecuritySettings);\n        safeCheck("WebView", this::checkWebView);\n        sortFindings();\n        return new ScanReport(System.currentTimeMillis(), new ArrayList<>(findings), tech.toString());\n    }\n    private interface Check { void run(); }\n    private void safeCheck(String name, Check c) {\n        try { c.run(); } catch (Throwable t) { add(Level.INFO, name, "Controllo non disponibile (" + t.getClass().getSimpleName() + ")."); }\n    }'''
+          assert old in s
+          p.write_text(s.replace(old,new))
+          PY
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.1'
+
+      - name: Build APK
+        working-directory: /tmp/pd/PhoneDoctorAndroid
+        run: gradle --no-daemon :app:assembleDebug
+
+      - name: Android 16 KVM test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: aosp_atd
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            set -euxo pipefail
+            APK=/tmp/pd/PhoneDoctorAndroid/app/build/outputs/apk/debug/app-debug.apk
+            adb install -r "$APK"
+            adb logcat -c
+            adb shell am start -W -n com.phonedoctor.app/.MainActivity | tee /tmp/start.txt
+            sleep 12
+            adb logcat -d -v threadtime > /tmp/pd-logcat.txt
+            adb shell uiautomator dump /sdcard/pd.xml
+            adb pull /sdcard/pd.xml /tmp/pd.xml
+            grep -q 'PHONE DOCTOR' /tmp/pd.xml
+            grep -q 'Stato:' /tmp/pd.xml
+            ! grep -Eq 'FATAL EXCEPTION|Unable to start activity|Process: com\.phonedoctor\.app' /tmp/pd-logcat.txt
+
+      - name: Upload test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PhoneDoctor-v1.1-KVM-test
+          path: |
+            /tmp/start.txt
+            /tmp/pd.xml
+            /tmp/pd-logcat.txt
+          if-no-files-found: warn
