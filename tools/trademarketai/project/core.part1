@@ -1,0 +1,333 @@
+            if (ok) out += Pivot(i, c[i].high)
+        }
+        return out
+    }
+
+    fun swingLows(c: List<Candle>, wing: Int = 3): List<Pivot> {
+        val out = mutableListOf<Pivot>()
+        if (c.size < wing * 2 + 1) return out
+        for (i in wing until c.size - wing) {
+            var ok = true
+            for (j in i - wing..i + wing) if (j != i && c[j].low <= c[i].low) { ok = false; break }
+            if (ok) out += Pivot(i, c[i].low)
+        }
+        return out
+    }
+
+    fun structure(c: List<Candle>): Structure {
+        val highs = swingHighs(c).takeLast(3)
+        val lows = swingLows(c).takeLast(3)
+        if (highs.size < 2 || lows.size < 2) return Structure.MIXED
+        val hh = highs.last().price > highs[highs.lastIndex - 1].price
+        val hl = lows.last().price > lows[lows.lastIndex - 1].price
+        val lh = highs.last().price < highs[highs.lastIndex - 1].price
+        val ll = lows.last().price < lows[lows.lastIndex - 1].price
+        return when {
+            hh && hl -> Structure.BULLISH
+            lh && ll -> Structure.BEARISH
+            abs(highs.last().price / highs[highs.lastIndex - 1].price - 1) < 0.01 && abs(lows.last().price / lows[lows.lastIndex - 1].price - 1) < 0.01 -> Structure.RANGE
+            else -> Structure.MIXED
+        }
+    }
+
+    fun support(c: List<Candle>, current: Double): Double {
+        val lows = swingLows(c).map { it.price }.filter { it < current }.sortedDescending()
+        return lows.firstOrNull() ?: c.takeLast(min(30, c.size)).minOfOrNull { it.low } ?: current
+    }
+
+    fun resistance(c: List<Candle>, current: Double): Double {
+        val highs = swingHighs(c).map { it.price }.filter { it > current }.sorted()
+        return highs.firstOrNull() ?: c.takeLast(min(30, c.size)).maxOfOrNull { it.high } ?: current
+    }
+
+    fun recentSwingLow(c: List<Candle>): Double = swingLows(c).lastOrNull()?.price ?: c.takeLast(min(30, c.size)).minOf { it.low }
+    fun recentSwingHigh(c: List<Candle>): Double = swingHighs(c).lastOrNull()?.price ?: c.takeLast(min(30, c.size)).maxOf { it.high }
+
+    private fun trendline(pivots: List<Pivot>, currentIndex: Int, atr: Double, kind: String, currentPrice: Double): TrendlineInfo {
+        if (pivots.size < 2 || !atr.isFinite() || atr <= 0) return TrendlineInfo()
+        val selected = pivots.takeLast(min(5, pivots.size))
+        var best: TrendlineInfo? = null
+        for (a in 0 until selected.size - 1) {
+            for (b in a + 1 until selected.size) {
+                val p1 = selected[a]; val p2 = selected[b]
+                if (p2.index == p1.index) continue
+                val slope = (p2.price - p1.price) / (p2.index - p1.index)
+                if (kind == "SUPPORT" && slope < -atr * 0.10) continue
+                if (kind == "RESISTANCE" && slope > atr * 0.10) continue
+                var touches = 0
+                for (p in selected) {
+                    val y = p1.price + slope * (p.index - p1.index)
+                    if (abs(p.price - y) <= atr * 0.45) touches++
+                }
+                val now = p1.price + slope * (currentIndex - p1.index)
+                val broken = if (kind == "SUPPORT") currentPrice < now - atr * 0.35 else currentPrice > now + atr * 0.35
+                val info = TrendlineInfo(
+                    kind = kind,
+                    valueNow = now,
+                    slopePerBar = slope,
+                    touches = touches,
+                    broken = broken,
+                    description = "$kind • tocchi $touches • ${if (broken) "rotta" else "attiva"}"
+                )
+                if (best == null || info.touches > best!!.touches) best = info
+            }
+        }
+        return best ?: TrendlineInfo()
+    }
+
+    fun supportTrendline(c: List<Candle>, atr: Double): TrendlineInfo = trendline(swingLows(c), c.lastIndex, atr, "SUPPORT", c.last().close)
+    fun resistanceTrendline(c: List<Candle>, atr: Double): TrendlineInfo = trendline(swingHighs(c), c.lastIndex, atr, "RESISTANCE", c.last().close)
+
+    fun classifyTrend(price: Double, e20: Double, e50: Double, e200: Double, adx: Double, structure: Structure): Trend {
+        val bull = price > e20 && e20 > e50 && (!e200.isFinite() || e50 > e200)
+        val bear = price < e20 && e20 < e50 && (!e200.isFinite() || e50 < e200)
+        return when {
+            bull && structure == Structure.BULLISH && adx >= 25 -> Trend.STRONG_BULL
+            bull -> Trend.BULL
+            bear && structure == Structure.BEARISH && adx >= 25 -> Trend.STRONG_BEAR
+            bear -> Trend.BEAR
+            adx.isFinite() && adx < 18 -> Trend.RANGE
+            else -> Trend.NEUTRAL
+        }
+    }
+}
+
+// ---- BinanceClient.kt ----
+class BinanceClient(private val baseUrl: String = "https://api.binance.com") {
+    private fun get(path: String, headers: Map<String, String> = emptyMap()): String {
+        val conn = URL(baseUrl + path).openConnection() as HttpURLConnection
+        conn.requestMethod = "GET"
+        conn.connectTimeout = 12_000
+        conn.readTimeout = 20_000
+        conn.setRequestProperty("Accept", "application/json")
+        headers.forEach { (k, v) -> conn.setRequestProperty(k, v) }
+        val code = conn.responseCode
+        val stream = if (code in 200..299) conn.inputStream else conn.errorStream
+        val text = BufferedReader(InputStreamReader(stream)).use { it.readText() }
+        conn.disconnect()
+        if (code !in 200..299) throw IllegalStateException("Binance HTTP $code: $text")
+        return text
+    }
+
+    fun ping(): Boolean {
+        get("/api/v3/ping")
+        return true
+    }
+
+    fun exchangeInfoSymbols(): Set<String> {
+        val root = JSONObject(get("/api/v3/exchangeInfo"))
+        val arr = root.getJSONArray("symbols")
+        val out = mutableSetOf<String>()
+        for (i in 0 until arr.length()) {
+            val o = arr.getJSONObject(i)
+            if (o.optString("status") == "TRADING" && o.optString("quoteAsset") == "USDT" && o.optBoolean("isSpotTradingAllowed", true)) {
+                out += o.getString("symbol")
+            }
+        }
+        return out
+    }
+
+    fun allTickers(): List<MarketTicker> {
+        val arr = JSONArray(get("/api/v3/ticker/24hr"))
+        val books = JSONArray(get("/api/v3/ticker/bookTicker"))
+        val bm = HashMap<String, Pair<Double, Double>>()
+        for (i in 0 until books.length()) {
+            val o = books.getJSONObject(i)
+            bm[o.getString("symbol")] = o.optString("bidPrice").toDoubleOrNull().orZero() to o.optString("askPrice").toDoubleOrNull().orZero()
+        }
+        val out = ArrayList<MarketTicker>(arr.length())
+        for (i in 0 until arr.length()) {
+            val o = arr.getJSONObject(i)
+            val symbol = o.getString("symbol")
+            val book = bm[symbol] ?: (0.0 to 0.0)
+            out += MarketTicker(
+                symbol = symbol,
+                lastPrice = o.optString("lastPrice").toDoubleOrNull().orZero(),
+                quoteVolume = o.optString("quoteVolume").toDoubleOrNull().orZero(),
+                priceChangePercent = o.optString("priceChangePercent").toDoubleOrNull().orZero(),
+                highPrice = o.optString("highPrice").toDoubleOrNull().orZero(),
+                lowPrice = o.optString("lowPrice").toDoubleOrNull().orZero(),
+                trades = o.optLong("count", 0L),
+                bid = book.first,
+                ask = book.second
+            )
+        }
+        return out
+    }
+
+    fun klines(symbol: String, interval: String, limit: Int): List<Candle> {
+        val path = "/api/v3/klines?symbol=${enc(symbol)}&interval=${enc(interval)}&limit=${limit.coerceIn(20, 1000)}"
+        val arr = JSONArray(get(path))
+        val out = ArrayList<Candle>(arr.length())
+        for (i in 0 until arr.length()) {
+            val a = arr.getJSONArray(i)
+            out += Candle(
+                openTime = a.getLong(0),
+                open = a.getString(1).toDouble(),
+                high = a.getString(2).toDouble(),
+                low = a.getString(3).toDouble(),
+                close = a.getString(4).toDouble(),
+                volume = a.getString(5).toDouble(),
+                quoteVolume = a.getString(7).toDouble(),
+                trades = a.getLong(8),
+                takerBuyBase = a.getString(9).toDouble()
+            )
+        }
+        return out
+    }
+
+    fun testSignedAccount(apiKey: String, secret: String): Boolean {
+        require(apiKey.isNotBlank() && secret.isNotBlank())
+        val timestamp = System.currentTimeMillis()
+        val query = "timestamp=$timestamp&recvWindow=5000"
+        val sig = hmacSha256(secret, query)
+        get("/api/v3/account?$query&signature=$sig", mapOf("X-MBX-APIKEY" to apiKey))
+        return true
+    }
+
+    private fun hmacSha256(secret: String, msg: String): String {
+        val mac = Mac.getInstance("HmacSHA256")
+        mac.init(SecretKeySpec(secret.toByteArray(Charsets.UTF_8), "HmacSHA256"))
+        return mac.doFinal(msg.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
+    }
+
+    private fun enc(v: String) = URLEncoder.encode(v, "UTF-8")
+    private fun Double?.orZero() = this ?: 0.0
+}
+
+// ---- TimeframeAnalyzer.kt ----
+object TimeframeAnalyzer {
+    fun analyze(timeframe: String, candles: List<Candle>): TimeframeAnalysis {
+        require(candles.size >= 60) { "Storico insufficiente $timeframe: ${candles.size}" }
+        val closes = candles.map { it.close }
+        val price = closes.last()
+        val e9 = Indicators.ema(closes, 9)
+        val e20 = Indicators.ema(closes, 20)
+        val e50 = Indicators.ema(closes, 50)
+        val e100 = if (closes.size >= 100) Indicators.ema(closes, 100) else Double.NaN
+        val e200 = if (closes.size >= 200) Indicators.ema(closes, 200) else Double.NaN
+        val s50 = Indicators.sma(closes, 50)
+        val s100 = if (closes.size >= 100) Indicators.sma(closes, 100) else Double.NaN
+        val s200 = if (closes.size >= 200) Indicators.sma(closes, 200) else Double.NaN
+        val rsi = Indicators.rsi(closes)
+        val macd = Indicators.macd(closes)
+        val atr = Indicators.atr(candles)
+        val adx = Indicators.adx(candles)
+        val structure = MarketStructure.structure(candles)
+        val trend = MarketStructure.classifyTrend(price, e20, e50, e200, adx.adx, structure)
+        return TimeframeAnalysis(
+            timeframe = timeframe,
+            price = price,
+            ema9 = e9, ema20 = e20, ema50 = e50, ema100 = e100, ema200 = e200,
+            sma50 = s50, sma100 = s100, sma200 = s200,
+            rsi14 = rsi,
+            macd = macd.line, macdSignal = macd.signal, macdHistogram = macd.histogram,
+            atr14 = atr,
+            atrPct = if (price > 0 && atr.isFinite()) atr / price * 100 else Double.NaN,
+            adx14 = adx.adx, plusDi = adx.plusDi, minusDi = adx.minusDi,
+            bollingerWidthPct = Indicators.bollingerWidthPct(closes),
+            roc20 = Indicators.roc(closes),
+            relativeVolume = Indicators.relativeVolume(candles),
+            obvSlope = Indicators.obvSlope(candles),
+            takerBuyRatio = Indicators.takerBuyRatio(candles),
+            trend = trend,
+            structure = structure,
+            trendlineSupport = MarketStructure.supportTrendline(candles, atr),
+            trendlineResistance = MarketStructure.resistanceTrendline(candles, atr),
+            support = MarketStructure.support(candles, price),
+            resistance = MarketStructure.resistance(candles, price),
+            swingLow = MarketStructure.recentSwingLow(candles),
+            swingHigh = MarketStructure.recentSwingHigh(candles)
+        )
+    }
+}
+
+// ---- RiskEngine.kt ----
+object RiskEngine {
+    fun plan(symbol: String, current: Double, daily: TimeframeAnalysis, h4: TimeframeAnalysis, h1: TimeframeAnalysis,
+             decision: Decision, bullCount: Int, bearCount: Int, contradictions: Int): TradePlan {
+        if (decision == Decision.WAIT || !h4.atr14.isFinite() || h4.atr14 <= 0.0) {
+            return TradePlan(Decision.WAIT, symbol, "Nessun setup confermato", quality(bullCount, bearCount, contradictions), current,
+                "N/D", EntryMode.NONE, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                "Attendere nuova struttura 1D/4H", "WAIT", "Confluenze insufficienti o contraddittorie.")
+        }
+        val atr = h4.atr14
+        return if (decision == Decision.LONG) longPlan(symbol, current, daily, h4, h1, atr, bullCount, bearCount, contradictions)
+        else shortPlan(symbol, current, daily, h4, h1, atr, bullCount, bearCount, contradictions)
+    }
+
+    private fun longPlan(symbol: String, current: Double, daily: TimeframeAnalysis, h4: TimeframeAnalysis, h1: TimeframeAnalysis,
+                         atr: Double, bull: Int, bear: Int, contra: Int): TradePlan {
+        val structuralSupport = listOf(h4.support, h4.ema20, h4.ema50, h4.trendlineSupport.valueNow)
+            .filter { it.isFinite() && it > 0 && it < current * 1.03 }.maxOrNull() ?: h4.support
+        val entryCenter = min(current, structuralSupport + atr * 0.20)
+        val low = max(0.0, entryCenter - atr * 0.20)
+        val high = entryCenter + atr * 0.20
+        val baseLow = listOf(h4.swingLow, h4.support, daily.support).filter { it.isFinite() && it > 0 }.minOrNull() ?: (entryCenter - atr)
+        var sl = baseLow - atr * 0.45
+        if (sl >= entryCenter) sl = entryCenter - atr * 1.25
+        val risk = entryCenter - sl
+        val r1Level = listOf(h4.resistance, h1.resistance).filter { it.isFinite() && it > entryCenter + risk * 0.8 }.minOrNull()
+        val dLevel = if (daily.resistance > entryCenter) daily.resistance else Double.NaN
+        val tp1 = max(entryCenter + risk * 1.25, r1Level ?: (entryCenter + atr * 1.5))
+        val tp2 = max(tp1 + atr * 0.5, if (dLevel.isFinite()) dLevel else entryCenter + risk * 2.25)
+        val tp3 = max(tp2 + atr * 0.75, entryCenter + risk * 3.5)
+        val mode = when {
+            current in low..high -> EntryMode.NOW
+            current > high -> EntryMode.RETRACE
+            else -> EntryMode.RETEST
+        }
+        val chase = high + atr * 0.50
+        return TradePlan(Decision.LONG, symbol, "Trend continuation / pullback", quality(bull, bear, contra), current, "2–7 giorni", mode,
+            low, high, entryCenter, chase, sl, tp1, tp2, tp3, rr(entryCenter, sl, tp1), rr(entryCenter, sl, tp2), rr(entryCenter, sl, tp3),
+            "Chiusura 4H sotto ${fmt(max(h4.support, h4.swingLow))} invalida il setup rialzista.",
+            if (mode == EntryMode.NOW) "LONG solo con conferma della zona di ingresso." else "Attendere ${mode.name.lowercase()} verso la zona di ingresso.",
+            "SL sotto struttura 4H con buffer ATR; target derivati da resistenze e multipli di rischio/ATR.")
+    }
+
+    private fun shortPlan(symbol: String, current: Double, daily: TimeframeAnalysis, h4: TimeframeAnalysis, h1: TimeframeAnalysis,
+                          atr: Double, bull: Int, bear: Int, contra: Int): TradePlan {
+        val structuralResistance = listOf(h4.resistance, h4.ema20, h4.ema50, h4.trendlineResistance.valueNow)
+            .filter { it.isFinite() && it > 0 && it > current * 0.97 }.minOrNull() ?: h4.resistance
+        val entryCenter = max(current, structuralResistance - atr * 0.20)
+        val low = entryCenter - atr * 0.20
+        val high = entryCenter + atr * 0.20
+        val baseHigh = listOf(h4.swingHigh, h4.resistance, daily.resistance).filter { it.isFinite() && it > 0 }.maxOrNull() ?: (entryCenter + atr)
+        var sl = baseHigh + atr * 0.45
+        if (sl <= entryCenter) sl = entryCenter + atr * 1.25
+        val risk = sl - entryCenter
+        val s1 = listOf(h4.support, h1.support).filter { it.isFinite() && it < entryCenter - risk * 0.8 }.maxOrNull()
+        val dLevel = if (daily.support < entryCenter) daily.support else Double.NaN
+        val tp1 = min(entryCenter - risk * 1.25, s1 ?: (entryCenter - atr * 1.5))
+        val tp2 = min(tp1 - atr * 0.5, if (dLevel.isFinite()) dLevel else entryCenter - risk * 2.25)
+        val tp3 = min(tp2 - atr * 0.75, entryCenter - risk * 3.5)
+        val mode = when {
+            current in low..high -> EntryMode.NOW
+            current < low -> EntryMode.RETRACE
+            else -> EntryMode.RETEST
+        }
+        val noChase = low - atr * 0.50
+        return TradePlan(Decision.SHORT, symbol, "Trend continuation / pullback", quality(bull, bear, contra), current, "2–7 giorni", mode,
+            low, high, entryCenter, noChase, sl, tp1, tp2, tp3, rr(entryCenter, sl, tp1), rr(entryCenter, sl, tp2), rr(entryCenter, sl, tp3),
+            "Chiusura 4H sopra ${fmt(min(h4.resistance, h4.swingHigh))} invalida il setup ribassista.",
+            if (mode == EntryMode.NOW) "SHORT solo con conferma della zona di ingresso." else "Attendere ${mode.name.lowercase()} verso la zona di ingresso.",
+            "SL sopra struttura 4H con buffer ATR; target derivati da supporti e multipli di rischio/ATR.")
+    }
+
+    private fun rr(entry: Double, sl: Double, tp: Double): Double {
+        val risk = abs(entry - sl)
+        return if (risk > 0) abs(tp - entry) / risk else 0.0
+    }
+
+    private fun quality(bull: Int, bear: Int, contra: Int): String {
+        val dominant = max(bull, bear)
+        val opposing = min(bull, bear) + contra
+        return when {
+            dominant >= 7 && opposing <= 2 -> "HIGH"
+            dominant >= 5 && opposing <= 4 -> "MEDIUM"
+            else -> "LOW"
+        }
+    }
+
+    private fun fmt(v: Double): String = if (v >= 1000) "%.2f".format(v) else if (v >= 1) "%.4f".format(v) else "%.8f".format(v)
+}
