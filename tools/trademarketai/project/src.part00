@@ -1,0 +1,190 @@
+package com.luca.trademarkerai
+
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
+import android.os.Bundle
+import android.text.InputType
+import android.util.Base64
+import android.view.Gravity
+import android.view.View
+import android.widget.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLEncoder
+import java.security.KeyStore
+import java.text.DecimalFormat
+import java.util.concurrent.Executors
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.Mac
+import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import kotlin.math.abs
+import kotlin.math.ln
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.sqrt
+import org.json.JSONArray
+import org.json.JSONObject
+
+// ---- Models.kt ----
+data class Candle(
+    val openTime: Long,
+    val open: Double,
+    val high: Double,
+    val low: Double,
+    val close: Double,
+    val volume: Double,
+    val quoteVolume: Double = 0.0,
+    val trades: Long = 0,
+    val takerBuyBase: Double = 0.0
+)
+
+data class MarketTicker(
+    val symbol: String,
+    val lastPrice: Double,
+    val quoteVolume: Double,
+    val priceChangePercent: Double,
+    val highPrice: Double,
+    val lowPrice: Double,
+    val trades: Long,
+    val bid: Double = 0.0,
+    val ask: Double = 0.0
+) {
+    val spreadPct: Double
+        get() = if (bid > 0.0 && ask > 0.0) ((ask - bid) / ((ask + bid) / 2.0)) * 100.0 else Double.NaN
+}
+
+enum class Trend { STRONG_BULL, BULL, NEUTRAL, RANGE, BEAR, STRONG_BEAR }
+enum class Structure { BULLISH, BEARISH, RANGE, MIXED }
+enum class Decision { LONG, SHORT, WAIT }
+enum class EntryMode { NOW, RETRACE, BREAKOUT, RETEST, NONE }
+
+data class TrendlineInfo(
+    val kind: String = "NONE",
+    val valueNow: Double = Double.NaN,
+    val slopePerBar: Double = 0.0,
+    val touches: Int = 0,
+    val broken: Boolean = false,
+    val description: String = "Nessuna trendline affidabile"
+)
+
+data class TimeframeAnalysis(
+    val timeframe: String,
+    val price: Double,
+    val ema9: Double,
+    val ema20: Double,
+    val ema50: Double,
+    val ema100: Double,
+    val ema200: Double,
+    val sma50: Double,
+    val sma100: Double,
+    val sma200: Double,
+    val rsi14: Double,
+    val macd: Double,
+    val macdSignal: Double,
+    val macdHistogram: Double,
+    val atr14: Double,
+    val atrPct: Double,
+    val adx14: Double,
+    val plusDi: Double,
+    val minusDi: Double,
+    val bollingerWidthPct: Double,
+    val roc20: Double,
+    val relativeVolume: Double,
+    val obvSlope: Double,
+    val takerBuyRatio: Double,
+    val trend: Trend,
+    val structure: Structure,
+    val trendlineSupport: TrendlineInfo,
+    val trendlineResistance: TrendlineInfo,
+    val support: Double,
+    val resistance: Double,
+    val swingLow: Double,
+    val swingHigh: Double
+)
+
+data class Candidate(
+    val ticker: MarketTicker,
+    val weekly: TimeframeAnalysis,
+    val daily: TimeframeAnalysis,
+    val h4: TimeframeAnalysis,
+    val h1: TimeframeAnalysis,
+    val m15: TimeframeAnalysis,
+    val relativeStrengthVsBtc7d: Double,
+    val correlationVsBtc: Double,
+    val bullEvidence: List<String>,
+    val bearEvidence: List<String>,
+    val contradictions: List<String>,
+    val localDecision: Decision,
+    val localPlan: TradePlan,
+    val rankMetric: Double
+)
+
+data class TradePlan(
+    val decision: Decision,
+    val symbol: String,
+    val setup: String,
+    val setupQuality: String,
+    val currentPrice: Double,
+    val expectedHoldingPeriod: String,
+    val entryMode: EntryMode,
+    val entryZoneLow: Double,
+    val entryZoneHigh: Double,
+    val preferredEntry: Double,
+    val doNotChase: Double,
+    val stopLoss: Double,
+    val tp1: Double,
+    val tp2: Double,
+    val tp3: Double,
+    val rr1: Double,
+    val rr2: Double,
+    val rr3: Double,
+    val invalidation: String,
+    val actionNow: String,
+    val summary: String,
+    val source: String = "LOCAL"
+)
+
+data class ScanResult(
+    val generatedAt: Long,
+    val btcRegime: String,
+    val ethRegime: String,
+    val shortlist: List<Candidate>,
+    val finalPlan: TradePlan,
+    val aiUsed: Boolean,
+    val notes: List<String>
+)
+
+// ---- Indicators.kt ----
+object Indicators {
+    fun sma(values: List<Double>, period: Int): Double {
+        if (values.size < period || period <= 0) return Double.NaN
+        return values.takeLast(period).average()
+    }
+
+    fun emaSeries(values: List<Double>, period: Int): List<Double> {
+        if (values.isEmpty()) return emptyList()
+        val k = 2.0 / (period + 1.0)
+        val out = ArrayList<Double>(values.size)
+        var e = values.first()
+        out.add(e)
+        for (i in 1 until values.size) {
+            e = values[i] * k + e * (1.0 - k)
+            out.add(e)
+        }
+        return out
+    }
+
+    fun ema(values: List<Double>, period: Int): Double = emaSeries(values, period).lastOrNull() ?: Double.NaN
+
+    fun rsi(values: List<Double>, period: Int = 14): Double {
+        if (values.size <= period) return Double.NaN
