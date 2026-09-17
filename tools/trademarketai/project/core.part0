@@ -1,0 +1,337 @@
+package com.luca.trademarkerai
+
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
+import android.os.Bundle
+import android.text.InputType
+import android.util.Base64
+import android.view.Gravity
+import android.view.View
+import android.widget.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLEncoder
+import java.security.KeyStore
+import java.text.DecimalFormat
+import java.util.concurrent.Executors
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.Mac
+import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import kotlin.math.abs
+import kotlin.math.ln
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.sqrt
+import org.json.JSONArray
+import org.json.JSONObject
+
+// ---- Models.kt ----
+data class Candle(
+    val openTime: Long,
+    val open: Double,
+    val high: Double,
+    val low: Double,
+    val close: Double,
+    val volume: Double,
+    val quoteVolume: Double = 0.0,
+    val trades: Long = 0,
+    val takerBuyBase: Double = 0.0
+)
+
+data class MarketTicker(
+    val symbol: String,
+    val lastPrice: Double,
+    val quoteVolume: Double,
+    val priceChangePercent: Double,
+    val highPrice: Double,
+    val lowPrice: Double,
+    val trades: Long,
+    val bid: Double = 0.0,
+    val ask: Double = 0.0
+) {
+    val spreadPct: Double
+        get() = if (bid > 0.0 && ask > 0.0) ((ask - bid) / ((ask + bid) / 2.0)) * 100.0 else Double.NaN
+}
+
+enum class Trend { STRONG_BULL, BULL, NEUTRAL, RANGE, BEAR, STRONG_BEAR }
+enum class Structure { BULLISH, BEARISH, RANGE, MIXED }
+enum class Decision { LONG, SHORT, WAIT }
+enum class EntryMode { NOW, RETRACE, BREAKOUT, RETEST, NONE }
+
+data class TrendlineInfo(
+    val kind: String = "NONE",
+    val valueNow: Double = Double.NaN,
+    val slopePerBar: Double = 0.0,
+    val touches: Int = 0,
+    val broken: Boolean = false,
+    val description: String = "Nessuna trendline affidabile"
+)
+
+data class TimeframeAnalysis(
+    val timeframe: String,
+    val price: Double,
+    val ema9: Double,
+    val ema20: Double,
+    val ema50: Double,
+    val ema100: Double,
+    val ema200: Double,
+    val sma50: Double,
+    val sma100: Double,
+    val sma200: Double,
+    val rsi14: Double,
+    val macd: Double,
+    val macdSignal: Double,
+    val macdHistogram: Double,
+    val atr14: Double,
+    val atrPct: Double,
+    val adx14: Double,
+    val plusDi: Double,
+    val minusDi: Double,
+    val bollingerWidthPct: Double,
+    val roc20: Double,
+    val relativeVolume: Double,
+    val obvSlope: Double,
+    val takerBuyRatio: Double,
+    val trend: Trend,
+    val structure: Structure,
+    val trendlineSupport: TrendlineInfo,
+    val trendlineResistance: TrendlineInfo,
+    val support: Double,
+    val resistance: Double,
+    val swingLow: Double,
+    val swingHigh: Double
+)
+
+data class Candidate(
+    val ticker: MarketTicker,
+    val weekly: TimeframeAnalysis,
+    val daily: TimeframeAnalysis,
+    val h4: TimeframeAnalysis,
+    val h1: TimeframeAnalysis,
+    val m15: TimeframeAnalysis,
+    val relativeStrengthVsBtc7d: Double,
+    val correlationVsBtc: Double,
+    val bullEvidence: List<String>,
+    val bearEvidence: List<String>,
+    val contradictions: List<String>,
+    val localDecision: Decision,
+    val localPlan: TradePlan,
+    val rankMetric: Double
+)
+
+data class TradePlan(
+    val decision: Decision,
+    val symbol: String,
+    val setup: String,
+    val setupQuality: String,
+    val currentPrice: Double,
+    val expectedHoldingPeriod: String,
+    val entryMode: EntryMode,
+    val entryZoneLow: Double,
+    val entryZoneHigh: Double,
+    val preferredEntry: Double,
+    val doNotChase: Double,
+    val stopLoss: Double,
+    val tp1: Double,
+    val tp2: Double,
+    val tp3: Double,
+    val rr1: Double,
+    val rr2: Double,
+    val rr3: Double,
+    val invalidation: String,
+    val actionNow: String,
+    val summary: String,
+    val source: String = "LOCAL"
+)
+
+data class ScanResult(
+    val generatedAt: Long,
+    val btcRegime: String,
+    val ethRegime: String,
+    val shortlist: List<Candidate>,
+    val finalPlan: TradePlan,
+    val aiUsed: Boolean,
+    val notes: List<String>
+)
+
+// ---- Indicators.kt ----
+object Indicators {
+    fun sma(values: List<Double>, period: Int): Double {
+        if (values.size < period || period <= 0) return Double.NaN
+        return values.takeLast(period).average()
+    }
+
+    fun emaSeries(values: List<Double>, period: Int): List<Double> {
+        if (values.isEmpty()) return emptyList()
+        val k = 2.0 / (period + 1.0)
+        val out = ArrayList<Double>(values.size)
+        var e = values.first()
+        out.add(e)
+        for (i in 1 until values.size) {
+            e = values[i] * k + e * (1.0 - k)
+            out.add(e)
+        }
+        return out
+    }
+
+    fun ema(values: List<Double>, period: Int): Double = emaSeries(values, period).lastOrNull() ?: Double.NaN
+
+    fun rsi(values: List<Double>, period: Int = 14): Double {
+        if (values.size <= period) return Double.NaN
+        var gains = 0.0
+        var losses = 0.0
+        val start = values.size - period - 1
+        for (i in start + 1 until values.size) {
+            val d = values[i] - values[i - 1]
+            if (d >= 0) gains += d else losses -= d
+        }
+        if (losses == 0.0) return 100.0
+        val rs = (gains / period) / (losses / period)
+        return 100.0 - (100.0 / (1.0 + rs))
+    }
+
+    data class Macd(val line: Double, val signal: Double, val histogram: Double)
+    fun macd(values: List<Double>): Macd {
+        if (values.size < 35) return Macd(Double.NaN, Double.NaN, Double.NaN)
+        val e12 = emaSeries(values, 12)
+        val e26 = emaSeries(values, 26)
+        val diffs = values.indices.map { e12[it] - e26[it] }
+        val sig = emaSeries(diffs, 9)
+        val line = diffs.last()
+        val signal = sig.last()
+        return Macd(line, signal, line - signal)
+    }
+
+    fun atr(candles: List<Candle>, period: Int = 14): Double {
+        if (candles.size <= period) return Double.NaN
+        val trs = ArrayList<Double>()
+        for (i in 1 until candles.size) {
+            val c = candles[i]
+            val pc = candles[i - 1].close
+            trs.add(max(c.high - c.low, max(abs(c.high - pc), abs(c.low - pc))))
+        }
+        return trs.takeLast(period).average()
+    }
+
+    data class Adx(val adx: Double, val plusDi: Double, val minusDi: Double)
+    fun adx(candles: List<Candle>, period: Int = 14): Adx {
+        if (candles.size < period + 2) return Adx(Double.NaN, Double.NaN, Double.NaN)
+        val slice = candles.takeLast(period + 1)
+        var trSum = 0.0
+        var plusSum = 0.0
+        var minusSum = 0.0
+        val dxList = mutableListOf<Double>()
+        for (i in 1 until slice.size) {
+            val c = slice[i]
+            val p = slice[i - 1]
+            val tr = max(c.high - c.low, max(abs(c.high - p.close), abs(c.low - p.close)))
+            val up = c.high - p.high
+            val down = p.low - c.low
+            val plus = if (up > down && up > 0) up else 0.0
+            val minus = if (down > up && down > 0) down else 0.0
+            trSum += tr
+            plusSum += plus
+            minusSum += minus
+            if (tr > 0) {
+                val pdi = 100 * plus / tr
+                val mdi = 100 * minus / tr
+                if (pdi + mdi > 0) dxList += 100 * abs(pdi - mdi) / (pdi + mdi)
+            }
+        }
+        val pdi = if (trSum > 0) 100 * plusSum / trSum else 0.0
+        val mdi = if (trSum > 0) 100 * minusSum / trSum else 0.0
+        val adx = if (dxList.isNotEmpty()) dxList.average() else 0.0
+        return Adx(adx, pdi, mdi)
+    }
+
+    fun bollingerWidthPct(values: List<Double>, period: Int = 20, mult: Double = 2.0): Double {
+        if (values.size < period) return Double.NaN
+        val s = values.takeLast(period)
+        val mean = s.average()
+        if (mean == 0.0) return Double.NaN
+        val sd = sqrt(s.sumOf { (it - mean).pow(2) } / s.size)
+        return ((mean + mult * sd) - (mean - mult * sd)) / mean * 100.0
+    }
+
+    fun roc(values: List<Double>, period: Int = 20): Double {
+        if (values.size <= period) return Double.NaN
+        val old = values[values.size - 1 - period]
+        return if (old != 0.0) (values.last() / old - 1.0) * 100.0 else Double.NaN
+    }
+
+    fun relativeVolume(candles: List<Candle>, period: Int = 20): Double {
+        if (candles.size < period + 1) return Double.NaN
+        val avg = candles.dropLast(1).takeLast(period).map { it.volume }.average()
+        return if (avg > 0) candles.last().volume / avg else Double.NaN
+    }
+
+    fun obvSlope(candles: List<Candle>, lookback: Int = 20): Double {
+        if (candles.size < lookback + 1) return 0.0
+        var obv = 0.0
+        val vals = mutableListOf<Double>()
+        for (i in 1 until candles.size) {
+            obv += when {
+                candles[i].close > candles[i - 1].close -> candles[i].volume
+                candles[i].close < candles[i - 1].close -> -candles[i].volume
+                else -> 0.0
+            }
+            vals += obv
+        }
+        val s = vals.takeLast(lookback)
+        val xMean = (s.size - 1) / 2.0
+        val yMean = s.average()
+        var num = 0.0
+        var den = 0.0
+        for (i in s.indices) {
+            num += (i - xMean) * (s[i] - yMean)
+            den += (i - xMean).pow(2)
+        }
+        return if (den > 0 && abs(yMean) > 1e-9) (num / den) / abs(yMean) * 100.0 else 0.0
+    }
+
+    fun takerBuyRatio(candles: List<Candle>, period: Int = 20): Double {
+        val s = candles.takeLast(min(period, candles.size))
+        val total = s.sumOf { it.volume }
+        val buy = s.sumOf { it.takerBuyBase }
+        return if (total > 0) buy / total else 0.5
+    }
+
+    fun correlation(a: List<Double>, b: List<Double>): Double {
+        val n = min(a.size, b.size)
+        if (n < 5) return Double.NaN
+        val aa = a.takeLast(n)
+        val bb = b.takeLast(n)
+        val ma = aa.average(); val mb = bb.average()
+        var num = 0.0; var da = 0.0; var db = 0.0
+        for (i in 0 until n) {
+            val xa = aa[i] - ma; val xb = bb[i] - mb
+            num += xa * xb; da += xa * xa; db += xb * xb
+        }
+        return if (da > 0 && db > 0) num / sqrt(da * db) else Double.NaN
+    }
+}
+
+// ---- MarketStructure.kt ----
+object MarketStructure {
+    data class Pivot(val index: Int, val price: Double)
+
+    fun swingHighs(c: List<Candle>, wing: Int = 3): List<Pivot> {
+        val out = mutableListOf<Pivot>()
+        if (c.size < wing * 2 + 1) return out
+        for (i in wing until c.size - wing) {
+            var ok = true
+            for (j in i - wing..i + wing) if (j != i && c[j].high >= c[i].high) { ok = false; break }
+            if (ok) out += Pivot(i, c[i].high)
+        }
+        return out
+    }
