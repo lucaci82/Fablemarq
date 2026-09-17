@@ -45,8 +45,7 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            APK="$GITHUB_WORKSPACE/tools/trademarketai/app/app/build/outputs/apk/debug/app-debug.apk"
-            adb install -r "$APK"
+            adb install -r "$GITHUB_WORKSPACE/tools/trademarketai/app/app/build/outputs/apk/debug/app-debug.apk"
             adb shell pm path com.luca.trademarkerai
             adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER com.luca.trademarkerai > /tmp/tm-resolve.txt
             grep -q 'com.luca.trademarkerai.MainActivity' /tmp/tm-resolve.txt
