@@ -28,7 +28,8 @@ jobs:
         run: |
           rm -rf /tmp/pd13
           mkdir -p /tmp/pd13
-          unzip -q tools/phonedoctor/v13/PhoneDoctor_Android_v1.3_Project.zip -d /tmp/pd13
+          base64 -d tools/phonedoctor/v13/PhoneDoctor_Android_v1.3_Project.zip.b64 > /tmp/pd13.zip
+          unzip -q /tmp/pd13.zip -d /tmp/pd13
 
       - uses: gradle/actions/setup-gradle@v4
         with:
