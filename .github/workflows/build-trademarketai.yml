@@ -1,0 +1,37 @@
+name: Build TradeMarkerAI
+
+on:
+  push:
+    branches: ["chatgpt/trademarketai-v1"]
+    paths:
+      - "tools/trademarketai/app/**"
+      - ".github/workflows/build-trademarketai.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.10.2"
+      - name: Build debug APK
+        working-directory: tools/trademarketai/app
+        run: gradle assembleDebug --stacktrace
+      - name: Verify APK
+        run: |
+          test -f tools/trademarketai/app/app/build/outputs/apk/debug/app-debug.apk
+          ls -lh tools/trademarketai/app/app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TradeMarkerAI-v1-APK
+          path: tools/trademarketai/app/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
