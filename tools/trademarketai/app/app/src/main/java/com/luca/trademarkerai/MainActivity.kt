@@ -2,111 +2,267 @@ package com.luca.trademarkerai
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
-import android.util.Base64
 import android.view.Gravity
 import android.widget.*
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.security.KeyStore
 import java.util.concurrent.Executors
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
-import javax.crypto.spec.GCMParameterSpec
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class MainActivity : Activity() {
-    data class C(val o:Double,val h:Double,val l:Double,val c:Double,val v:Double,val tb:Double)
-    data class T(val s:String,val p:Double,val qv:Double,val bid:Double,val ask:Double){ val spread get()=if(bid>0&&ask>0)(ask-bid)/((ask+bid)/2)*100 else 999.0 }
-    data class A(val tf:String,val p:Double,val e20:Double,val e50:Double,val e200:Double,val s50:Double,val s200:Double,val rsi:Double,val atr:Double,val adx:Double,val macdH:Double,val rv:Double,val tb:Double,val sup:Double,val res:Double,val trend:String,val struct:String,val tlSup:Double,val tlRes:Double)
-    data class P(val symbol:String,val d:String,val quality:String,val entry:Double,val lo:Double,val hi:Double,val sl:Double,val t1:Double,val t2:Double,val t3:Double,val rr1:Double,val rr2:Double,val rr3:Double,val action:String,val reason:String,val source:String="LOCAL")
-    data class X(val t:T,val w:A,val d:A,val h4:A,val h1:A,val m15:A,val bull:List<String>,val bear:List<String>,val contra:List<String>,val plan:P,val rank:Double)
+    private val executor = Executors.newSingleThreadExecutor()
+    private val bg = Color.rgb(8, 14, 25)
+    private val card = Color.rgb(18, 27, 43)
+    private val green = Color.rgb(34, 197, 94)
+    private val fg = Color.rgb(235, 238, 244)
+    private val muted = Color.rgb(155, 165, 180)
 
-    private val ex=Executors.newSingleThreadExecutor()
-    private val bg=Color.rgb(8,14,25); private val card=Color.rgb(18,27,43); private val green=Color.rgb(34,197,94); private val fg=Color.rgb(235,238,244); private val muted=Color.rgb(155,165,180)
-    private lateinit var progress:ProgressBar; private lateinit var status:TextView; private lateinit var output:TextView; private lateinit var go:Button; private lateinit var capital:EditText; private lateinit var risk:EditText
-    private lateinit var sec:SecureStore
+    private lateinit var secure: SecureStore
+    private lateinit var progress: ProgressBar
+    private lateinit var status: TextView
+    private lateinit var output: TextView
+    private lateinit var analyze: Button
+    private lateinit var capital: EditText
+    private lateinit var risk: EditText
 
-    override fun onCreate(b:Bundle?){ super.onCreate(b); sec=SecureStore(this); window.statusBarColor=bg; ui() }
-    override fun onDestroy(){ ex.shutdownNow(); super.onDestroy() }
-
-    private fun ui(){
-        val sc=ScrollView(this).apply{setBackgroundColor(bg)}
-        val r=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(18),dp(20),dp(18),dp(30))}; sc.addView(r)
-        r.addView(TextView(this).apply{text="TRADEMARKERAI";textSize=28f;setTextColor(Color.WHITE);setTypeface(typeface,Typeface.BOLD)})
-        r.addView(TextView(this).apply{text="Swing Analysis • 2–7 giorni • Analysis-only";textSize=13f;setTextColor(green);setPadding(0,0,0,dp(14))})
-        val cr=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;setPadding(dp(10),dp(10),dp(10),dp(10));setBackgroundColor(card)}
-        capital=num("Capitale USDT","10000"); risk=num("Rischio %","1"); cr.addView(capital,LinearLayout.LayoutParams(0,dp(52),1f).apply{marginEnd=dp(8)});cr.addView(risk,LinearLayout.LayoutParams(0,dp(52),1f));r.addView(cr)
-        go=Button(this).apply{text="ANALIZZA MERCATO";setTextColor(Color.BLACK);setBackgroundColor(green);setTypeface(typeface,Typeface.BOLD);setOnClickListener{startScan()}};r.addView(go,LinearLayout.LayoutParams(-1,dp(58)).apply{topMargin=dp(10)})
-        r.addView(Button(this).apply{text="IMPOSTAZIONI API";setTextColor(fg);setBackgroundColor(Color.rgb(35,45,62));setOnClickListener{apiDialog()}},LinearLayout.LayoutParams(-1,dp(50)).apply{topMargin=dp(8)})
-        progress=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply{max=100};r.addView(progress,LinearLayout.LayoutParams(-1,dp(10)).apply{topMargin=dp(16)})
-        status=TextView(this).apply{text="Pronto";setTextColor(muted);textSize=13f;setPadding(0,dp(7),0,dp(10))};r.addView(status)
-        output=TextView(this).apply{text="Premi ANALIZZA MERCATO.\n\nL'app non invia ordini a Binance. WAIT è un risultato valido.";setTextColor(fg);textSize=14f;setLineSpacing(0f,1.12f);setTextIsSelectable(true)};r.addView(output)
-        setContentView(sc)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        secure = SecureStore(this)
+        window.statusBarColor = bg
+        buildUi()
     }
 
-    private fun startScan(){
-        val cap=capital.text.toString().toDoubleOrNull()?:0.0; val rp=(risk.text.toString().toDoubleOrNull()?:0.0).coerceIn(0.0,10.0)
-        go.isEnabled=false;output.text="Analisi in corso…";progress.progress=0
-        ex.execute{try{ val pair=scan{p,s->runOnUiThread{progress.progress=p;status.text=s}}; var plan=pair.first; val list=pair.second
-            val key=sec.get("openai"); if(key.isNotBlank()){runOnUiThread{status.text="Confronto finale OpenAI"}; try{plan=aiChoose(key,list,plan)}catch(e:Exception){plan=plan.copy(reason=plan.reason+"\nOpenAI non disponibile: "+(e.message?:"errore"))}}
-            runOnUiThread{render(plan,list,cap,rp);go.isEnabled=true;progress.progress=100;status.text="Completato • ${plan.source}"}
-        }catch(e:Exception){runOnUiThread{go.isEnabled=true;status.text="Errore";output.text="ERRORE\n\n${e.message?:e.javaClass.simpleName}\n\nControlla la connessione e riprova."}}}
+    override fun onDestroy() {
+        executor.shutdownNow()
+        super.onDestroy()
     }
 
-    private fun scan(cb:(Int,String)->Unit):Pair<P,List<X>>{
-        cb(3,"Connessione Binance"); get("/api/v3/ping")
-        cb(7,"Universo USDT"); val allowed=HashSet<String>(); val ei=JSONObject(get("/api/v3/exchangeInfo")).getJSONArray("symbols"); for(i in 0 until ei.length()){val o=ei.getJSONObject(i);if(o.optString("status")=="TRADING"&&o.optString("quoteAsset")=="USDT")allowed+=o.getString("symbol")}
-        val bm=HashMap<String,Pair<Double,Double>>();val ba=JSONArray(get("/api/v3/ticker/bookTicker"));for(i in 0 until ba.length()){val o=ba.getJSONObject(i);bm[o.getString("symbol")]=(o.optString("bidPrice").toDoubleOrNull()?:0.0) to (o.optString("askPrice").toDoubleOrNull()?:0.0)}
-        val stable=setOf("USDC","FDUSD","TUSD","USDP","DAI","EUR","AEUR","EURI","BUSD","USTC")
-        val ta=JSONArray(get("/api/v3/ticker/24hr"));val all=mutableListOf<T>();for(i in 0 until ta.length()){val o=ta.getJSONObject(i);val s=o.getString("symbol");if(s in allowed&&s.endsWith("USDT")&&!stable.contains(s.removeSuffix("USDT"))){val b=bm[s]?:0.0 to 0.0;val t=T(s,o.optString("lastPrice").toDoubleOrNull()?:0.0,o.optString("quoteVolume").toDoubleOrNull()?:0.0,b.first,b.second);if(t.p>0&&t.spread<0.45)all+=t}}
-        val liquid=all.sortedByDescending{it.qv}.take(22); require(liquid.size>=8){"Poche coppie liquide"}
-        cb(12,"Regime BTC/ETH"); val btcD=ana("1D",kl("BTCUSDT","1d",240));val btc4=ana("4H",kl("BTCUSDT","4h",240));val ethD=ana("1D",kl("ETHUSDT","1d",240)); val regime=if(btcD.trend.startsWith("BULL")&&btc4.trend.startsWith("BULL"))"BULL" else if(btcD.trend.startsWith("BEAR")&&btc4.trend.startsWith("BEAR"))"BEAR" else "NEUTRAL"
-        val quick=mutableListOf<Pair<T,Double>>();liquid.forEachIndexed{idx,t->cb(15+idx*25/liquid.size,"Screening ${t.s}");try{val a=if(t.s=="BTCUSDT")btcD else ana("1D",kl(t.s,"1d",220));val m=(1.0-idx.toDouble()/liquid.size)+abs(a.rsi-50)/50+(a.adx.coerceAtMost(50.0)/50)+(a.rv.coerceAtMost(3.0)/3);quick+=t to m}catch(_:Exception){}}
-        val deep=quick.sortedByDescending{it.second}.take(7);val xs=mutableListOf<X>();deep.forEachIndexed{idx,q->cb(43+idx*44/deep.size,"Multi-timeframe ${q.first.s}");try{val t=q.first;val w=ana("1W",kl(t.s,"1w",120));val d=if(t.s=="BTCUSDT")btcD else ana("1D",kl(t.s,"1d",240));val h4=if(t.s=="BTCUSDT")btc4 else ana("4H",kl(t.s,"4h",240));val h1=ana("1H",kl(t.s,"1h",240));val m15=ana("15M",kl(t.s,"15m",200));val ev=evidence(d,h4,h1,regime);val p=makePlan(t,d,h4,h1,ev.first,ev.second,ev.third);val rk=(if(p.quality=="HIGH")3.0 else if(p.quality=="MEDIUM")1.5 else 0.0)+max(ev.first.size,ev.second.size)-ev.third.size*0.7+max(p.rr1,p.rr2).coerceAtMost(4.0);xs+=X(t,w,d,h4,h1,m15,ev.first,ev.second,ev.third,p,rk)}catch(_:Exception){}}
-        val top=xs.sortedByDescending{it.rank}.take(5);require(top.isNotEmpty()){"Nessun candidato analizzabile"};cb(92,"Confronto setup");val p=top.firstOrNull{it.plan.d!="WAIT"&&it.plan.quality!="LOW"}?.plan?:P("MARKET","WAIT","LOW",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,"WAIT","Nessun setup 1D/4H sufficientemente coerente.");return p to top
+    private fun buildUi() {
+        val scroll = ScrollView(this).apply { setBackgroundColor(bg) }
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(18), dp(20), dp(18), dp(30))
+        }
+        scroll.addView(root)
+
+        root.addView(TextView(this).apply {
+            text = "TRADEMARKERAI"
+            textSize = 28f
+            setTextColor(Color.WHITE)
+            setTypeface(typeface, Typeface.BOLD)
+        })
+        root.addView(TextView(this).apply {
+            text = "GPT-5.6 Sol Trader Agent • Binance • Swing 2–7 giorni"
+            textSize = 13f
+            setTextColor(green)
+            setPadding(0, 0, 0, dp(14))
+        })
+
+        val inputs = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(dp(10), dp(10), dp(10), dp(10))
+            setBackgroundColor(card)
+        }
+        capital = numberInput("Capitale USDT", "10000")
+        risk = numberInput("Rischio %", "1")
+        inputs.addView(capital, LinearLayout.LayoutParams(0, dp(52), 1f).apply { marginEnd = dp(8) })
+        inputs.addView(risk, LinearLayout.LayoutParams(0, dp(52), 1f))
+        root.addView(inputs)
+
+        analyze = Button(this).apply {
+            text = "ANALIZZA MERCATO CON GPT"
+            setTextColor(Color.BLACK)
+            setBackgroundColor(green)
+            setTypeface(typeface, Typeface.BOLD)
+            setOnClickListener { startAgent() }
+        }
+        root.addView(analyze, LinearLayout.LayoutParams(-1, dp(60)).apply { topMargin = dp(10) })
+
+        root.addView(Button(this).apply {
+            text = "IMPOSTAZIONI API"
+            setTextColor(fg)
+            setBackgroundColor(Color.rgb(35, 45, 62))
+            setOnClickListener { apiDialog() }
+        }, LinearLayout.LayoutParams(-1, dp(50)).apply { topMargin = dp(8) })
+
+        progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply { max = 100 }
+        root.addView(progress, LinearLayout.LayoutParams(-1, dp(10)).apply { topMargin = dp(16) })
+
+        status = TextView(this).apply {
+            text = apiStatusText()
+            setTextColor(muted)
+            textSize = 13f
+            setPadding(0, dp(7), 0, dp(10))
+        }
+        root.addView(status)
+
+        output = TextView(this).apply {
+            text = "ChatGPT decide autonomamente quali dati chiedere a Binance, quali coppie approfondire e se concludere LONG, SHORT o WAIT.\n\nNessun ordine viene inviato a Binance."
+            setTextColor(fg)
+            textSize = 14f
+            setLineSpacing(0f, 1.14f)
+            setTextIsSelectable(true)
+        }
+        root.addView(output)
+        setContentView(scroll)
     }
 
-    private fun evidence(d:A,h:A,h1:A,btc:String):Triple<List<String>,List<String>,List<String>>{val b=mutableListOf<String>();val s=mutableListOf<String>();val c=mutableListOf<String>();if(d.trend.startsWith("BULL"))b+="Trend 1D rialzista";if(d.trend.startsWith("BEAR"))s+="Trend 1D ribassista";if(h.trend.startsWith("BULL"))b+="Trend 4H rialzista";if(h.trend.startsWith("BEAR"))s+="Trend 4H ribassista";if(d.struct=="BULL")b+="Struttura 1D HH/HL";if(d.struct=="BEAR")s+="Struttura 1D LH/LL";if(h.struct=="BULL")b+="Struttura 4H HH/HL";if(h.struct=="BEAR")s+="Struttura 4H LH/LL";if(h.p>h.e20&&h.e20>h.e50)b+="EMA20>EMA50 4H";if(h.p<h.e20&&h.e20<h.e50)s+="EMA20<EMA50 4H";if(d.s200.isFinite()&&d.p>d.s200)b+="Sopra SMA200 1D";if(d.s200.isFinite()&&d.p<d.s200)s+="Sotto SMA200 1D";if(h.macdH>0)b+="MACD histogram 4H positivo" else s+="MACD histogram 4H negativo";if(h.tb>.54)b+="Taker buy prevalente";if(h.tb<.46)s+="Taker sell prevalente";if(h.rv>1.15){if(h.macdH>=0)b+="Volume 4H in espansione" else s+="Volume 4H in espansione"};if(h.tlSup.isFinite()&&h.p>=h.tlSup)b+="Trendline support 4H rispettata";if(h.tlRes.isFinite()&&h.p<=h.tlRes)s+="Trendline resistance 4H attiva";if(d.trend.startsWith("BULL")&&h.trend.startsWith("BEAR"))c+="1D/4H discordanti";if(d.trend.startsWith("BEAR")&&h.trend.startsWith("BULL"))c+="1D/4H discordanti";if(h.rsi>78)c+="RSI 4H molto esteso";if(h.rsi<22)c+="RSI 4H molto esteso";if(h.atr/h.p*100>8)c+="Volatilità 4H elevata";if(btc=="BEAR"&&b.size>s.size)c+="BTC ribassista contro LONG";if(btc=="BULL"&&s.size>b.size)c+="BTC rialzista contro SHORT";if(h1.trend=="RANGE")c+="1H in range";return Triple(b,s,c)}
+    private fun startAgent() {
+        val openAiKey = secure.get("openai")
+        if (openAiKey.isBlank()) {
+            Toast.makeText(this, "Inserisci prima la OpenAI API Key", Toast.LENGTH_LONG).show()
+            apiDialog()
+            return
+        }
+        val cap = capital.text.toString().toDoubleOrNull()?.coerceAtLeast(0.0) ?: 0.0
+        val riskPct = risk.text.toString().toDoubleOrNull()?.coerceIn(0.0, 10.0) ?: 0.0
+        analyze.isEnabled = false
+        progress.progress = 2
+        output.text = "GPT sta analizzando il mercato…\n\nLe richieste dati verranno decise autonomamente dal modello."
+        status.text = "Connessione Binance e OpenAI"
 
-    private fun makePlan(t:T,d:A,h:A,h1:A,b:List<String>,s:List<String>,c:List<String>):P{val long=d.trend.startsWith("BULL")&&h.trend.startsWith("BULL")&&b.size>=5&&b.size>=s.size+2&&c.size<=3;val sh=d.trend.startsWith("BEAR")&&h.trend.startsWith("BEAR")&&s.size>=5&&s.size>=b.size+2&&c.size<=3;if(!long&&!sh)return P(t.s,"WAIT",quality(b,s,c),t.p,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,"WAIT","Confluenze insufficienti o contraddittorie.");val a=h.atr;return if(long){val e=min(t.p,max(h.sup,h.e20)+.15*a);val sl=min(h.sup,h.tlSup.takeIf{it.isFinite()}?:h.sup)-.45*a;val r=e-sl;val t1=max(h.res,e+1.25*r);val t2=max(d.res,e+2.1*r);val t3=e+3.3*r;P(t.s,"LONG",quality(b,s,c),e,e-.2*a,e+.2*a,sl,t1,t2,t3,rr(e,sl,t1),rr(e,sl,t2),rr(e,sl,t3),if(t.p>e+.2*a)"WAIT FOR RETRACE" else "ENTER ONLY WITH CONFIRMATION","SL sotto struttura 4H + buffer ATR; TP su resistenze/R multipli.")}else{val e=max(t.p,min(h.res,h.e20)-.15*a);val sl=max(h.res,h.tlRes.takeIf{it.isFinite()}?:h.res)+.45*a;val r=sl-e;val t1=min(h.sup,e-1.25*r);val t2=min(d.sup,e-2.1*r);val t3=e-3.3*r;P(t.s,"SHORT",quality(b,s,c),e,e-.2*a,e+.2*a,sl,t1,t2,t3,rr(e,sl,t1),rr(e,sl,t2),rr(e,sl,t3),if(t.p<e-.2*a)"WAIT FOR RETRACE" else "ENTER ONLY WITH CONFIRMATION","SL sopra struttura 4H + buffer ATR; TP su supporti/R multipli.")}}
-    private fun quality(b:List<String>,s:List<String>,c:List<String>):String{val n=max(b.size,s.size);return if(n>=7&&c.size<=2)"HIGH" else if(n>=5&&c.size<=4)"MEDIUM" else "LOW"}
-    private fun rr(e:Double,sl:Double,tp:Double)=if(abs(e-sl)>0)abs(tp-e)/abs(e-sl) else 0.0
+        executor.execute {
+            try {
+                val toolbox = BinanceToolbox(secure.get("binance_api"))
+                val agent = OpenAiTraderAgent(openAiKey, toolbox)
+                val plan = agent.run(cap, riskPct) { p ->
+                    runOnUiThread {
+                        progress.progress = (8 + p.round * 7 + p.toolCalls).coerceAtMost(94)
+                        status.text = p.message
+                    }
+                }
+                runOnUiThread {
+                    render(plan, cap, riskPct)
+                    progress.progress = 100
+                    status.text = "Completato • GPT-5.6 Sol • ${plan.toolCalls} richieste tool"
+                    analyze.isEnabled = true
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    progress.progress = 0
+                    status.text = "Analisi interrotta"
+                    output.text = "ERRORE\n\n${e.message ?: e.javaClass.simpleName}\n\nControlla connessione e API key, poi riprova."
+                    analyze.isEnabled = true
+                }
+            }
+        }
+    }
 
-    private fun ana(tf:String,x:List<C>):A{val cl=x.map{it.c};val p=cl.last();val e20=ema(cl,20);val e50=ema(cl,50);val e200=if(cl.size>=200)ema(cl,200) else Double.NaN;val s50=sma(cl,50);val s200=if(cl.size>=200)sma(cl,200) else Double.NaN;val r=rsi(cl);val at=atr(x);val ad=adx(x);val mh=macdH(cl);val rv=if(x.size>21)x.last().v/x.dropLast(1).takeLast(20).map{it.v}.average() else 1.0;val tb=x.takeLast(20).sumOf{it.tb}/max(1e-12,x.takeLast(20).sumOf{it.v});val lows=pivots(x,false);val highs=pivots(x,true);val sup=lows.map{it.second}.filter{it<p}.maxOrNull()?:x.takeLast(50).minOf{it.l};val res=highs.map{it.second}.filter{it>p}.minOrNull()?:x.takeLast(50).maxOf{it.h};val st=if(highs.size>=2&&lows.size>=2&&highs.last().second>highs[highs.lastIndex-1].second&&lows.last().second>lows[lows.lastIndex-1].second)"BULL" else if(highs.size>=2&&lows.size>=2&&highs.last().second<highs[highs.lastIndex-1].second&&lows.last().second<lows[lows.lastIndex-1].second)"BEAR" else "MIXED";val tr=if(p>e20&&e20>e50&&(!e200.isFinite()||e50>e200))if(ad>=25)"BULL_STRONG" else "BULL" else if(p<e20&&e20<e50&&(!e200.isFinite()||e50<e200))if(ad>=25)"BEAR_STRONG" else "BEAR" else if(ad<18)"RANGE" else "NEUTRAL";return A(tf,p,e20,e50,e200,s50,s200,r,at,ad,mh,rv,tb,sup,res,tr,st,trendline(lows,x.lastIndex),trendline(highs,x.lastIndex))}
-    private fun sma(v:List<Double>,n:Int)=if(v.size>=n)v.takeLast(n).average() else Double.NaN
-    private fun ema(v:List<Double>,n:Int):Double{var e=v.first();val k=2.0/(n+1);for(i in 1 until v.size)e=v[i]*k+e*(1-k);return e}
-    private fun rsi(v:List<Double>,n:Int=14):Double{if(v.size<=n)return 50.0;var g=0.0;var l=0.0;for(i in v.size-n until v.size){val d=v[i]-v[i-1];if(d>0)g+=d else l-=d};return if(l==0.0)100.0 else 100-100/(1+(g/n)/(l/n))}
-    private fun atr(x:List<C>,n:Int=14):Double{val z=mutableListOf<Double>();for(i in 1 until x.size){val q=x[i];val pc=x[i-1].c;z+=max(q.h-q.l,max(abs(q.h-pc),abs(q.l-pc)))};return z.takeLast(n).average()}
-    private fun adx(x:List<C>,n:Int=14):Double{val z=x.takeLast(n+1);var tr=0.0;var plus=0.0;var minus=0.0;for(i in 1 until z.size){val q=z[i];val p=z[i-1];tr+=max(q.h-q.l,max(abs(q.h-p.c),abs(q.l-p.c)));val u=q.h-p.h;val d=p.l-q.l;if(u>d&&u>0)plus+=u;if(d>u&&d>0)minus+=d};if(tr==0.0)return 0.0;val a=100*plus/tr;val b=100*minus/tr;return if(a+b>0)100*abs(a-b)/(a+b) else 0.0}
-    private fun macdH(v:List<Double>):Double{fun es(n:Int):List<Double>{val o=mutableListOf<Double>();var e=v.first();val k=2.0/(n+1);for(q in v){e=q*k+e*(1-k);o+=e};return o};val a=es(12);val b=es(26);val d=a.indices.map{a[it]-b[it]};var s=d.first();val k=2.0/10;for(q in d)s=q*k+s*(1-k);return d.last()-s}
-    private fun pivots(x:List<C>,hi:Boolean):List<Pair<Int,Double>>{val o=mutableListOf<Pair<Int,Double>>();for(i in 3 until x.size-3){val p=if(hi)x[i].h else x[i].l;var ok=true;for(j in i-3..i+3)if(j!=i){if(hi&&x[j].h>=p)ok=false;if(!hi&&x[j].l<=p)ok=false};if(ok)o+=i to p};return o}
-    private fun trendline(p:List<Pair<Int,Double>>,now:Int):Double{if(p.size<2)return Double.NaN;val a=p[p.size-2];val b=p.last();if(a.first==b.first)return Double.NaN;return a.second+(b.second-a.second)/(b.first-a.first)*(now-a.first)}
+    private fun render(p: TradePlan, cap: Double, riskPct: Double) {
+        val b = StringBuilder()
+        b.append("ANALISI GPT COMPLETATA\n\n")
+        b.append("${p.symbol}   ${p.decision}\n")
+        b.append("Qualità setup: ${p.setupQuality}\n")
+        b.append("Orizzonte: ${p.expectedHoldingPeriod.ifBlank { "2–7 giorni" }}\n")
+        b.append("Modello: ${p.model}\n")
+        b.append("Round: ${p.rounds} • Tool Binance/calcolo: ${p.toolCalls}\n\n")
 
-    private fun kl(s:String,i:String,n:Int):List<C>{val a=JSONArray(get("/api/v3/klines?symbol=$s&interval=$i&limit=$n"));val o=mutableListOf<C>();for(k in 0 until a.length()){val q=a.getJSONArray(k);o+=C(q.getString(1).toDouble(),q.getString(2).toDouble(),q.getString(3).toDouble(),q.getString(4).toDouble(),q.getString(5).toDouble(),q.getString(9).toDouble())};return o}
-    private fun get(path:String):String{val c=URL("https://api.binance.com$path").openConnection() as HttpURLConnection;c.connectTimeout=12000;c.readTimeout=20000;c.requestMethod="GET";val code=c.responseCode;val st=if(code in 200..299)c.inputStream else c.errorStream;val txt=BufferedReader(InputStreamReader(st)).use{it.readText()};c.disconnect();if(code !in 200..299)throw IllegalStateException("Binance HTTP $code");return txt}
+        if (p.currentPrice != null) b.append("Prezzo osservato: ${fmt(p.currentPrice)}\n")
+        b.append("Modalità: ${p.entryMode}\n")
 
-    private fun aiChoose(key:String,x:List<X>,fallback:P):P{val arr=JSONArray();x.forEach{q->arr.put(JSONObject().put("symbol",q.t.s).put("localDecision",q.plan.d).put("quality",q.plan.quality).put("1D",q.d.trend).put("4H",q.h4.trend).put("1H",q.h1.trend).put("bull",JSONArray(q.bull)).put("bear",JSONArray(q.bear)).put("contradictions",JSONArray(q.contra)).put("entry",q.plan.entry).put("sl",q.plan.sl).put("tp1",q.plan.t1).put("tp2",q.plan.t2).put("tp3",q.plan.t3))};val schema=JSONObject().put("type","object").put("properties",JSONObject().put("decision",JSONObject().put("type","string").put("enum",JSONArray(listOf("LONG","SHORT","WAIT")))).put("symbol",JSONObject().put("type","string")).put("action",JSONObject().put("type","string")).put("summary",JSONObject().put("type","string"))).put("required",JSONArray(listOf("decision","symbol","action","summary"))).put("additionalProperties",false);val body=JSONObject().put("model","gpt-5.6-terra").put("store",false).put("reasoning",JSONObject().put("effort","medium")).put("instructions","Sei un senior crypto swing trader e risk manager. Orizzonte 2-7 giorni. Confronta SOLO i candidati e i dati forniti. Dai priorità a 1D/4H, struttura, EMA/SMA, trendline, volume e contraddizioni. Non inventare prezzi o probabilità. Puoi scegliere LONG/SHORT solo se la localDecision dello stesso candidato coincide; altrimenti WAIT. WAIT è valido. Restituisci JSON conforme.").put("input",JSONObject().put("candidates",arr).toString()).put("text",JSONObject().put("format",JSONObject().put("type","json_schema").put("name","selection").put("strict",true).put("schema",schema)));val con=URL("https://api.openai.com/v1/responses").openConnection() as HttpURLConnection;con.requestMethod="POST";con.doOutput=true;con.connectTimeout=15000;con.readTimeout=90000;con.setRequestProperty("Authorization","Bearer $key");con.setRequestProperty("Content-Type","application/json");con.outputStream.use{it.write(body.toString().toByteArray())};val code=con.responseCode;val st=if(code in 200..299)con.inputStream else con.errorStream;val txt=BufferedReader(InputStreamReader(st)).use{it.readText()};if(code !in 200..299)throw IllegalStateException("OpenAI HTTP $code");val root=JSONObject(txt);var ans="";val out=root.getJSONArray("output");for(i in 0 until out.length()){val m=out.optJSONObject(i)?:continue;val ca=m.optJSONArray("content")?:continue;for(j in 0 until ca.length()){val z=ca.optJSONObject(j)?:continue;if(z.optString("type")=="output_text")ans=z.getString("text")}};val a=JSONObject(ans);val dec=a.getString("decision");if(dec=="WAIT")return fallback.copy(d="WAIT",action=a.getString("action"),reason=a.getString("summary"),source="OPENAI+LOCAL");val q=x.firstOrNull{it.t.s==a.getString("symbol")&&it.plan.d==dec}?:return fallback;return q.plan.copy(action=a.getString("action"),reason=a.getString("summary"),source="OPENAI+LOCAL")}
+        if (p.decision != "WAIT") {
+            if (p.entryZoneLow != null || p.entryZoneHigh != null) b.append("ENTRY ZONE: ${fmt(p.entryZoneLow)} – ${fmt(p.entryZoneHigh)}\n")
+            b.append("ENTRY IDEALE: ${fmt(p.preferredEntry)}\n")
+            if (p.doNotChase != null) b.append("NON INSEGUIRE OLTRE: ${fmt(p.doNotChase)}\n")
+            b.append("STOP LOSS: ${fmt(p.stopLoss)}\n")
+            b.append("TP1: ${fmt(p.takeProfit1)}${rrText(p.riskReward(p.takeProfit1))}\n")
+            b.append("TP2: ${fmt(p.takeProfit2)}${rrText(p.riskReward(p.takeProfit2))}\n")
+            b.append("TP3: ${fmt(p.takeProfit3)}${rrText(p.riskReward(p.takeProfit3))}\n")
 
-    private fun render(p:P,x:List<X>,cap:Double,rp:Double){val b=StringBuilder();b.append("MIGLIORE RISULTATO\n\n${p.symbol}   ${p.d}\nQualità setup: ${p.quality}\nFonte: ${p.source}\nOrizzonte: 2–7 giorni\n\n");if(p.d!="WAIT"){b.append("ENTRY  ${f(p.lo)} – ${f(p.hi)}\nEntry ideale  ${f(p.entry)}\nSL  ${f(p.sl)}\nTP1  ${f(p.t1)}   ${"%.2f".format(p.rr1)}R\nTP2  ${f(p.t2)}   ${"%.2f".format(p.rr2)}R\nTP3  ${f(p.t3)}   ${"%.2f".format(p.rr3)}R\n");val m=cap*rp/100;val u=abs(p.entry-p.sl);if(m>0&&u>0)b.append("\nPOSITION SIZE\nRischio max ${f(m)} USDT\nQuantità teorica ${f(m/u)} ${p.symbol.removeSuffix("USDT")}\n")};b.append("\nCOSA FARE\n${p.action}\n\nMOTIVO\n${p.reason}\n\nTOP 5\n");x.forEachIndexed{i,q->b.append("${i+1}. ${q.t.s} • ${q.plan.d} • ${q.plan.quality}\n   1D ${q.d.trend} | 4H ${q.h4.trend} | confluenze ${max(q.bull.size,q.bear.size)} | contro ${q.contra.size}\n")};b.append("\nNessun ordine viene inviato automaticamente. I segnali non sono garanzie di rendimento.");output.text=b.toString()}
-    private fun apiDialog(){val l=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(20),dp(4),dp(20),0)};val b=secret("Binance API Key (opzionale)");val s=secret("Binance Secret (opzionale)");val o=secret("OpenAI API Key");if(sec.get("openai").isNotBlank())o.hint="OpenAI API Key • salvata";l.addView(TextView(this).apply{text="Le chiavi sono cifrate con Android Keystore. La scansione Binance usa dati pubblici e non richiede permessi di trading.";textSize=12f;setTextColor(Color.DKGRAY)});l.addView(b);l.addView(s);l.addView(o);val d=AlertDialog.Builder(this).setTitle("Impostazioni API").setView(l).setPositiveButton("Salva",null).setNeutralButton("Cancella",null).setNegativeButton("Chiudi",null).create();d.setOnShowListener{d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener{if(b.text.isNotBlank())sec.put("binance",b.text.toString());if(s.text.isNotBlank())sec.put("binance_secret",s.text.toString());if(o.text.isNotBlank())sec.put("openai",o.text.toString());Toast.makeText(this,"Salvato",Toast.LENGTH_SHORT).show();d.dismiss()};d.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener{sec.put("binance","");sec.put("binance_secret","");sec.put("openai","");d.dismiss()}};d.show()}
-    private fun num(h:String,v:String)=EditText(this).apply{hint=h;setText(v);setTextColor(fg);setHintTextColor(muted);setBackgroundColor(Color.rgb(35,45,62));setPadding(dp(9),0,dp(9),0);inputType=InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL}
-    private fun secret(h:String)=EditText(this).apply{hint=h;inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD}
-    private fun f(v:Double)=when{!v.isFinite()->"n/d";abs(v)>=1000->"%,.2f".format(v);abs(v)>=1->"%.4f".format(v);else->"%.8f".format(v)}
-    private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
+            val e = p.preferredEntry; val sl = p.stopLoss
+            if (e != null && sl != null && cap > 0 && riskPct > 0 && abs(e - sl) > 0) {
+                val maxLoss = cap * riskPct / 100.0
+                val qty = maxLoss / abs(e - sl)
+                b.append("\nPOSITION SIZE TEORICA\n")
+                b.append("Perdita massima: ${fmt(maxLoss)} USDT\n")
+                b.append("Quantità: ${fmt(qty)} ${p.symbol.removeSuffix("USDT")}\n")
+                b.append("Calcolo basato esclusivamente su entry/SL scelti da GPT.\n")
+            }
+        }
 
-    class SecureStore(c:Context){private val p=c.getSharedPreferences("secure",Context.MODE_PRIVATE);private val alias="TradeMarkerAIKey";private fun key():SecretKey{val ks=KeyStore.getInstance("AndroidKeyStore").apply{load(null)};val old=ks.getKey(alias,null) as? SecretKey;if(old!=null)return old;val g=KeyGenerator.getInstance("AES","AndroidKeyStore");g.init(android.security.keystore.KeyGenParameterSpec.Builder(alias,android.security.keystore.KeyProperties.PURPOSE_ENCRYPT or android.security.keystore.KeyProperties.PURPOSE_DECRYPT).setBlockModes(android.security.keystore.KeyProperties.BLOCK_MODE_GCM).setEncryptionPaddings(android.security.keystore.KeyProperties.ENCRYPTION_PADDING_NONE).setKeySize(256).build());return g.generateKey()};fun put(n:String,v:String){if(v.isBlank()){p.edit().remove(n).apply();return};val c=Cipher.getInstance("AES/GCM/NoPadding");c.init(Cipher.ENCRYPT_MODE,key());p.edit().putString(n,Base64.encodeToString(c.iv,Base64.NO_WRAP)+":"+Base64.encodeToString(c.doFinal(v.toByteArray()),Base64.NO_WRAP)).apply()};fun get(n:String):String{val z=p.getString(n,null)?:return "";return try{val a=z.split(":",limit=2);val c=Cipher.getInstance("AES/GCM/NoPadding");c.init(Cipher.DECRYPT_MODE,key(),GCMParameterSpec(128,Base64.decode(a[0],Base64.NO_WRAP)));String(c.doFinal(Base64.decode(a[1],Base64.NO_WRAP)))}catch(_:Exception){""}}}
+        section(b, "COSA FARE ADESSO", listOf(p.actionNow))
+        section(b, "TESI / SINTESI", listOf(p.reasoningSummary))
+        section(b, "INVALIDAZIONE", listOf(p.invalidation))
+        section(b, "EVIDENZE BULLISH", p.bullishEvidence)
+        section(b, "EVIDENZE BEARISH", p.bearishEvidence)
+        section(b, "CONTRADDIZIONI", p.contradictions)
+        section(b, "RISCHI", p.mainRisks)
+        section(b, "DATI CONSULTATI DA GPT", p.dataUsed)
+        section(b, "DATI MANCANTI", p.missingData)
+
+        b.append("\nNessun ordine è stato aperto. L'analisi usa dati di mercato e non garantisce risultati futuri.")
+        output.text = b.toString()
+    }
+
+    private fun section(b: StringBuilder, title: String, items: List<String>) {
+        val clean = items.filter { it.isNotBlank() }
+        if (clean.isEmpty()) return
+        b.append("\n$title\n")
+        clean.forEach { b.append("• $it\n") }
+    }
+
+    private fun apiDialog() {
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(6), dp(20), 0)
+        }
+        layout.addView(TextView(this).apply {
+            text = "OpenAI è obbligatoria: GPT-5.6 Sol è il motore decisionale. Binance Spot/Futures usa dati pubblici; la Binance API Key è opzionale. La Secret viene conservata cifrata ma questa versione non la usa e non invia ordini."
+            textSize = 12f
+            setTextColor(Color.DKGRAY)
+            setPadding(0, 0, 0, dp(8))
+        })
+        val openAi = secretInput(if (secure.get("openai").isBlank()) "OpenAI API Key" else "OpenAI API Key • salvata")
+        val binance = secretInput(if (secure.get("binance_api").isBlank()) "Binance API Key • opzionale" else "Binance API Key • salvata")
+        val secret = secretInput(if (secure.get("binance_secret").isBlank()) "Binance Secret • non usata" else "Binance Secret • salvata, non usata")
+        layout.addView(openAi); layout.addView(binance); layout.addView(secret)
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Impostazioni API")
+            .setView(layout)
+            .setPositiveButton("Salva", null)
+            .setNeutralButton("Cancella chiavi", null)
+            .setNegativeButton("Chiudi", null)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                if (openAi.text.isNotBlank()) secure.put("openai", openAi.text.toString().trim())
+                if (binance.text.isNotBlank()) secure.put("binance_api", binance.text.toString().trim())
+                if (secret.text.isNotBlank()) secure.put("binance_secret", secret.text.toString().trim())
+                status.text = apiStatusText()
+                Toast.makeText(this, "API salvate in Android Keystore", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                secure.put("openai", ""); secure.put("binance_api", ""); secure.put("binance_secret", "")
+                status.text = apiStatusText(); dialog.dismiss()
+            }
+        }
+        dialog.show()
+    }
+
+    private fun apiStatusText(): String = if (secure.get("openai").isBlank()) "OpenAI API: da configurare" else "OpenAI API: configurata • Binance market data: pronta"
+
+    private fun numberInput(hintText: String, value: String) = EditText(this).apply {
+        hint = hintText; setText(value); setTextColor(fg); setHintTextColor(muted); setBackgroundColor(Color.rgb(35,45,62)); setPadding(dp(9), 0, dp(9), 0)
+        inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        gravity = Gravity.CENTER_VERTICAL
+    }
+
+    private fun secretInput(hintText: String) = EditText(this).apply {
+        hint = hintText
+        inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+    }
+
+    private fun rrText(v: Double?): String = if (v == null || !v.isFinite()) "" else "   ${"%.2f".format(v)}R"
+    private fun fmt(v: Double?): String = when {
+        v == null || !v.isFinite() -> "n/d"
+        abs(v) >= 1000 -> "%,.2f".format(v)
+        abs(v) >= 1 -> "%.4f".format(v)
+        else -> "%.8f".format(v)
+    }
+    private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 }
