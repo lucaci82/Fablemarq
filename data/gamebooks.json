@@ -18,6 +18,22 @@
       }
     },
     {
+      "slug": "il-colpo",
+      "title": "IL COLPO",
+      "series": "crime",
+      "seriesLabel": "Crime",
+      "status": "development",
+      "cover": "crime-il-colpo.webp",
+      "width": 320,
+      "height": 480,
+      "accent": "#dc343d",
+      "hook": {
+        "it": "Un piano perfetto. Un solo errore. Nessuna seconda occasione.",
+        "en": "A perfect plan. One mistake. No second chance.",
+        "es": "Un plan perfecto. Un solo error. Ninguna segunda oportunidad."
+      }
+    },
+    {
       "slug": "72-ore-sottoterra",
       "title": "72 ORE SOTTOTERRA",
       "series": "survive",
@@ -98,19 +114,19 @@
       }
     },
     {
-      "slug": "protocollo-omega",
-      "title": "PROTOCOLLO OMEGA",
+      "slug": "domani-non-esisti",
+      "title": "DOMANI NON ESISTI",
       "series": "sci-fi",
       "seriesLabel": "Sci-Fi",
       "status": "development",
-      "cover": "sci-fi-protocollo-omega.avif",
+      "cover": "sci-fi-domani-non-esisti.webp",
       "width": 320,
       "height": 480,
       "accent": "#12c9e8",
       "hook": {
-        "it": "Un segnale impossibile. Una stazione isolata. Qualcosa è già salito a bordo.",
-        "en": "An impossible signal. An isolated station. Something is already on board.",
-        "es": "Una señal imposible. Una estación aislada. Algo ya está a bordo."
+        "it": "Tutti hanno ricevuto un messaggio dal proprio futuro. Tu no.",
+        "en": "Everyone received a message from their future. You didn't.",
+        "es": "Todos recibieron un mensaje de su futuro. Tú no."
       }
     },
     {
