@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-15",
+  "updated": "2026-09-19",
   "books": [
     {
       "slug": "l-accusato",
@@ -31,6 +31,22 @@
         "it": "Sette persone. Una galleria crollata. L'aria non basterà per tutti.",
         "en": "Seven people. A collapsed tunnel. There will not be enough air for everyone.",
         "es": "Siete personas. Un túnel derrumbado. El aire no alcanzará para todos."
+      }
+    },
+    {
+      "slug": "il-container",
+      "title": "IL CONTAINER",
+      "series": "survive",
+      "seriesLabel": "Survive",
+      "status": "development",
+      "cover": "survive-il-container.webp",
+      "width": 320,
+      "height": 480,
+      "accent": "#ff671f",
+      "hook": {
+        "it": "Ti sei svegliato al buio. Il porto è già lontano.",
+        "en": "You woke up in the dark. The port is already far behind.",
+        "es": "Te has despertado a oscuras. El puerto ya está lejos."
       }
     },
     {
